@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+	font-family: var(--font-family);
+}
+
+html,
+body {
+	height: 100%;
+}
+
+p-dropdown {
+	.p-dropdown-filter {
+		width: 100% !important;
+		border: 1px solid rgba(255, 255, 255, 0.3) !important;
+	}
+}
+
+//p-sidebar div.p-sidebar
+//{
+//	position: relative !important;
+//}

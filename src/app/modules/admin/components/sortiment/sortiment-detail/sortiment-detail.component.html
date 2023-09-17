@@ -1,0 +1,25 @@
+<div class="flex">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+		<div class="flex flex-column gap-2">
+			<label htmlFor="sortimentName">Name</label>
+			<input pInputText id="sortimentName" formControlName="name" />
+		</div>
+
+		<div class="flex flex-column gap-2">
+			<label htmlFor="sortimentSourceName">Source</label>
+			<input pInputText id="sortimentSourceName" formControlName="sourceName" />
+		</div>
+
+		<div class="flex flex-column gap-2">
+			<label htmlFor="sortimentPrice">Price</label>
+			<input type="number" pInputText id="sortimentPrice" formControlName="price" />
+		</div>
+
+		<div class="flex flex-column gap-2">
+			<label htmlFor="sortimentVolume">Volume</label>
+			<input type="number" pInputText id="sortimentVolume" formControlName="volume" />
+		</div>
+
+		<p-button label="Save" type="submit" />
+	</form>
+</div>

@@ -1,0 +1,96 @@
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { EventService } from '../../../admin/services/event/event.service';
+import { Observable, tap } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageService, SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { IEvent } from '../../../admin/types/IEvent';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
+import { IUserRead } from '../../../user/types/IUser';
+import { UserService } from '../../../user/services/user/user.service';
+
+@Component({
+	selector: 'app-registration-detail',
+	standalone: true,
+	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule],
+	providers: [DialogService],
+	templateUrl: './registration-detail.component.html',
+	styleUrls: ['./registration-detail.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class RegistrationDetailComponent implements OnDestroy {
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly eventService: EventService = inject(EventService);
+	private readonly dialogService: DialogService = inject(DialogService);
+	private readonly usersService: UserService = inject(UserService);
+	public readonly messageService = inject(MessageService);
+
+	protected eventId: number;
+	protected event: Observable<IEvent>;
+	protected $eventUsers = signal<IUserRead[]>([]);
+
+	private attendDialogRef: DynamicDialogRef;
+
+	constructor() {
+		// TOOD: vyresit NaN
+		this.eventId = Number(this.activatedRoute.snapshot.paramMap.get('eventId')); // eventId has always value, otherwise it's redirected to list
+
+		if (this.eventId) {
+			this.loadUsers();
+			this.event = this.eventService.getEvent(this.eventId);
+		}
+	}
+
+	protected showAttendModal(): void {
+		this.attendDialogRef = this.dialogService.open(SelectUserDialogComponent, {
+			header: 'Select user',
+			width: '50%',
+			contentStyle: { overflow: 'auto' },
+			data: {
+				users: this.usersService.$users(),
+			},
+		});
+
+		this.attendDialogRef.onClose.subscribe((data: { newUser: string | null; existingUser: IUserRead | null }) => {
+			if (data.newUser) {
+				this.usersService.addUser({ name: data.newUser }).subscribe((user) => {
+					this.attendEvent(user.id, this.eventId);
+				});
+			}
+			if (data.existingUser) {
+				this.attendEvent(data.existingUser.id, this.eventId);
+			}
+		});
+	}
+
+	public ngOnDestroy() {
+		if (this.attendDialogRef) {
+			this.attendDialogRef.close();
+		}
+	}
+
+	private attendEvent(userId: number, eventId: number): void {
+		this.eventService
+			.attendEvent(userId, eventId)
+			.pipe(tap(() => this.loadUsers()))
+			.subscribe({
+				next: () => this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User added' }),
+				error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' }),
+			});
+	}
+
+	private loadUsers(): void {
+		this.eventService
+			.getUsersForEvent(this.eventId)
+			.pipe(
+				tap((users) => {
+					this.$eventUsers.set(users);
+				}),
+			)
+			.subscribe();
+	}
+}

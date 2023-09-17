@@ -1,0 +1,33 @@
+<p-toolbar>
+	<div class="p-toolbar-group-start">
+		<p-button (click)="toggleSidebar()" icon="pi pi-fw pi-bars" styleClass="p-button-outlined" class="mr-2"> </p-button>
+
+		<h3>{{ layoutService.$topBarTitle() }}</h3>
+	</div>
+
+	<div class="p-toolbar-group-end">
+		<p-dropdown
+			[options]="eventService.$events()"
+			[ngModel]="eventService.$activeEvent()"
+			(ngModelChange)="eventService.setActiveEvent($event)"
+			optionLabel="name"
+			[filter]="true"
+			filterBy="name"
+			[showClear]="true"
+			placeholder="Select event"
+			[style]="{ width: '100%' }"
+		>
+			<ng-template pTemplate="selectedItem">
+				<div class="flex align-items-center gap-2" *ngIf="eventService.$activeEvent() as event">
+					<div>{{ event.name }}</div>
+				</div>
+			</ng-template>
+
+			<ng-template let-item pTemplate="item">
+				<div class="flex align-items-center gap-2">
+					<div>{{ item.name }}</div>
+				</div>
+			</ng-template>
+		</p-dropdown>
+	</div>
+</p-toolbar>

@@ -1,0 +1,10 @@
+<div>
+	<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+		<div class="flex flex-column gap-2">
+			<label htmlFor="eventName">Username</label>
+			<input pInputText id="eventName" formControlName="name" />
+		</div>
+
+		<p-button label="Save" type="submit" />
+	</form>
+</div>

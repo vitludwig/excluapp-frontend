@@ -1,0 +1,29 @@
+<div class="flex justify-content-between mb-3">
+	<div class="flex">
+		<div class="ml-auto p-inputgroup">
+			<input pInputText type="text" (input)="eventsTable.filterGlobal($any($event.target).value, 'contains')" placeholder="Search" />
+			<button pButton icon="pi pi-filter-slash" class="p-button-outlined" (click)="clearSearch(eventsTable)"></button>
+		</div>
+	</div>
+</div>
+
+<p-table #eventsTable [value]="eventService.$events()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+	<ng-template pTemplate="header">
+		<tr>
+			<th>Name</th>
+			<th>Start</th>
+			<th>End</th>
+			<th></th>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="body" let-event>
+		<tr>
+			<td>{{ event.name }}</td>
+			<td>{{ event.start }}</td>
+			<td>{{ event.end }}</td>
+			<td>
+				<p-button [routerLink]="[event.id]">Attend</p-button>
+			</td>
+		</tr>
+	</ng-template>
+</p-table>

@@ -1,0 +1,59 @@
+<div class="flex flex-column h-full">
+	{{users | json}}
+	<ng-container *ngIf="layout === 'form'">
+		<div class="flex flex-column justify-content-center mb-4">
+			<p-dropdown
+				[options]="users"
+				[(ngModel)]="selectedUser"
+				optionLabel="name"
+				[filter]="true"
+				filterBy="name"
+				[showClear]="true"
+				placeholder="Select user"
+				[style]="{ width: '100%' }"
+				appendTo="body"
+			>
+				<ng-template pTemplate="selectedItem">
+					<div class="flex align-items-center gap-2"
+						*ngIf="selectedUser"
+					>
+						<div>{{ $any(selectedUser).name }}</div>
+					</div>
+				</ng-template>
+
+				<ng-template let-item
+					pTemplate="item">
+					<div class="flex align-items-center gap-2">
+						<div>{{ item.name }}</div>
+					</div>
+				</ng-template>
+			</p-dropdown>
+
+			<h4 class="text-center">Or</h4>
+
+			<input type="text"
+				pInputText
+				placeholder="New user"
+				[(ngModel)]="newUser"/>
+		</div>
+	</ng-container>
+
+	<ng-container *ngIf="layout === 'list'">
+		<div class="overflow-auto">
+			<p-listbox [options]="users"
+				[(ngModel)]="selectedUser"
+				(ngModelChange)="onUserSelect($event)"
+				[multiple]="multiple"
+				[metaKeySelection]="false"
+				optionLabel="name"
+				[style]="{'width':'100%'}" />
+		</div>
+	</ng-container>
+
+	<p-button *ngIf="multiple"
+		(click)="submit()"
+		[style]="{'width': '100%'}"
+		class="w-full mt-3"
+		styleClass="p-button-lg"
+		label="Confirm" />
+</div>

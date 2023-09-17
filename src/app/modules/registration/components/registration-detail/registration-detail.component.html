@@ -1,0 +1,24 @@
+<ng-container *ngIf="eventId; else missingId">
+	<ng-container *ngIf="(event | async) as currentEvent">
+		<div class="flex align-items-center gap-3">
+			<h1>{{ currentEvent.name }}</h1>
+			<h2>({{ currentEvent.start | date: 'dd.MM HH:mm' }} - {{ currentEvent.end | date: 'dd.MM HH:mm' }})</h2>
+		</div>
+		<div class="flex justify-content-between align-items-center">
+			<h3>Visitors ({{$eventUsers().length}}/{{ currentEvent.capacity }})</h3>
+			<p-button label="Attend" icon="pi pi-plus" (onClick)="showAttendModal()"></p-button>
+		</div>
+
+		<p-table [value]="$eventUsers()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+			<ng-template pTemplate="body" let-event>
+				<tr>
+					<td>{{ event.name }}</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</ng-container>
+</ng-container>
+
+<ng-template #missingId>
+	<p>Missing event id</p>
+</ng-template>
