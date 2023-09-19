@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventService } from '../../../admin/services/event/event.service';
 import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
@@ -18,6 +18,8 @@ import { IKeg } from '../../../admin/types/IKeg';
 import { ICartItem } from '../../types/ICartItem';
 import { MessageService } from 'primeng/api';
 import { SummaryItemDialogComponent } from '../summary-item-dialog/summary-item-dialog.component';
+import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
+import { IBeerpong } from '../../types/IBeerpong';
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -37,10 +39,11 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly orderService = inject(OrderService);
 	private readonly messageService = inject(MessageService);
 
-	private summaryDialogRef: DynamicDialogRef;
+	private summaryDialogRef: DynamicDialogRef | null = null;
+	private beerpongDialogRef: DynamicDialogRef | null = null;
 
 	protected $sortiment = computed(() => {
-		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id));
+		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty);
 	});
 
 	protected $summary = computed(() => {
@@ -63,10 +66,10 @@ export class SaleDashboardComponent implements OnDestroy {
 		const result: Record<string, number> = {};
 
 		for (const item of this.$cart()) {
-			if (!result[item.sortimentId]) {
-				result[item.sortimentId] = 1;
+			if (!result[item.kegId]) {
+				result[item.kegId] = 1;
 			} else {
-				result[item.sortimentId]++;
+				result[item.kegId]++;
 			}
 		}
 
@@ -85,11 +88,11 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.layoutService.$topBarTitle.set(value?.name ?? '');
 	}
 
-	protected addOneToCart(value: IKeg, $event?: MouseEvent) {
+	protected addOneToCart(kegId: number, userId = this.$selectedUser()!.id, isBeerpong: boolean = false, $event?: MouseEvent) {
 		if ($event) {
 			$event.stopPropagation();
 		}
-		this.$cart.update((cart) => [...cart, { userId: this.$selectedUser()!.id, sortimentId: value.id }]);
+		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong }]);
 	}
 
 	protected removeOneToCart(value: IKeg, $event: MouseEvent) {
@@ -97,7 +100,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			$event.stopPropagation();
 		}
 		this.$cart.update((cart) => {
-			const index = cart.findIndex((obj) => obj.sortimentId === value.id);
+			const index = cart.findIndex((obj) => obj.kegId === value.id);
 			if (index !== -1) {
 				cart.splice(index, 1);
 			}
@@ -110,7 +113,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			this.orderService
 				.addOrder({
 					userId: item.userId,
-					kegId: item.sortimentId,
+					kegId: item.kegId,
 					eventId: this.eventService.$activeEvent()?.id!,
 				})
 				.pipe(
@@ -161,7 +164,23 @@ export class SaleDashboardComponent implements OnDestroy {
 		});
 	}
 
-	protected showBeerpongDialog() {}
+	protected showBeerpongDialog() {
+		this.beerpongDialogRef = this.dialogService.open(BeerpongDialogComponent, {
+			header: 'Býrponk!',
+			width: '90%',
+			contentStyle: { overflow: 'auto' },
+			data: {
+				kegs: this.$sortiment(),
+				users: this.usersService.$users(),
+			},
+		});
+
+		this.beerpongDialogRef.onClose.subscribe((data: IBeerpong[]) => {
+			for (const obj of data) {
+				this.addOneToCart(obj.kegId, obj.userId, true);
+			}
+		});
+	}
 
 	private groupOrderBySortiment(orders: IOrderRead[]): IOrderReadGroup[] {
 		const items: Record<string, IOrderReadGroup> = {};
@@ -183,8 +202,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	}
 
 	public ngOnDestroy() {
-		if (this.summaryDialogRef) {
-			this.summaryDialogRef.close();
-		}
+		this.summaryDialogRef?.close();
+		this.beerpongDialogRef?.close();
 	}
 }

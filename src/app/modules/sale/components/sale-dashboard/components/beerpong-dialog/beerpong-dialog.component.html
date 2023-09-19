@@ -1,1 +1,18 @@
-<p>beerpong-dialog works!</p>
+<div class="flex gap-2">
+	<div class="beerpong-item flex-1" *ngFor="let keg of kegs">
+		<h3>{{ keg.name }}</h3>
+		<p-listbox [options]="users"
+			[(ngModel)]="data[keg.id]"
+			[multiple]="true"
+			[metaKeySelection]="false"
+			optionLabel="name"
+			[style]="{'width':'100%'}" />
+	</div>
+</div>
+
+<p-button (click)="submit()"
+	[style]="{'width': '100%'}"
+	class="w-full mt-3"
+	styleClass="p-button-lg"
+	label="Potvrdit"
+/>

@@ -1,7 +1,7 @@
 <ng-container *ngIf="$selectedUser()">
 	<div class="flex gap-3 flex-wrap">
 		<p-card *ngFor="let item of $sortiment()"
-			(click)="addOneToCart(item)"
+			(click)="addOneToCart(item.id)"
 			[header]="item.name"
 			[class.active]="$cartCount()[item.id]"
 			class="card"
@@ -20,12 +20,12 @@
 					icon="pi pi-plus"
 					class="p-button-rounded"
 					styleClass="p-button-lg"
-					(click)="addOneToCart(item, $event)"></p-button>
+					(click)="addOneToCart(item.id, $selectedUser()!.id, false, $event)"></p-button>
 			</div>
 		</p-card>
 
 		<p-card (click)="showBeerpongDialog()"
-			[header]="'Beerpong'"
+			[header]="'Býrponk'"
 			[class.active]="$cartCount()['beerpong']"
 			class="card"
 		/>

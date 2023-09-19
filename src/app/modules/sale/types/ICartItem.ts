@@ -1,4 +1,5 @@
 export interface ICartItem {
 	userId: number;
-	sortimentId: number;
+	kegId: number;
+	isBeerpong: boolean;
 }
