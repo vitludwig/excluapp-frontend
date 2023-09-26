@@ -1,20 +1,25 @@
 <div class="flex justify-content-between mb-3">
-	<div class="flex">
+	<div class="flex align-items-center">
 		<div class="ml-auto p-inputgroup">
 			<input pInputText type="text" (input)="sortimentsTable.filterGlobal($any($event.target).value, 'contains')" placeholder="Search" />
 			<button pButton icon="pi pi-filter-slash" class="p-button-outlined" (click)="clearSearch(sortimentsTable)"></button>
+		</div>
+		<div class="ml-3 p-inputgroup">
+			<label for="onlyEventKegs" class="mr-2">Pouze sudy na události</label>
+			<p-inputSwitch inputId="onlyEventKegs" [(ngModel)]="onlyEventKegs"></p-inputSwitch>
 		</div>
 	</div>
 
 	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" [routerLink]="['new']"></p-button>
 </div>
 
-<p-table #sortimentsTable [value]="sortimentService.$originalSortiment()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+<p-table #sortimentsTable [value]="$kegs()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Name</th>
 			<th>Volume</th>
 			<th>Price</th>
+			<th>Event</th>
 			<th></th>
 		</tr>
 	</ng-template>
@@ -23,6 +28,11 @@
 			<td>{{ sortiment.name }} ({{ sortiment.sourceName }})</td>
 			<td>{{ sortiment.volume }}</td>
 			<td>{{ sortiment.price }} Kč</td>
+			<td>
+				<ng-container *ngIf="sortiment.event">
+					{{ sortiment.event?.event.name }} ({{sortiment.event?.event.start | date: 'dd.MM YYYY' }})
+				</ng-container>
+			</td>
 			<td>
 				<p-button [routerLink]="['detail', sortiment.id]"
 					styleClass="p-button-info"

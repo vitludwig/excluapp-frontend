@@ -18,7 +18,12 @@
 
 		<ng-template let-item pTemplate="item">
 			<div class="flex align-items-center gap-2">
-				<div>{{ item.name }}</div>
+				<div>
+					{{ item.name }}
+					<ng-container *ngIf="item.event?.event">
+						({{ item.event.event.start | date: 'dd.MM.yyyy' }})
+					</ng-container>
+				</div>
 			</div>
 		</ng-template>
 	</p-dropdown>

@@ -1,3 +1,5 @@
+import { IEvent } from './IEvent';
+
 export interface IKeg {
 	id: number;
 	name: string;
@@ -6,4 +8,5 @@ export interface IKeg {
 	price: number;
 	isEmpty: boolean;
 	isOriginal: boolean;
+	event?: IEvent;
 }

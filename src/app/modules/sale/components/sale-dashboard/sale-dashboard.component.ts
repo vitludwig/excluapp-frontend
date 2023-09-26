@@ -20,6 +20,7 @@ import { MessageService } from 'primeng/api';
 import { SummaryItemDialogComponent } from '../summary-item-dialog/summary-item-dialog.component';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { IBeerpong } from '../../types/IBeerpong';
+import { EBeerVolume } from '../../types/EBeerVolume';
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -38,6 +39,8 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly layoutService = inject(LayoutService);
 	private readonly orderService = inject(OrderService);
 	private readonly messageService = inject(MessageService);
+
+	protected readonly EBeerVolume = EBeerVolume;
 
 	private summaryDialogRef: DynamicDialogRef | null = null;
 	private beerpongDialogRef: DynamicDialogRef | null = null;
@@ -88,11 +91,11 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.layoutService.$topBarTitle.set(value?.name ?? '');
 	}
 
-	protected addOneToCart(kegId: number, userId = this.$selectedUser()!.id, isBeerpong: boolean = false, $event?: MouseEvent) {
+	protected addOneToCart(kegId: number, userId = this.$selectedUser()!.id, volume: EBeerVolume = EBeerVolume.BIG, isBeerpong: boolean = false, $event?: MouseEvent) {
 		if ($event) {
 			$event.stopPropagation();
 		}
-		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong }]);
+		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong, volume }]);
 	}
 
 	protected removeOneToCart(value: IKeg, $event: MouseEvent) {
@@ -114,6 +117,7 @@ export class SaleDashboardComponent implements OnDestroy {
 				.addOrder({
 					userId: item.userId,
 					kegId: item.kegId,
+					volume: item.volume,
 					eventId: this.eventService.$activeEvent()?.id!,
 				})
 				.pipe(
@@ -177,7 +181,7 @@ export class SaleDashboardComponent implements OnDestroy {
 
 		this.beerpongDialogRef.onClose.subscribe((data: IBeerpong[]) => {
 			for (const obj of data) {
-				this.addOneToCart(obj.kegId, obj.userId, true);
+				this.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);
 			}
 		});
 	}
