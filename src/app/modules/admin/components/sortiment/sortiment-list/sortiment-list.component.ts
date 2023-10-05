@@ -60,7 +60,7 @@ export class SortimentListComponent {
 			.subscribe();
 	}
 
-	protected emptyKeg(id: string) {
+	protected emptyKeg(id: number) {
 		this.sortimentService
 			.updateSortiment(id, { isEmpty: true })
 			.pipe(switchMap(() => this.sortimentService.loadSortiment()))

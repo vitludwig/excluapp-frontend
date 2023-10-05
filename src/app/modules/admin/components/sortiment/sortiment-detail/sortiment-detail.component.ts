@@ -37,14 +37,14 @@ export class SortimentDetailComponent {
 		this.sortimentId = this.activatedRoute.snapshot.paramMap.get('id');
 
 		if (this.sortimentId) {
-			this.loadUser(this.sortimentId);
+			this.loadUser(Number(this.sortimentId));
 		}
 	}
 
 	protected async onSubmit() {
 		try {
 			if (this.sortimentId) {
-				await firstValueFrom(this.sortimentService.updateSortiment(this.sortimentId, this.form.value as IKeg));
+				await firstValueFrom(this.sortimentService.updateSortiment(Number(this.sortimentId), this.form.value as IKeg));
 			} else {
 				(<IKeg>this.form.value).isOriginal = true;
 				await firstValueFrom(this.sortimentService.addSortiment(this.form.value as IKeg));
@@ -55,7 +55,7 @@ export class SortimentDetailComponent {
 		}
 	}
 
-	private loadUser(id: string) {
+	private loadUser(id: number) {
 		this.sortimentService
 			.getSortiment(id)
 			.pipe(

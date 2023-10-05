@@ -48,7 +48,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	private beerpongDialogRef: DynamicDialogRef | null = null;
 
 	protected $sortiment = computed(() => {
-		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty);
+		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive);
 	});
 
 	protected $summary = computed(() => {

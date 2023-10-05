@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "chart.js": "^4.4.0",
     "face-api.js": "^0.22.2",
     "ngx-webcam": "^0.4.1",
     "primeflex": "^3.3.1",

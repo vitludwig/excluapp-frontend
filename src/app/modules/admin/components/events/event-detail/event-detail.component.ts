@@ -11,20 +11,26 @@ import { TableModule } from 'primeng/table';
 import { IKeg } from '../../../types/IKeg';
 import { EventSortimentComponent } from './components/event-sortiment/event-sortiment.component';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
 	selector: 'app-event-detail',
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent],
+	imports: [CommonModule, ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent, TooltipModule, ConfirmDialogModule],
+	providers: [ConfirmationService, MessageService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetailComponent {
 	private readonly eventService: EventService = inject(EventService);
-	protected readonly sortimentService: SortimentService = inject(SortimentService);
 	private readonly router: Router = inject(Router);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly messageService = inject(MessageService);
+	protected readonly sortimentService: SortimentService = inject(SortimentService);
+	protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
 
 	protected eventId: number | null = null;
 
@@ -110,6 +116,46 @@ export class EventDetailComponent {
 
 	protected removeKeg(id: number) {
 		this.$eventKegs.update((kegs) => kegs.filter((k) => k.id !== id));
+	}
+
+	protected openToggleConfirm(keg: IKeg) {
+		if (keg.isActive) {
+			// we are deactivating keg, so we ask if it is empty
+			this.confirmationService.confirm({
+				header: 'Je sud prázdný?',
+				acceptLabel: 'Ano',
+				rejectLabel: 'Ne',
+				accept: () => {
+					this.setKegActive(keg, !keg.isActive, true);
+				},
+				reject: () => {
+					this.setKegActive(keg, !keg.isActive, false);
+				},
+			});
+		} else {
+			this.setKegActive(keg, !keg.isActive, false);
+		}
+	}
+
+	private setKegActive(keg: IKeg, value: boolean, isEmpty: boolean) {
+		this.$eventKegs.update((kegs) =>
+			kegs.map((k) => {
+				if (k.id === keg.id) {
+					k.isActive = value;
+					k.isEmpty = isEmpty;
+				}
+
+				return k;
+			}),
+		);
+
+		if (this.eventId) {
+			const message = `${keg.name} ${value ? 'aktivován' : 'deaktivován'}`;
+			this.sortimentService
+				.updateSortiment(keg.id, { isActive: value, isEmpty })
+				.pipe(tap(() => this.messageService.add({ severity: 'success', summary: 'Olé!', detail: message })))
+				.subscribe();
+		}
 	}
 
 	private loadEvent(id: number) {

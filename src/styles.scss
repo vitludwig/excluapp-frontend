@@ -14,7 +14,13 @@ p-dropdown {
 	}
 }
 
-//p-sidebar div.p-sidebar
-//{
-//	position: relative !important;
-//}
+
+::ng-deep {
+	.p.button.p-button-success {
+		background: var(--green-500) !important;
+	}
+
+	.p.button.p-button-warning {
+		background: var(--yellow-500) !important;
+	}
+}

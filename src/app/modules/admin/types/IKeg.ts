@@ -7,6 +7,7 @@ export interface IKeg {
 	volume: number;
 	price: number;
 	isEmpty: boolean;
+	isActive: boolean;
 	isOriginal: boolean;
 	event?: IEvent;
 }

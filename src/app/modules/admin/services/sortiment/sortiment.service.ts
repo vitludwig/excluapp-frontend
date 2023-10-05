@@ -45,11 +45,11 @@ export class SortimentService {
 		return this.http.post<IKeg>(environment.apiUrl + '/keg', value);
 	}
 
-	public getSortiment(id: string): Observable<IKeg> {
+	public getSortiment(id: number): Observable<IKeg> {
 		return this.http.get<IKeg>(environment.apiUrl + '/keg/' + id);
 	}
 
-	public updateSortiment(id: string, value: Partial<IKeg>): Observable<IKeg> {
+	public updateSortiment(id: number, value: Partial<IKeg>): Observable<IKeg> {
 		return this.http.patch<IKeg>(environment.apiUrl + '/keg/' + id, value);
 	}
 
