@@ -12,11 +12,12 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
 import { IUserRead } from '../../../user/types/IUser';
 import { UserService } from '../../../user/services/user/user.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
 	selector: 'app-registration-detail',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule],
+	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, TooltipModule],
 	providers: [DialogService],
 	templateUrl: './registration-detail.component.html',
 	styleUrls: ['./registration-detail.component.scss'],
@@ -73,13 +74,20 @@ export class RegistrationDetailComponent implements OnDestroy {
 		}
 	}
 
+	protected unattend(userId: number): void {
+		this.eventService
+			.unAttendEvent(userId, this.eventId)
+			.pipe(tap(() => this.loadUsers()))
+			.subscribe();
+	}
+
 	private attendEvent(userId: number, eventId: number): void {
 		this.eventService
 			.attendEvent(userId, eventId)
 			.pipe(tap(() => this.loadUsers()))
 			.subscribe({
-				next: () => this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User added' }),
-				error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' }),
+				next: () => this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Uživatel přidán' }),
+				error: () => this.messageService.add({ severity: 'error', summary: 'Urgh', detail: 'Něco se posralo' }),
 			});
 	}
 

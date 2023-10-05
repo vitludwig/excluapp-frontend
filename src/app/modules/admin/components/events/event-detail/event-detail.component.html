@@ -23,16 +23,16 @@
 		</form>
 
 		<div class="flex-1">
-			<app-event-sortiment label="Sud z minula" [sortiment]="existingKegs" [options]="sortimentService.$copySortiment()"></app-event-sortiment>
-			<app-event-sortiment label="Nový sud" [(sortiment)]="newKegs" [options]="sortimentService.$originalSortiment()"></app-event-sortiment>
+			<app-event-sortiment label="Sud z minula" [options]="$existingKegs()" (select)="addKeg($event)"></app-event-sortiment>
+			<app-event-sortiment label="Nový sud" [options]="sortimentService.$originalSortiment()" (select)="addKeg($event)"></app-event-sortiment>
 
-			<p-table [value]="eventKegs$()">
+			<h4>Sudy na akci</h4>
+			<p-table [value]="$eventKegs()">
 				<ng-template pTemplate="body" let-item>
 					<tr>
 						<td>{{ item.name }} ({{item.sourceName}})</td>
 						<td>{{ item.price }} Kč</td>
 						<td>{{ item.volume }} l</td>
-						<td>{{ item.event?.event.start |  date: 'dd.MM YYYY' }}</td>
 						<td class="flex gap-2">
 							<p-button (click)="removeKeg(item.id)"
 								styleClass="p-button-danger"

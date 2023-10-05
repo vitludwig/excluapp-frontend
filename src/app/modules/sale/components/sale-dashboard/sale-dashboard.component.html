@@ -1,34 +1,22 @@
 <ng-container *ngIf="$selectedUser()">
 	<div class="flex gap-3 flex-wrap">
-		<p-card *ngFor="let item of $sortiment()"
-			(click)="addOneToCart(item.id)"
-			[header]="item.name"
-			[class.active]="$cartCount()[item.id]"
-			class="card"
-		>
-			<div class="card-controls w-full flex justify-content-between align-items-center"
-				*ngIf="$cartCount()[item.id]">
-				<p-button type="button"
-					icon="pi pi-minus"
-					class="p-button-rounded"
-					styleClass="p-button-lg"
-					(click)="removeOneToCart(item, $event)"></p-button>
-
-				<span>{{ $cartCount()[item.id] }}</span>
-
-				<p-button type="button"
-					icon="pi pi-plus"
-					class="p-button-rounded"
-					styleClass="p-button-lg"
-					(click)="addOneToCart(item.id, $selectedUser()!.id, EBeerVolume.BIG, false, $event)"></p-button>
-			</div>
-		</p-card>
+		<ng-container *ngFor="let item of $sortiment()">
+			<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.BIG, item: item}"></ng-container>
+		</ng-container>
 
 		<p-card (click)="showBeerpongDialog()"
 			[header]="'Býrponk'"
-			[class.active]="$cartCount()['beerpong']"
-			class="card"
+			[class.active]="($cartCount()['beerpong'] | json) !== '{}'"
+			class="card card-beerpong"
 		/>
+	</div>
+
+	<p-divider/>
+
+	<div class="flex gap-3 flex-wrap">
+		<ng-container *ngFor="let item of $sortiment()">
+			<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.SMALL, item: item, subheader: 'malé'}"></ng-container>
+		</ng-container>
 	</div>
 
 	<div class="slide-panel">
@@ -56,7 +44,7 @@
 			<div class="summary-item"
 				*ngFor="let item of $summary() | async"
 			>
-				<span>{{item.sortiment?.name ?? 'Pivečko nebo kyseláček'}}</span>
+				<span>{{item.kegName ?? 'Pivečko nebo kyseláček'}}</span>
 				<div class="flex align-items-center">
 					<span>{{item.count}}</span>
 					<p-button icon="pi pi-pencil"
@@ -69,7 +57,6 @@
 		</div>
 	</div>
 
-
 </ng-container>
 
 <ng-container *ngIf="!$selectedUser()">
@@ -79,3 +66,35 @@
 		(select)="selectUser($event.existingUser![0])"
 	/>
 </ng-container>
+
+<ng-template #sortimentCard
+	let-category="category"
+	let-item="item"
+	let-subheader="subheader"
+>
+	<p-card
+		(click)="addOneToCart(item.id, $selectedUser()!.id, category)"
+		[header]="item.name"
+		[subheader]="subheader"
+		[class.active]="$cartCount()[category | asSortimentCategory][item.id]"
+		[class.card-outline]="category === EBeerVolume.SMALL"
+		class="card"
+	>
+		<div class="card-controls w-full flex justify-content-between align-items-center"
+			*ngIf="$cartCount()[category | asSortimentCategory][item.id]">
+			<p-button type="button"
+				icon="pi pi-minus"
+				class="p-button-rounded"
+				styleClass="p-button-lg"
+				(click)="removeOneFromCart(item, $event, category)"></p-button>
+
+			<span>{{ $cartCount()[category | asSortimentCategory][item.id] }}</span>
+
+			<p-button type="button"
+				icon="pi pi-plus"
+				class="p-button-rounded"
+				styleClass="p-button-lg"
+				(click)="addOneToCart(item.id, $selectedUser()!.id, category, false, $event)"></p-button>
+		</div>
+	</p-card>
+</ng-template>

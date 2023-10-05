@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { filter, firstValueFrom, map, Observable, tap } from 'rxjs';
+import { catchError, combineLatest, filter, firstValueFrom, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { IKeg } from '../../types/IKeg';
 import { IEvent } from '../../types/IEvent';
 
@@ -12,17 +12,26 @@ export class SortimentService {
 	private readonly http = inject(HttpClient);
 
 	public $allSortiment = signal<IKeg[]>([]);
+	/**
+	 * Keg templates, that are copied to events as new kegs
+	 */
 	public $originalSortiment = signal<IKeg[]>([]);
+	/**
+	 * Copied kegs from original kegs
+	 * When adding new keg to event, original keg is copied and inserted as new (copied) keg
+	 */
 	public $copySortiment = signal<IKeg[]>([]);
 
 	public loadSortiment(): Observable<IKeg[]> {
 		return this.http.get<IKeg[]>(environment.apiUrl + '/keg').pipe(
-			tap(async (value) => {
-				// TODO: predelat reaktivne, fuj!
-				for (const keg of value) {
-					keg.event = await firstValueFrom(this.getKegEvent(keg.id));
+			switchMap((kegs) => {
+				// if kegs are empty, return empty array - otherwise it will throw empty observable error
+				if (kegs.length === 0) {
+					return of([]);
 				}
-				console.log('kegs', value);
+				return forkJoin(kegs.map((k) => this.getKegEvent(k.id).pipe(map((event) => ({ ...k, event })))));
+			}),
+			map((value) => {
 				this.$allSortiment.set(value);
 				this.$originalSortiment.set(value.filter((obj) => obj.isOriginal));
 				this.$copySortiment.set(value.filter((obj) => !obj.isOriginal));
@@ -40,8 +49,8 @@ export class SortimentService {
 		return this.http.get<IKeg>(environment.apiUrl + '/keg/' + id);
 	}
 
-	public updateSortiment(id: string, value: IKeg): Observable<IKeg> {
-		return this.http.put<IKeg>(environment.apiUrl + '/keg/' + id, value);
+	public updateSortiment(id: string, value: Partial<IKeg>): Observable<IKeg> {
+		return this.http.patch<IKeg>(environment.apiUrl + '/keg/' + id, value);
 	}
 
 	public removeSortiment(id: string): Observable<IKeg> {

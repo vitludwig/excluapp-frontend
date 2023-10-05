@@ -58,6 +58,10 @@ export class SidebarComponent implements OnInit {
 						label: 'Sortiment',
 						routerLink: ['/admin/sortiment'],
 					},
+					{
+						label: 'Infoporno',
+						routerLink: ['/admin/statistics'],
+					},
 				],
 			},
 		];

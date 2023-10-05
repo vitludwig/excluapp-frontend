@@ -3,11 +3,26 @@
 		.card {
 			.p-card {
 				min-height: 150px;
+				background-color: var(--bluegray-800);
 			}
 
 			&.active {
 				.p-card {
-					background: var(--gray-700) !important;
+					background: var(--orange-800) !important;
+				}
+			}
+
+			&.card-outline {
+				.p-card {
+					background: transparent;
+					border: 1px solid #333;
+					box-shadow: none;
+				}
+			}
+
+			&.card-beerpong {
+				.p-card {
+					//background-color: var(--orange-900);
 				}
 			}
 		}

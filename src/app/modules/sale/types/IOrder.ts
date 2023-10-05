@@ -1,5 +1,3 @@
-import { IKeg } from '../../admin/types/IKeg';
-
 export interface IOrderCreate {
 	userId: number;
 	kegId: number;
@@ -9,7 +7,7 @@ export interface IOrderCreate {
 
 export interface IOrderRead extends IOrderCreate {
 	id: number;
-	sortiment?: IKeg;
+	kegName?: string;
 }
 
 export interface IOrderReadGroup extends IOrderRead {

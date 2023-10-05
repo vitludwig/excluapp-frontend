@@ -21,8 +21,8 @@
 	<ng-template pTemplate="body" let-event>
 		<tr>
 			<td>{{ event.name }}</td>
-			<td>{{ event.start }}</td>
-			<td>{{ event.end }}</td>
+			<td>{{ event.start | date: 'dd.MM YY, HH:mm' }}</td>
+			<td>{{ event.end | date: 'dd.MM YY, HH:mm'  }}</td>
 			<td class="flex gap-2">
 				<p-button [routerLink]="['detail', event.id]">Edit</p-button>
 				<p-button (click)="showInviteModal(event.id)">Invite</p-button>

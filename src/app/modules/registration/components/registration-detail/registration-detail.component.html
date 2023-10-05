@@ -10,9 +10,16 @@
 		</div>
 
 		<p-table [value]="$eventUsers()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
-			<ng-template pTemplate="body" let-event>
+			<ng-template pTemplate="body" let-user>
 				<tr>
-					<td>{{ event.name }}</td>
+					<td>{{ user.name }}</td>
+					<td>
+						<p-button (click)="unattend(user.id)"
+							pTooltip="Odstranit"
+							styleClass="p-button-danger"
+							icon="pi pi-fw pi-trash"
+						/>
+					</td>
 				</tr>
 			</ng-template>
 		</p-table>

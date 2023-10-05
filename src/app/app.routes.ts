@@ -44,7 +44,6 @@ export const routes: Routes = [
 					},
 				],
 			},
-
 			{
 				path: 'users',
 				data: {
@@ -65,7 +64,6 @@ export const routes: Routes = [
 					},
 				],
 			},
-
 			{
 				path: 'sortiment',
 				data: {
@@ -85,6 +83,13 @@ export const routes: Routes = [
 						loadComponent: () => import('./modules/admin/components/sortiment/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
 					},
 				],
+			},
+			{
+				path: 'statistics',
+				data: {
+					title: 'Infoporno',
+				},
+				loadComponent: () => import('./modules/admin/components/statistics/statistics.component').then((m) => m.StatisticsComponent),
 			},
 		],
 	},

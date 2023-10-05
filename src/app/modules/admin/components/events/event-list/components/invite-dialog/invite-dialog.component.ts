@@ -26,7 +26,7 @@ export class InviteDialogComponent implements OnInit {
 
 	protected async copyAddress(): Promise<void> {
 		await navigator.clipboard.writeText(this.address);
-		this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Address copied to clipboard' });
+		this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Adresa zkopírována do schránky' });
 		this.dialogRef.close();
 	}
 }

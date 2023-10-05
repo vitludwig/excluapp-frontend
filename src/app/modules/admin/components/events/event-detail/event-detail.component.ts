@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -39,19 +39,10 @@ export class EventDetailComponent {
 	 * Kegs, that were originaly in event on load
 	 * @protected
 	 */
-	protected originalKegIds: number[] = [];
-	/**
-	 * Kegs, that were added to event
-	 * @protected
-	 */
-	protected newKegs: IKeg[] = [];
-	/**
-	 * Modified array of kegs that were originaly in event
-	 * @protected
-	 */
-	protected existingKegs: IKeg[] = [];
+	protected originalKegs: IKeg[] = [];
 
-	protected eventKegs$ = signal<IKeg[]>([]);
+	protected $eventKegs = signal<IKeg[]>([]);
+	protected $existingKegs = computed(() => this.sortimentService.$copySortiment().filter((k) => k.event));
 
 	constructor() {
 		this.eventId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -62,19 +53,27 @@ export class EventDetailComponent {
 	}
 
 	protected async onSubmit() {
-		const newKegIds: number[] = [];
-		const promises = [];
-		if (this.newKegs) {
-			for (const keg of this.newKegs) {
-				keg.isOriginal = false;
-				keg.isEmpty = false;
-				// @ts-ignore
-				delete keg.id; // TODO: create proper keg dtos
-				promises.push(firstValueFrom(this.sortimentService.addSortiment(keg).pipe(tap((keg) => newKegIds.push(keg.id)))));
+		const existingKegs = this.$eventKegs();
+		const newKegPromises = [];
+		const existingKegsToAdd: IKeg[] = []; // kegs from previous events to add
+		const kegsToAdd: IKeg[] = existingKegs.filter((k) => !this.originalKegs.map((o) => o.id).includes(k.id)); // kegs that were not originally in event
+
+		// TODO: rewirte mroe reactively
+		if (kegsToAdd) {
+			for (const keg of kegsToAdd) {
+				if (keg.isOriginal) {
+					keg.isOriginal = false;
+					keg.isEmpty = false;
+					// @ts-ignore
+					delete keg.id; // TODO: create proper keg dtos
+					newKegPromises.push(firstValueFrom(this.sortimentService.addSortiment(keg)));
+				} else {
+					existingKegsToAdd.push(keg);
+				}
 			}
 		}
 
-		const newKegs = await Promise.all(promises);
+		const newKegsToAdd = await Promise.all(newKegPromises);
 
 		let request;
 
@@ -88,15 +87,15 @@ export class EventDetailComponent {
 			.pipe(
 				map((event) => {
 					// TODO: dodelat odstranovani kegu z eventu
-					for (const keg of newKegs) {
+					for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
 						this.sortimentService.addKegToEvent(event.id, keg.id).subscribe();
 					}
 
-					const existingKegIds = this.existingKegs.map((k) => k.id);
-					const kegsToRemove = this.originalKegIds.filter((k) => !existingKegIds.includes(k));
+					const existingKegIds = existingKegs.map((k) => k.id);
+					const kegsToRemove = this.originalKegs.filter((k) => !existingKegIds.includes(k.id));
 
-					for (const kegId of kegsToRemove) {
-						this.sortimentService.removeKegFromEvent(event.id, kegId).subscribe();
+					for (const keg of kegsToRemove) {
+						this.sortimentService.removeKegFromEvent(event.id, keg.id).subscribe();
 					}
 
 					this.router.navigate(['/admin/events']);
@@ -105,8 +104,12 @@ export class EventDetailComponent {
 			.subscribe();
 	}
 
+	protected addKeg(keg: IKeg) {
+		this.$eventKegs.update((kegs) => [...kegs, keg]);
+	}
+
 	protected removeKeg(id: number) {
-		this.eventKegs$.update((kegs) => kegs.filter((k) => k.id !== id));
+		this.$eventKegs.update((kegs) => kegs.filter((k) => k.id !== id));
 	}
 
 	private loadEvent(id: number) {
@@ -118,9 +121,10 @@ export class EventDetailComponent {
 					event.end = new Date(event.end);
 					event.kegs = event.kegs.map((k) => +k);
 
-					this.originalKegIds = event.kegs;
+					const eventKegs = this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id));
+					this.originalKegs = eventKegs;
 					this.form.patchValue(event);
-					this.eventKegs$.set(this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id)));
+					this.$eventKegs.set(eventKegs);
 				}),
 			)
 			.subscribe();

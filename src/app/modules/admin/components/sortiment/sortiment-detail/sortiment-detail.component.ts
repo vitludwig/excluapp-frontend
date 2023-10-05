@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { firstValueFrom, map, tap } from 'rxjs';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../types/IKeg';
 import { ListboxModule } from 'primeng/listbox';
@@ -41,23 +41,18 @@ export class SortimentDetailComponent {
 		}
 	}
 
-	protected onSubmit() {
-		let request;
-		if (this.sortimentId) {
-			request = this.sortimentService.updateSortiment(this.sortimentId, this.form.value as IKeg);
-		} else {
-			(<IKeg>this.form.value).isOriginal = true;
-			request = this.sortimentService.addSortiment(this.form.value as IKeg);
+	protected async onSubmit() {
+		try {
+			if (this.sortimentId) {
+				await firstValueFrom(this.sortimentService.updateSortiment(this.sortimentId, this.form.value as IKeg));
+			} else {
+				(<IKeg>this.form.value).isOriginal = true;
+				await firstValueFrom(this.sortimentService.addSortiment(this.form.value as IKeg));
+			}
+			this.location.back();
+		} catch (e) {
+			console.error(e);
 		}
-
-		request
-			.pipe(
-				tap(() => {
-					this.location.back();
-					// this.router.navigate(['/admin/sortiment']);
-				}),
-			)
-			.subscribe();
 	}
 
 	private loadUser(id: string) {

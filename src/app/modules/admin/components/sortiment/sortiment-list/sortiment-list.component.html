@@ -4,11 +4,15 @@
 			<input pInputText type="text" (input)="sortimentsTable.filterGlobal($any($event.target).value, 'contains')" placeholder="Search" />
 			<button pButton icon="pi pi-filter-slash" class="p-button-outlined" (click)="clearSearch(sortimentsTable)"></button>
 		</div>
-		<div class="ml-3 p-inputgroup">
-			<label for="onlyEventKegs" class="mr-2">Pouze sudy na události</label>
-			<p-inputSwitch inputId="onlyEventKegs" [(ngModel)]="onlyEventKegs"></p-inputSwitch>
-		</div>
 	</div>
+
+	<p-selectButton [options]="filterOptions"
+		[(ngModel)]="filter"
+		(ngModelChange)="filterKegs(filter)"
+		[multiple]="true"
+		optionLabel="name"
+		optionValue="value"
+	/>
 
 	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" [routerLink]="['new']"></p-button>
 </div>
@@ -16,30 +20,44 @@
 <p-table #sortimentsTable [value]="$kegs()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
-			<th>Name</th>
-			<th>Volume</th>
-			<th>Price</th>
-			<th>Event</th>
+			<th></th>
+			<th>Název</th>
+			<th>Objem</th>
+			<th>Cena</th>
+			<th>Prázdný</th>
+			<th>Událost</th>
 			<th></th>
 		</tr>
 	</ng-template>
 	<ng-template pTemplate="body" let-sortiment>
 		<tr>
+			<td>
+				<i class="pi pi-shield" pTooltip="Pivní předloha" *ngIf="sortiment.isOriginal"></i>
+			</td>
 			<td>{{ sortiment.name }} ({{ sortiment.sourceName }})</td>
 			<td>{{ sortiment.volume }}</td>
 			<td>{{ sortiment.price }} Kč</td>
+			<td>{{ sortiment.isEmpty }}</td>
 			<td>
 				<ng-container *ngIf="sortiment.event">
 					{{ sortiment.event?.event.name }} ({{sortiment.event?.event.start | date: 'dd.MM YYYY' }})
 				</ng-container>
 			</td>
-			<td>
+			<td class="flex gap-2">
 				<p-button [routerLink]="['detail', sortiment.id]"
+					pTooltip="Upravit"
 					styleClass="p-button-info"
 					icon="pi pi-fw pi-pencil"
 				/>
 
-				<p-button (click)="removeSortiment(sortiment.id)"
+				<p-button (click)="emptyKeg(sortiment.id)"
+					pTooltip="Vypít"
+					styleClass="p-button-warning"
+					icon="pi pi-fw pi-circle"
+				/>
+
+				<p-button (click)="removeKeg(sortiment.id)"
+					pTooltip="Odstranit"
 					styleClass="p-button-danger"
 					icon="pi pi-fw pi-trash"
 				/>

@@ -19,23 +19,14 @@ import { tap } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventSortimentComponent {
-	protected readonly sortimentService = inject(SortimentService);
-
 	@Input()
 	public options: IKeg[] = [];
 
 	@Input()
 	public label: string = '';
 
-	@Input()
-	public set sortiment(value: IKeg[]) {
-		this.$sortiment.set(value);
-	}
-
 	@Output()
-	public sortimentChange: EventEmitter<IKeg[]> = new EventEmitter<IKeg[]>();
-
-	protected $sortiment = signal<IKeg[]>([]);
+	public select: EventEmitter<IKeg> = new EventEmitter<IKeg>();
 
 	protected selectedSortiment: IKeg | null = null;
 
@@ -46,18 +37,11 @@ export class EventSortimentComponent {
 			return;
 		}
 
-		this.$sortiment.update((sortiment) => [...sortiment, value]);
 		this.selectedSortiment = null;
-		this.propagateSortiment();
+		this.propagateSortiment(value);
 	}
 
-	protected removeSortiment(id: number) {
-		// this.sortiment = this.sortiment.filter((value) => value.id !== id);
-		this.$sortiment.update((sortiment) => sortiment.filter((value) => value.id !== id));
-		this.propagateSortiment();
-	}
-
-	private propagateSortiment() {
-		this.sortimentChange.emit(this.$sortiment());
+	private propagateSortiment(value: IKeg) {
+		this.select.emit(value);
 	}
 }

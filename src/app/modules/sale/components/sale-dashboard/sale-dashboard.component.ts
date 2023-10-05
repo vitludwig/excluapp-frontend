@@ -21,11 +21,13 @@ import { SummaryItemDialogComponent } from '../summary-item-dialog/summary-item-
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { IBeerpong } from '../../types/IBeerpong';
 import { EBeerVolume } from '../../types/EBeerVolume';
+import { DividerModule } from 'primeng/divider';
+import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe';
 
 @Component({
 	selector: 'app-sale-dashboard',
 	standalone: true,
-	imports: [CommonModule, CardModule, WebcamModule, ButtonModule, SelectUserDialogComponent, SelectUserComponent],
+	imports: [CommonModule, CardModule, WebcamModule, ButtonModule, SelectUserDialogComponent, SelectUserComponent, DividerModule, AsSortimentCategoryPipe],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
 	styleUrls: ['./sale-dashboard.component.scss'],
@@ -56,6 +58,9 @@ export class SaleDashboardComponent implements OnDestroy {
 
 		return this.orderService.getOrderByEventUserId(this.eventService.$activeEvent()?.id!, this.$selectedUser()!.id!).pipe(
 			map((obj) => {
+				for (const item of obj) {
+					item.kegName = this.sortimentService.$allSortiment().find((s) => s.id === item.kegId)?.name ?? '';
+				}
 				return this.groupOrderBySortiment(obj);
 			}),
 		);
@@ -66,16 +71,21 @@ export class SaleDashboardComponent implements OnDestroy {
 
 	// TODO: write this using reduce maybe?
 	protected $cartCount = computed(() => {
-		const result: Record<string, number> = {};
+		const result: Record<EBeerVolume | 'beerpong', Record<string, number>> = {
+			[EBeerVolume.BIG]: {},
+			[EBeerVolume.SMALL]: {},
+			beerpong: {},
+		};
 
 		for (const item of this.$cart()) {
-			if (!result[item.kegId]) {
-				result[item.kegId] = 1;
+			const category = item.isBeerpong ? 'beerpong' : item.volume === EBeerVolume.BIG ? EBeerVolume.BIG : EBeerVolume.SMALL;
+			if (!result[category][item.kegId]) {
+				result[category][item.kegId] = 1;
 			} else {
-				result[item.kegId]++;
+				result[category][item.kegId]++;
 			}
 		}
-
+		console.log(result);
 		return result;
 	});
 	protected $showSummary = signal<boolean>(false);
@@ -98,12 +108,12 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong, volume }]);
 	}
 
-	protected removeOneToCart(value: IKeg, $event: MouseEvent) {
+	protected removeOneFromCart(value: IKeg, $event: MouseEvent, volume: EBeerVolume) {
 		if ($event) {
 			$event.stopPropagation();
 		}
 		this.$cart.update((cart) => {
-			const index = cart.findIndex((obj) => obj.kegId === value.id);
+			const index = cart.findIndex((obj) => obj.kegId === value.id && obj.volume === volume);
 			if (index !== -1) {
 				cart.splice(index, 1);
 			}
@@ -154,7 +164,7 @@ export class SaleDashboardComponent implements OnDestroy {
 						.removeOrder(data.orderIds.at(-i)!)
 						.pipe(
 							tap(() => {
-								this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Upraveno' });
+								this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Upraveno' });
 							}),
 						)
 						.subscribe();

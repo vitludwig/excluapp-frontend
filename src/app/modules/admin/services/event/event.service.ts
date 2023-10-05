@@ -4,6 +4,7 @@ import { IEvent } from '../../types/IEvent';
 import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IUserRead } from '../../../user/types/IUser';
+import { IEventKegsStatistics, IEventUsersStatistics } from '../../types/IEventKegsStatistics';
 
 @Injectable({
 	providedIn: 'root',
@@ -74,5 +75,17 @@ export class EventService {
 
 	public attendEvent(userId: number, eventId: number): Observable<IUserRead[]> {
 		return this.http.post<IUserRead[]>(environment.apiUrl + '/attendance', { userId, eventId });
+	}
+
+	public unAttendEvent(userId: number, eventId: number): Observable<void> {
+		return this.http.delete<void>(`${environment.apiUrl}/attendance/${eventId}/${userId}`);
+	}
+
+	public getKegsStatistics(eventId: number): Observable<IEventKegsStatistics[]> {
+		return this.http.get<IEventKegsStatistics[]>(`${environment.apiUrl}/events/${eventId}/keg-statistics/`);
+	}
+
+	public getUsersStatistics(eventId: number): Observable<IEventUsersStatistics[]> {
+		return this.http.get<IEventUsersStatistics[]>(`${environment.apiUrl}/events/${eventId}/user-statistics/`);
 	}
 }
