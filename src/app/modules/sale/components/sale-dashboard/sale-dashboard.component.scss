@@ -43,6 +43,10 @@
 .card {
 	flex: 40%;
 	height: auto;
+
+	@media (max-width: 480px) {
+		flex: 100%;
+	}
 }
 
 .slide-panel {
