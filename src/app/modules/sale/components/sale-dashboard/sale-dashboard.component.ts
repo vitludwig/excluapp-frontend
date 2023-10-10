@@ -11,7 +11,7 @@ import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { OrderService } from '../../services/order/order.service';
-import { map, tap } from 'rxjs';
+import { forkJoin, map, tap } from 'rxjs';
 import { IOrderRead, IOrderReadGroup } from '../../types/IOrder';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
 import { IKeg } from '../../../admin/types/IKeg';
@@ -122,22 +122,26 @@ export class SaleDashboardComponent implements OnDestroy {
 	}
 
 	protected confirmOrder() {
+		const requests = [];
 		for (const item of this.$cart()) {
-			this.orderService
-				.addOrder({
-					userId: item.userId,
-					kegId: item.kegId,
-					volume: item.volume,
-					eventId: this.eventService.$activeEvent()?.id!,
-				})
-				.pipe(
-					tap(() => {
-						this.clearOrder();
-						this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Zapsáno!' });
-					}),
-				)
-				.subscribe();
+			const req = this.orderService.addOrder({
+				userId: item.userId,
+				kegId: item.kegId,
+				volume: item.volume,
+				eventId: this.eventService.$activeEvent()?.id!,
+			});
+			requests.push(req);
 		}
+
+		forkJoin(requests)
+			.pipe(
+				tap(() => {
+					this.clearOrder();
+					new Audio('/assets/finish.mp3').play();
+					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Zapsáno!' });
+				}),
+			)
+			.subscribe();
 	}
 
 	protected clearOrder() {
@@ -190,8 +194,10 @@ export class SaleDashboardComponent implements OnDestroy {
 		});
 
 		this.beerpongDialogRef.onClose.subscribe((data: IBeerpong[]) => {
-			for (const obj of data) {
-				this.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);
+			if (data) {
+				for (const obj of data) {
+					this.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);
+				}
 			}
 		});
 	}

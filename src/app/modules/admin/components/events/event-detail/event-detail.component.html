@@ -43,10 +43,13 @@
 								[pTooltip]="item.isActive ? 'Deaktivovat' : 'Aktivovat'"
 							/>
 
-							<p-button (click)="removeKeg(item.id)"
-								styleClass="p-button-danger"
+							<button pButton
+								appConfirm
+								confirmMessage="Smazat?"
+								(confirm)="removeKeg(item.id)"
+								class="p-button-danger"
 								icon="pi pi-fw pi-trash"
-							/>
+							></button>
 						</td>
 					</tr>
 				</ng-template>

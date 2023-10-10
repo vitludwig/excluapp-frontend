@@ -14,11 +14,23 @@ import { SortimentService } from '../../../services/sortiment/sortiment.service'
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 
 @Component({
 	selector: 'app-event-detail',
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent, TooltipModule, ConfirmDialogModule],
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		InputTextModule,
+		CalendarModule,
+		TableModule,
+		RouterLink,
+		EventSortimentComponent,
+		TooltipModule,
+		ConfirmDialogModule,
+		ConfirmComponent,
+	],
 	providers: [ConfirmationService, MessageService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],

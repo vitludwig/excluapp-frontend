@@ -11,11 +11,24 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 
 @Component({
 	selector: 'app-sortiment-list',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, RouterLink, InputSwitchModule, FormsModule, SelectButtonModule, TooltipModule],
+	imports: [
+		CommonModule,
+		ButtonModule,
+		InputTextModule,
+		SharedModule,
+		TableModule,
+		RouterLink,
+		InputSwitchModule,
+		FormsModule,
+		SelectButtonModule,
+		TooltipModule,
+		ConfirmComponent,
+	],
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

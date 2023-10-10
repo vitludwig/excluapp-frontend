@@ -7,14 +7,15 @@ import { filter, map, tap } from 'rxjs';
 import { LayoutService } from './layout/services/layout/layout.service';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent, ToastModule],
-	providers: [MessageService],
+	imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent, ToastModule, ConfirmPopupModule],
+	providers: [MessageService, ConfirmationService],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

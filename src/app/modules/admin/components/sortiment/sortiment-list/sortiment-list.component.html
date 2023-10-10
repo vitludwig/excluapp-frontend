@@ -56,11 +56,14 @@
 					icon="pi pi-fw pi-circle"
 				/>
 
-				<p-button (click)="removeKeg(sortiment.id)"
+				<button pButton
+					appConfirm
+					confirmMessage="Smazat?"
+					(confirm)="removeKeg(sortiment.id)"
 					pTooltip="Odstranit"
-					styleClass="p-button-danger"
+					class="p-button-danger"
 					icon="pi pi-fw pi-trash"
-				/>
+				></button>
 			</td>
 		</tr>
 	</ng-template>
