@@ -23,11 +23,13 @@ import { IBeerpong } from '../../types/IBeerpong';
 import { EBeerVolume } from '../../types/EBeerVolume';
 import { DividerModule } from 'primeng/divider';
 import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe';
+import { DashboardUserSelectComponent } from './components/dashboard-user-select/dashboard-user-select.component';
+import { DashboardSortimentSelectComponent } from './components/dashboard-sortiment-select/dashboard-sortiment-select.component';
 
 @Component({
 	selector: 'app-sale-dashboard',
 	standalone: true,
-	imports: [CommonModule, CardModule, WebcamModule, ButtonModule, SelectUserDialogComponent, SelectUserComponent, DividerModule, AsSortimentCategoryPipe],
+	imports: [CommonModule, CardModule, WebcamModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, DashboardUserSelectComponent, DashboardSortimentSelectComponent],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
 	styleUrls: ['./sale-dashboard.component.scss'],
@@ -36,150 +38,41 @@ import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe'
 export class SaleDashboardComponent implements OnDestroy {
 	protected readonly eventService = inject(EventService);
 	protected readonly sortimentService = inject(SortimentService);
+	protected readonly orderService = inject(OrderService);
+
 	private readonly dialogService: DialogService = inject(DialogService);
-	protected readonly usersService: UserService = inject(UserService);
 	private readonly layoutService = inject(LayoutService);
-	private readonly orderService = inject(OrderService);
 	private readonly messageService = inject(MessageService);
+	private readonly usersService: UserService = inject(UserService);
 
-	protected readonly EBeerVolume = EBeerVolume;
-
-	private summaryDialogRef: DynamicDialogRef | null = null;
 	private beerpongDialogRef: DynamicDialogRef | null = null;
+	protected readonly EBeerVolume = EBeerVolume;
 
 	protected $sortiment = computed(() => {
 		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive);
 	});
 
-	protected $summary = computed(() => {
-		if (!this.$selectedUser() || !this.eventService.$activeEvent()) {
-			return;
-		}
-
-		return this.orderService.getOrderByEventUserId(this.eventService.$activeEvent()?.id!, this.$selectedUser()!.id!).pipe(
-			map((obj) => {
-				for (const item of obj) {
-					item.kegName = this.sortimentService.$allSortiment().find((s) => s.id === item.kegId)?.name ?? '';
-				}
-				return this.groupOrderBySortiment(obj);
-			}),
-		);
-	});
-
 	protected $selectedUser = signal<IUserRead | null>(null);
-	protected $cart = signal<ICartItem[]>([]);
-
-	// TODO: write this using reduce maybe?
-	protected $cartCount = computed(() => {
-		const result: Record<EBeerVolume | 'beerpong', Record<string, number>> = {
-			[EBeerVolume.BIG]: {},
-			[EBeerVolume.SMALL]: {},
-			beerpong: {},
-		};
-
-		for (const item of this.$cart()) {
-			const category = item.isBeerpong ? 'beerpong' : item.volume === EBeerVolume.BIG ? EBeerVolume.BIG : EBeerVolume.SMALL;
-			if (!result[category][item.kegId]) {
-				result[category][item.kegId] = 1;
-			} else {
-				result[category][item.kegId]++;
-			}
-		}
-		console.log(result);
-		return result;
-	});
-	protected $showSummary = signal<boolean>(false);
 
 	constructor() {}
 
-	protected toggleSummary() {
-		this.$showSummary.set(!this.$showSummary());
-	}
-
-	protected selectUser(value: IUserRead | null): void {
-		this.$selectedUser.set(value);
-		this.layoutService.$topBarTitle.set(value?.name ?? '');
-	}
-
-	protected addOneToCart(kegId: number, userId = this.$selectedUser()!.id, volume: EBeerVolume = EBeerVolume.BIG, isBeerpong: boolean = false, $event?: MouseEvent) {
-		if ($event) {
-			$event.stopPropagation();
-		}
-		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong, volume }]);
-	}
-
-	protected removeOneFromCart(value: IKeg, $event: MouseEvent, volume: EBeerVolume) {
-		if ($event) {
-			$event.stopPropagation();
-		}
-		this.$cart.update((cart) => {
-			const index = cart.findIndex((obj) => obj.kegId === value.id && obj.volume === volume);
-			if (index !== -1) {
-				cart.splice(index, 1);
-			}
-			return cart;
-		});
-	}
-
-	protected confirmOrder() {
-		const requests = [];
-		for (const item of this.$cart()) {
-			const req = this.orderService.addOrder({
-				userId: item.userId,
-				kegId: item.kegId,
-				volume: item.volume,
-				eventId: this.eventService.$activeEvent()?.id!,
-			});
-			requests.push(req);
-		}
-
-		forkJoin(requests)
-			.pipe(
-				tap(() => {
-					this.clearOrder();
-					new Audio('/assets/finish.mp3').play();
-					this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Zapsáno!' });
-				}),
-			)
-			.subscribe();
-	}
-
 	protected clearOrder() {
-		this.$cart.set([]);
+		this.orderService.clearOrder();
 		this.$selectedUser.set(null);
 		this.layoutService.$topBarTitle.set('');
 	}
 
-	protected showSummaryDetail(value: IOrderReadGroup) {
-		this.summaryDialogRef = this.dialogService.open(SummaryItemDialogComponent, {
-			header: 'Upravit ponožku',
-			width: '80%',
-			height: 'auto',
-			contentStyle: { overflow: 'auto' },
-			data: {
-				item: value,
-			},
-		});
-
-		this.summaryDialogRef.onClose.subscribe((data: IOrderReadGroup) => {
-			if (data && data.orderIds.length > 0) {
-				for (let i = 1; i <= Math.abs(value.count - data.count); i++) {
-					this.orderService
-						.removeOrder(data.orderIds.at(-i)!)
-						.pipe(
-							tap(() => {
-								this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Upraveno' });
-							}),
-						)
-						.subscribe();
-				}
-
-				// TODO: update value properly, this is veeery ugly
-				setTimeout(() => {
-					this.$selectedUser.set(this.$selectedUser());
-				}, 1000);
-			}
-		});
+	protected confirmOrder() {
+		this.orderService
+			.confirmOrder()
+			.pipe(
+				tap(() => {
+					this.clearOrder();
+					new Audio('/assets/finish.mp3').play();
+					this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Zapsáno!' });
+				}),
+			)
+			.subscribe();
 	}
 
 	protected showBeerpongDialog() {
@@ -196,33 +89,19 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.beerpongDialogRef.onClose.subscribe((data: IBeerpong[]) => {
 			if (data) {
 				for (const obj of data) {
-					this.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);
+					this.orderService.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);
 				}
+				this.confirmOrder();
 			}
 		});
 	}
 
-	private groupOrderBySortiment(orders: IOrderRead[]): IOrderReadGroup[] {
-		const items: Record<string, IOrderReadGroup> = {};
-
-		for (const order of orders) {
-			if (!items[order.kegId]) {
-				items[order.kegId] = {
-					...order,
-					count: 1,
-					orderIds: [order.id],
-				};
-			} else {
-				items[order.kegId].count!++;
-				items[order.kegId].orderIds!.push(order.id);
-			}
-		}
-
-		return Object.values(items);
+	protected selectUser(value: IUserRead | null): void {
+		this.$selectedUser.set(value);
+		this.layoutService.$topBarTitle.set(value?.name ?? '');
 	}
 
 	public ngOnDestroy() {
-		this.summaryDialogRef?.close();
 		this.beerpongDialogRef?.close();
 	}
 }

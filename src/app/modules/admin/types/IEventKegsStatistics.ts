@@ -3,6 +3,7 @@ export interface IEventKegsStatistics {
 	volume: number; // in litres
 	kegName: string;
 	kegSourceName: string;
+	kegVolume: number;
 }
 
 export interface IEventUsersStatistics {

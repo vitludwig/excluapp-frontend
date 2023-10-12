@@ -62,6 +62,7 @@ export class EventService {
 	}
 
 	public getEvent(id: number): Observable<IEvent> {
+		// TODO: map kegs to event on backend
 		return this.http.get<IEvent>(environment.apiUrl + '/events/' + id).pipe(switchMap((event) => this.appendsKegsToEvent(event)));
 	}
 

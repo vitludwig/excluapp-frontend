@@ -49,7 +49,7 @@ export class SortimentDetailComponent {
 				(<IKeg>this.form.value).isOriginal = true;
 				await firstValueFrom(this.sortimentService.addSortiment(this.form.value as IKeg));
 			}
-			this.location.back();
+			this.router.navigate(['/admin/sortiment']);
 		} catch (e) {
 			console.error(e);
 		}

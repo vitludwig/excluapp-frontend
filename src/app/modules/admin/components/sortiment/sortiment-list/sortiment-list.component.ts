@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -33,7 +33,7 @@ import { ConfirmComponent } from '../../../../../common/components/confirm/confi
 	styleUrls: ['./sortiment-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SortimentListComponent {
+export class SortimentListComponent implements OnInit {
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 
 	protected $kegs = computed(() => {
@@ -58,8 +58,8 @@ export class SortimentListComponent {
 	protected filter: string[] = [];
 	protected $filter = signal(this.filter);
 
-	constructor() {
-		this.sortimentService.loadSortiment();
+	public ngOnInit(): void {
+		this.sortimentService.loadSortiment().subscribe();
 	}
 
 	protected clearSearch(table: Table) {

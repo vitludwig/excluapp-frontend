@@ -2,30 +2,40 @@
 	[(ngModel)]="selectedEvent"
 	(ngModelChange)="$selectedEvent.set($event)"
 	optionLabel="name"
-	[style]="{'width': '100%'}" />
+	[style]="{'width': '100%'}"/>
 
-<p-chart type="bar" [data]="$kegsStatistics() | async" [options]="chartOptions"></p-chart>
+<ng-container *ngIf="selectedEvent">
+	<p-chart type="bar"
+		[data]="$kegsStatistics() | async"
+		[options]="chartOptions"></p-chart>
 
-<h3>Pijani</h3>
-<ng-container *ngIf="($usersStatistics() | async) as usersStatistics">
-	<p-table [value]="$any(usersStatistics)" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
-		<ng-template pTemplate="header">
-			<tr>
-				<th>Pijan</th>
-				<th>Propito (Kč)</th>
-				<th>Propito (l)</th>
-				<th>Propito (ks)</th>
-			</tr>
-		</ng-template>
-		<ng-template pTemplate="body" let-item>
-			<tr>
-				<td>{{ item.userName }}</td>
-				<td>{{ item.price }} Kč</td>
-				<td>{{ item.volume }} l</td>
-				<td>{{ item.volume / 0.5 }} ks</td>
-			</tr>
-		</ng-template>
-	</p-table>
-	<br>
-	<p-button class="mt-3" styleClass="p-button-lg p-button-info"><i class="pi pi-fw pi-money-bill"></i> Pejdej</p-button>
+	<h3>Pijani</h3>
+	<ng-container *ngIf="($usersStatistics() | async) as usersStatistics">
+		<p-table [value]="$any(usersStatistics)"
+			[paginator]="true"
+			[rows]="10"
+			[globalFilterFields]="['name']">
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Pijan</th>
+					<th>Propito (Kč)</th>
+					<th>Propito (l)</th>
+					<th>Propito (ks)</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body"
+				let-item>
+				<tr>
+					<td>{{ item.userName }}</td>
+					<td>{{ item.price }} Kč</td>
+					<td>{{ item.volume }} l</td>
+					<td>{{ item.volume / 0.5 }} ks</td>
+				</tr>
+			</ng-template>
+		</p-table>
+		<br>
+		<p-button class="mt-3"
+			styleClass="p-button-lg p-button-info"><i class="pi pi-fw pi-money-bill"></i> Pejdej
+		</p-button>
+	</ng-container>
 </ng-container>

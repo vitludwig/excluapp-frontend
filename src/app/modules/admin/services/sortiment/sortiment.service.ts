@@ -35,7 +35,7 @@ export class SortimentService {
 				this.$allSortiment.set(value);
 				this.$originalSortiment.set(value.filter((obj) => obj.isOriginal));
 				this.$copySortiment.set(value.filter((obj) => !obj.isOriginal));
-
+				console.log('all sortiment', this.$allSortiment());
 				return value;
 			}),
 		);

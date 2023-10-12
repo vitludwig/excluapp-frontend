@@ -1,0 +1,5 @@
+<app-select-user [users]="usersService.$users()"
+	layout="list"
+	[multiple]="false"
+	(select)="selectUser($event.existingUser![0])"
+/>

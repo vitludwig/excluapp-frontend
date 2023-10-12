@@ -60,7 +60,8 @@ export class EventDetailComponent {
 	protected originalKegs: IKeg[] = [];
 
 	protected $eventKegs = signal<IKeg[]>([]);
-	protected $existingKegs = computed(() => this.sortimentService.$copySortiment().filter((k) => k.event));
+	// get existing kegs, that are not "original" kegs and are not connected to this event
+	protected $existingKegs = computed(() => this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !this.$eventKegs().some((e) => e.event?.id === k.event?.id)));
 
 	constructor() {
 		this.eventId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -106,7 +107,10 @@ export class EventDetailComponent {
 				map((event) => {
 					// TODO: dodelat odstranovani kegu z eventu
 					for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
-						this.sortimentService.addKegToEvent(event.id, keg.id).subscribe();
+						this.sortimentService
+							.addKegToEvent(event.id, keg.id)
+							.pipe(tap(() => this.sortimentService.$allSortiment.update((kegs) => [...kegs, keg])))
+							.subscribe();
 					}
 
 					const existingKegIds = existingKegs.map((k) => k.id);
@@ -123,6 +127,7 @@ export class EventDetailComponent {
 	}
 
 	protected addKeg(keg: IKeg) {
+		keg.isActive = true;
 		this.$eventKegs.update((kegs) => [...kegs, keg]);
 	}
 
@@ -178,7 +183,7 @@ export class EventDetailComponent {
 					event.start = new Date(event.start);
 					event.end = new Date(event.end);
 					event.kegs = event.kegs.map((k) => +k);
-
+					console.log('all srotiment in detail', this.sortimentService.$allSortiment());
 					const eventKegs = this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id));
 					this.originalKegs = eventKegs;
 					this.form.patchValue(event);

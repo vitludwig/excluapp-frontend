@@ -12,14 +12,14 @@
 	>
 		<ng-template pTemplate="selectedItem">
 			<div class="flex align-items-center gap-2" *ngIf="selectedSortiment">
-				<div>{{ selectedSortiment.name }}</div>
+				<div>{{ selectedSortiment.name }} ({{ selectedSortiment.volume }}l)</div>
 			</div>
 		</ng-template>
 
 		<ng-template let-item pTemplate="item">
 			<div class="flex align-items-center gap-2">
 				<div>
-					{{ item.name }}
+					{{ item.name }} ({{ item.volume }}l)
 					<ng-container *ngIf="item.event?.event">
 						({{ item.event.event.start | date: 'dd.MM.yyyy' }})
 					</ng-container>

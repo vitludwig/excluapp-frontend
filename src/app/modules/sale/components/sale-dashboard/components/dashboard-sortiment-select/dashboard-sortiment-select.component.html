@@ -1,0 +1,87 @@
+<div class="flex gap-3 flex-wrap">
+	<ng-container *ngFor="let item of sortiment">
+		<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.BIG, item: item}"></ng-container>
+	</ng-container>
+</div>
+
+<p-divider/>
+
+<div class="flex gap-3 flex-wrap">
+	<ng-container *ngFor="let item of sortiment">
+		<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.SMALL, item: item, subheader: 'malé'}"></ng-container>
+	</ng-container>
+</div>
+
+<div class="slide-panel">
+	<div class="w-full flex align-items-end justify-content-between">
+		<p-button icon="pi pi-times"
+			styleClass="p-button-rounded p-button-raised p-button-lg p-button-danger"
+			class="order-control-btn"
+			(click)="cancelOrder()"
+		/>
+
+		<p-button icon="pi pi-fw pi-{{$showSummary() ? 'chevron-down' : 'chevron-up'}}"
+			class="slide-open-btn"
+			styleClass="p-button-raised p-button-lg p-button-info"
+			(click)="toggleSummary()">
+		</p-button>
+
+		<p-button icon="pi pi-check"
+			styleClass="p-button-rounded p-button-raised p-button-lg p-button-success"
+			class="order-control-btn"
+			(click)="confirmOrder()"
+		/>
+	</div>
+	<div class="summary"
+		[class.visible]="$showSummary()">
+		<div class="summary-item"
+			*ngFor="let item of $summary() | async"
+		>
+			<span>{{item.kegName ?? 'Pivečko nebo kyseláček'}}</span>
+			<div class="flex align-items-center">
+				<span>{{item.count}}</span>
+				<p-button icon="pi pi-pencil"
+					class="ml-4"
+					styleClass="p-button-raised p-button-info p-button-sm"
+					(click)="showSummaryDetail(item)"
+				/>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #sortimentCard
+	let-category="category"
+	let-item="item"
+	let-subheader="subheader"
+>
+	<p-card
+		(click)="orderService.addOneToCart(item.id, selectedUser.id, category)"
+		[header]="item.name"
+		[subheader]="subheader"
+		[class.active]="orderService.$cartCount()[category | asSortimentCategory][item.id]"
+		[class.card-outline]="category === EBeerVolume.SMALL"
+		class="card"
+	>
+		<div class="card-controls w-full flex justify-content-between align-items-center"
+			*ngIf="orderService.$cartCount()[category | asSortimentCategory][item.id]">
+			<p-button type="button"
+				icon="pi pi-minus"
+				class="p-button-rounded"
+				styleClass="p-button-lg"
+				(click)="orderService.removeOneFromCart(item, $event, category)"></p-button>
+
+			<span *ngIf="orderService.$cartCount()[category | asSortimentCategory][item.id] as count">+ {{ count }}ks</span>
+
+			<p-button type="button"
+				icon="pi pi-plus"
+				class="p-button-rounded"
+				styleClass="p-button-lg"
+				(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"></p-button>
+		</div>
+
+		<ng-template pTemplate="footer">
+			<div class="w-full text-right">{{ item.sourceName }}</div>
+		</ng-template>
+	</p-card>
+</ng-template>

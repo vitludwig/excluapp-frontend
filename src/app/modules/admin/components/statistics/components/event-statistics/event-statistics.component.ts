@@ -28,7 +28,6 @@ export class EventStatisticsComponent {
 		if (event) {
 			return this.eventService.getKegsStatistics(event.id).pipe(
 				switchMap((statistics) => {
-					console.log('statistics', statistics);
 					return of(this.createKegsChartData(statistics));
 				}),
 			);
@@ -59,7 +58,7 @@ export class EventStatisticsComponent {
 	private createKegsChartData(value: IEventKegsStatistics[]): any {
 		// TODO: create colors according to keg type and dynamically add them by amount of kegs
 		return {
-			labels: value.map((v) => v.kegName),
+			labels: value.map((v) => `${v.kegName} (${v.kegVolume}l) [ks]`),
 			datasets: [
 				{
 					label: 'Pivínko',
