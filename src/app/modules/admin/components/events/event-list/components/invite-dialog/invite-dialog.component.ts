@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService } from 'primeng/api';
@@ -14,9 +14,9 @@ import { MessageService } from 'primeng/api';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InviteDialogComponent implements OnInit {
-	public readonly dialogRef = inject(DynamicDialogRef);
-	public readonly dialogConfig = inject(DynamicDialogConfig);
-	public readonly messageService = inject(MessageService);
+	public readonly dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
+	public readonly dialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig);
+	public readonly messageService: MessageService = inject(MessageService);
 
 	protected address: string = '';
 

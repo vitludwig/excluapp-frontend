@@ -7,22 +7,22 @@
 	</div>
 </div>
 
-<p-table #eventsTable [value]="eventService.$events()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+<p-table #eventsTable [value]="$events()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
-			<th>Name</th>
-			<th>Start</th>
-			<th>End</th>
+			<th>Název</th>
+			<th>Začátek</th>
+			<th>Konec</th>
 			<th></th>
 		</tr>
 	</ng-template>
 	<ng-template pTemplate="body" let-event>
 		<tr>
 			<td>{{ event.name }}</td>
-			<td>{{ event.start }}</td>
-			<td>{{ event.end }}</td>
+			<td>{{ event.start | date: 'dd.MM YYYY' }}</td>
+			<td>{{ event.end | date: 'dd.MM YYYY' }}</td>
 			<td>
-				<p-button [routerLink]="[event.id]">Attend</p-button>
+				<p-button [routerLink]="[event.id]">Přidat se</p-button>
 			</td>
 		</tr>
 	</ng-template>

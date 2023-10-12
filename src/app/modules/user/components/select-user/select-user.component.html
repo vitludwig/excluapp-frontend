@@ -8,7 +8,7 @@
 				[filter]="true"
 				filterBy="name"
 				[showClear]="true"
-				placeholder="Select user"
+				placeholder="Najdi pijáka"
 				[style]="{ width: '100%' }"
 				appendTo="body"
 			>
@@ -28,11 +28,11 @@
 				</ng-template>
 			</p-dropdown>
 
-			<h4 class="text-center">Or</h4>
+			<h4 class="text-center">Nebo</h4>
 
 			<input type="text"
 				pInputText
-				placeholder="New user"
+				placeholder="Nový piják"
 				[(ngModel)]="newUser"/>
 		</div>
 	</ng-container>
@@ -45,7 +45,9 @@
 				[multiple]="multiple"
 				[metaKeySelection]="false"
 				optionLabel="name"
-				[style]="{'width':'100%'}" />
+				[style]="{'width':'100%'}"
+				[class.big-list-items]="users.length < 6"
+			/>
 		</div>
 	</ng-container>
 
@@ -54,5 +56,5 @@
 		[style]="{'width': '100%'}"
 		class="w-full mt-3"
 		styleClass="p-button-lg"
-		label="Confirm" />
+		label="Potvrdit" />
 </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,6 +17,14 @@ import { RouterLink } from '@angular/router';
 })
 export class RegistrationListComponent {
 	protected readonly eventService: EventService = inject(EventService);
+
+	protected $events = computed(() =>
+		this.eventService.$events().filter((e) => {
+			const now = new Date().getTime();
+			const start = new Date(e.start).getTime();
+			return Math.floor(Math.abs(start - now) / (1000 * 60 * 60 * 24)) < 2; // filter events, that starts max day ago, so we dont show old events
+		}),
+	);
 
 	constructor() {
 		this.eventService.loadEvents();

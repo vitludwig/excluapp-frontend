@@ -41,6 +41,6 @@ export class UserService {
 	}
 
 	public updateUser(id: number, value: IUserRead): Observable<IUserRead> {
-		return this.http.put<IEvent>(environment.apiUrl + '/users' + id, value);
+		return this.http.put<IEvent>(environment.apiUrl + '/user/' + id, value);
 	}
 }

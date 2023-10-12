@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Table, TableModule } from 'primeng/table';
 import { EventService } from '../../../services/event/event.service';
@@ -23,6 +23,17 @@ export class EventListComponent implements OnDestroy {
 	private readonly dialogService: DialogService = inject(DialogService);
 
 	private inviteDialogRef: DynamicDialogRef;
+
+	// TODO: add filtering by date
+	protected $events = computed(
+		() => this.eventService.$events(),
+		// this.eventService.$events().filter((e) => {
+		// 	const now = new Date().getTime();
+		// 	const start = new Date(e.start).getTime();
+		// 	const isNear = Math.floor(Math.abs(start - now) / (1000 * 60 * 60 * 24)) < 2;
+		// 	return isNear;
+		// }),
+	);
 
 	constructor() {
 		this.eventService.loadEvents();

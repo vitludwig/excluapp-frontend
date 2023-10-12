@@ -13,11 +13,12 @@ import { SelectUserDialogComponent } from '../../../user/components/select-user-
 import { IUserRead } from '../../../user/types/IUser';
 import { UserService } from '../../../user/services/user/user.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmComponent } from '../../../../common/components/confirm/confirm.component';
 
 @Component({
 	selector: 'app-registration-detail',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, TooltipModule],
+	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, TooltipModule, ConfirmComponent],
 	providers: [DialogService],
 	templateUrl: './registration-detail.component.html',
 	styleUrls: ['./registration-detail.component.scss'],
@@ -28,7 +29,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 	private readonly eventService: EventService = inject(EventService);
 	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly usersService: UserService = inject(UserService);
-	public readonly messageService = inject(MessageService);
+	private readonly messageService = inject(MessageService);
 
 	protected eventId: number;
 	protected event: Observable<IEvent>;
@@ -48,11 +49,11 @@ export class RegistrationDetailComponent implements OnDestroy {
 
 	protected showAttendModal(): void {
 		this.attendDialogRef = this.dialogService.open(SelectUserDialogComponent, {
-			header: 'Select user',
+			header: 'Přidat pijáka',
 			width: '50%',
 			contentStyle: { overflow: 'auto' },
 			data: {
-				users: this.usersService.$users(),
+				users: this.usersService.$users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)),
 			},
 		});
 

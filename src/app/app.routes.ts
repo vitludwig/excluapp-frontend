@@ -8,11 +8,14 @@ export const routes: Routes = [
 	{
 		path: 'party',
 		loadComponent: () => import('./modules/sale/sale.component').then((m) => m.SaleComponent),
+		data: {
+			title: 'Párty!',
+		},
 	},
 	{
 		path: 'registration',
 		data: {
-			title: 'Registration',
+			title: 'Registrace',
 		},
 		children: [
 			{
@@ -31,7 +34,7 @@ export const routes: Routes = [
 			{
 				path: 'events',
 				data: {
-					title: 'Events',
+					title: 'Události',
 				},
 				children: [
 					{
@@ -51,7 +54,7 @@ export const routes: Routes = [
 			{
 				path: 'users',
 				data: {
-					title: 'Users',
+					title: 'Pijáci',
 				},
 				children: [
 					{
@@ -71,7 +74,7 @@ export const routes: Routes = [
 			{
 				path: 'sortiment',
 				data: {
-					title: 'Sortiment',
+					title: 'Sudy',
 				},
 				children: [
 					{

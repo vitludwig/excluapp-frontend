@@ -32,21 +32,27 @@
 			(click)="confirmOrder()"
 		/>
 	</div>
+
 	<div class="summary"
-		[class.visible]="$showSummary()">
-		<div class="summary-item"
-			*ngFor="let item of $summary() | async"
-		>
-			<span>{{item.kegName ?? 'Pivečko nebo kyseláček'}}</span>
-			<div class="flex align-items-center">
-				<span>{{item.count}}</span>
-				<p-button icon="pi pi-pencil"
-					class="ml-4"
-					styleClass="p-button-raised p-button-info p-button-sm"
-					(click)="showSummaryDetail(item)"
-				/>
+		[class.visible]="$showSummary()"
+	>
+		<h4>Už jsi vypil/a</h4>
+		<ng-container *ngIf="($summary() | async) as summary">
+			<h5 *ngIf="summary.length === 0">Nic jsi nevypil/a, křupko!</h5>
+			<div class="summary-item"
+				*ngFor="let item of summary"
+			>
+				<span>{{item.kegName ?? 'Pivečko nebo kyseláček'}}</span>
+				<div class="flex align-items-center">
+					<span>{{item.count}}ks</span>
+					<p-button icon="pi pi-pencil"
+						class="ml-4"
+						styleClass="p-button-raised p-button-info p-button-sm"
+						(click)="showSummaryDetail(item)"
+					/>
+				</div>
 			</div>
-		</div>
+		</ng-container>
 	</div>
 </div>
 

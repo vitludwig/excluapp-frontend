@@ -13,9 +13,24 @@
 		class="card card-beerpong"
 	/>
 
-	<h3>Nebo se vyber</h3>
+	<p-divider></p-divider>
 
-	<app-dashboard-user-select
-		(selected)="selectUser($event)"
-	/>
+	<h3>Nebo se vyber</h3>
+	<div>
+		<app-dashboard-user-select
+			[users]="$usersInEvent() | async"
+			(selected)="selectUser($event)"
+		/>
+
+		<p-divider></p-divider>
+
+		<p-accordion>
+			<p-accordionTab header="Ostatní">
+				<app-dashboard-user-select
+					[users]="$usersOther()"
+					(selected)="selectUser($event)"
+				/>
+			</p-accordionTab>
+		</p-accordion>
+	</div>
 </ng-container>

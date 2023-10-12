@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -6,10 +6,7 @@ import { LayoutService } from '../../services/layout/layout.service';
 import { ActivationEnd, Router } from '@angular/router';
 import { filter, tap } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
-import { EventService } from '../../../modules/admin/services/event/event.service';
 import { FormsModule } from '@angular/forms';
-import { IEvent } from '../../../modules/admin/types/IEvent';
-
 @Component({
 	selector: 'app-topbar',
 	standalone: true,
@@ -20,7 +17,6 @@ import { IEvent } from '../../../modules/admin/types/IEvent';
 })
 export class TopbarComponent {
 	protected readonly layoutService = inject(LayoutService);
-	protected readonly eventService = inject(EventService);
 	private readonly router = inject(Router);
 
 	constructor() {

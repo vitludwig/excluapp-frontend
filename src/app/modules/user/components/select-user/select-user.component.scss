@@ -3,9 +3,17 @@
 	height: 100%;
 
 	::ng-deep {
-		.p-listbox-item {
-			padding: 25px 16px !important;
-			border-bottom: 1px solid #333 !important;
+		p-listbox {
+			.p-listbox-item {
+				padding: 25px 16px !important;
+				border-bottom: 1px solid #333 !important;
+			}
+
+			&.big-list-items {
+				.p-listbox-item {
+					padding: 35px 16px !important;
+				}
+			}
 		}
 	}
 

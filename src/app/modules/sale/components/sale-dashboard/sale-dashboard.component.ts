@@ -11,7 +11,7 @@ import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { OrderService } from '../../services/order/order.service';
-import { forkJoin, map, tap } from 'rxjs';
+import { forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { IOrderRead, IOrderReadGroup } from '../../types/IOrder';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
 import { IKeg } from '../../../admin/types/IKeg';
@@ -25,11 +25,22 @@ import { DividerModule } from 'primeng/divider';
 import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe';
 import { DashboardUserSelectComponent } from './components/dashboard-user-select/dashboard-user-select.component';
 import { DashboardSortimentSelectComponent } from './components/dashboard-sortiment-select/dashboard-sortiment-select.component';
+import { AccordionModule } from 'primeng/accordion';
 
 @Component({
 	selector: 'app-sale-dashboard',
 	standalone: true,
-	imports: [CommonModule, CardModule, WebcamModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, DashboardUserSelectComponent, DashboardSortimentSelectComponent],
+	imports: [
+		CommonModule,
+		CardModule,
+		WebcamModule,
+		ButtonModule,
+		DividerModule,
+		AsSortimentCategoryPipe,
+		DashboardUserSelectComponent,
+		DashboardSortimentSelectComponent,
+		AccordionModule,
+	],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
 	styleUrls: ['./sale-dashboard.component.scss'],
@@ -53,6 +64,20 @@ export class SaleDashboardComponent implements OnDestroy {
 	});
 
 	protected $selectedUser = signal<IUserRead | null>(null);
+	protected $usersInEvent = computed(() => {
+		const event = this.eventService.$activeEvent();
+		if (event) {
+			return this.eventService.getUsersForEvent(event.id).pipe(
+				tap((users) => {
+					const usersInEventIds = users.map((u) => u.id);
+					this.$usersOther.set(this.usersService.$users().filter((u) => !usersInEventIds.includes(u.id)));
+				}),
+			);
+		}
+		return of([]);
+	});
+
+	protected $usersOther = signal<IUserRead[]>([]);
 
 	constructor() {}
 

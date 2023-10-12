@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SaleDashboardComponent } from './components/sale-dashboard/sale-dashboard.component';
+import { LoginDialogComponent } from '../../layout/components/sidebar/components/login-dialog/login-dialog.component';
 
 @Component({
 	selector: 'app-sale',

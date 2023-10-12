@@ -1,0 +1,27 @@
+:host {
+	::ng-deep {
+		.numpad {
+			justify-content: center;
+
+			.numpad-item {
+				.p-button {
+					padding: 17px;
+					flex: 0 0 calc(33.33% - 10px); /* 3 items per row with some spacing */
+					font-size: 25px;
+					justify-content: center;
+					width: 80px;
+					height: 80px;
+				}
+			}
+		}
+	}
+}
+.numpad {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 400px; /* Adjust as needed */
+
+	.numpad-item {
+		margin: 15px;
+	}
+}

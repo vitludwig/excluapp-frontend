@@ -9,7 +9,7 @@
 	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" [routerLink]="['new']"></p-button>
 </div>
 
-<p-table #eventsTable [value]="eventService.$events()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+<p-table #eventsTable [value]="$events()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Name</th>

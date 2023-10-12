@@ -2,11 +2,12 @@
 	<ng-container *ngIf="(event | async) as currentEvent">
 		<div class="flex align-items-center gap-3">
 			<h1>{{ currentEvent.name }}</h1>
-			<h2>({{ currentEvent.start | date: 'dd.MM HH:mm' }} - {{ currentEvent.end | date: 'dd.MM HH:mm' }})</h2>
+			<h2>({{ currentEvent.start | date: 'dd.MM' }} - {{ currentEvent.end | date: 'dd.MM' }})</h2>
 		</div>
+
 		<div class="flex justify-content-between align-items-center">
-			<h3>Visitors ({{$eventUsers().length}}/{{ currentEvent.capacity }})</h3>
-			<p-button label="Attend" icon="pi pi-plus" (onClick)="showAttendModal()"></p-button>
+			<h3>Účastníci zájezdu ({{$eventUsers().length}}/{{ currentEvent.capacity }})</h3>
+			<p-button label="Přidat se" icon="pi pi-plus" (onClick)="showAttendModal()"></p-button>
 		</div>
 
 		<p-table [value]="$eventUsers()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
@@ -14,11 +15,13 @@
 				<tr>
 					<td>{{ user.name }}</td>
 					<td>
-						<p-button (click)="unattend(user.id)"
+						<button pButton
+							appConfirm
+							(confirm)="unattend(user.id)"
 							pTooltip="Odstranit"
-							styleClass="p-button-danger"
+							class="p-button-danger"
 							icon="pi pi-fw pi-trash"
-						/>
+						></button>
 					</td>
 				</tr>
 			</ng-template>
