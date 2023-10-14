@@ -1,1 +1,5 @@
-<app-sale-dashboard />
+<app-sale-dashboard *ngIf="eventService.$activeEvent()" />
+<div class="flex flex-column align-items-center justify-content-center h-full" *ngIf="!eventService.$activeEvent()">
+	<h1>Nejdřív vyber událost</h1>
+	<h3>To může udělat jen admin</h3>
+</div>
