@@ -64,6 +64,13 @@
 					class="p-button-danger"
 					icon="pi pi-fw pi-trash"
 				></button>
+
+				<p-button
+					*ngIf="!sortiment.isOriginal"
+					(click)="showKegStatusDialog(sortiment.id)"
+					[severity]="'info'"
+					icon="pi pi-fw pi-question-circle"
+				/>
 			</td>
 		</tr>
 	</ng-template>

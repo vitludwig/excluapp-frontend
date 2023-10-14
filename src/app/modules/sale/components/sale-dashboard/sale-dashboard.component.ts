@@ -6,18 +6,12 @@ import { CardModule } from 'primeng/card';
 import { WebcamModule } from 'ngx-webcam';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
 import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { OrderService } from '../../services/order/order.service';
-import { forkJoin, map, of, switchMap, tap } from 'rxjs';
-import { IOrderRead, IOrderReadGroup } from '../../types/IOrder';
-import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
-import { IKeg } from '../../../admin/types/IKeg';
-import { ICartItem } from '../../types/ICartItem';
+import { Observable, of, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { SummaryItemDialogComponent } from '../summary-item-dialog/summary-item-dialog.component';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { IBeerpong } from '../../types/IBeerpong';
 import { EBeerVolume } from '../../types/EBeerVolume';
@@ -26,6 +20,10 @@ import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe'
 import { DashboardUserSelectComponent } from './components/dashboard-user-select/dashboard-user-select.component';
 import { DashboardSortimentSelectComponent } from './components/dashboard-sortiment-select/dashboard-sortiment-select.component';
 import { AccordionModule } from 'primeng/accordion';
+import { KnobModule } from 'primeng/knob';
+import { IKegStatus } from '../../../admin/components/sortiment/types/IKegStatus';
+import { FormsModule } from '@angular/forms';
+import { IKeg } from '../../../admin/types/IKeg';
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -40,6 +38,8 @@ import { AccordionModule } from 'primeng/accordion';
 		DashboardUserSelectComponent,
 		DashboardSortimentSelectComponent,
 		AccordionModule,
+		KnobModule,
+		FormsModule,
 	],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
@@ -57,10 +57,20 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly usersService: UserService = inject(UserService);
 
 	private beerpongDialogRef: DynamicDialogRef | null = null;
-	protected readonly EBeerVolume = EBeerVolume;
 
 	protected $sortiment = computed(() => {
 		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive);
+	});
+	protected $kegStats = computed(() => {
+		const stats: Record<number, { keg: IKeg; status: Observable<IKegStatus> }> = {};
+		for (const keg of this.$sortiment()) {
+			stats[keg.id] = {
+				keg,
+				status: this.sortimentService.getKegStatus(keg.id),
+			};
+		}
+
+		return stats;
 	});
 
 	protected $selectedUser = signal<IUserRead | null>(null);

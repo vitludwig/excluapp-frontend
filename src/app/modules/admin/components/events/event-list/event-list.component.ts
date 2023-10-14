@@ -8,11 +8,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
 import { ToastModule } from 'primeng/toast';
+import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
+import { map } from 'rxjs';
 
 @Component({
 	selector: 'app-event-list',
 	standalone: true,
-	imports: [CommonModule, TableModule, ButtonModule, RouterLink, InputTextModule, ToastModule],
+	imports: [CommonModule, TableModule, ButtonModule, RouterLink, InputTextModule, ToastModule, ConfirmComponent],
 	providers: [DialogService],
 	templateUrl: './event-list.component.html',
 	styleUrls: ['./event-list.component.scss'],
@@ -54,6 +56,13 @@ export class EventListComponent implements OnDestroy {
 				address: inviteAddress,
 			},
 		});
+	}
+
+	protected removeEvent(eventId: number) {
+		this.eventService
+			.removeEvent(eventId)
+			.pipe(map(() => this.eventService.loadEvents()))
+			.subscribe();
 	}
 
 	public ngOnDestroy() {

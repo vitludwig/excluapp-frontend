@@ -24,8 +24,15 @@
 			<td>{{ event.start | date: 'dd.MM YY, HH:mm' }}</td>
 			<td>{{ event.end | date: 'dd.MM YY, HH:mm'  }}</td>
 			<td class="flex gap-2">
-				<p-button [routerLink]="['detail', event.id]">Edit</p-button>
-				<p-button (click)="showInviteModal(event.id)">Invite</p-button>
+				<p-button [routerLink]="['detail', event.id]">Upravit</p-button>
+				<p-button (click)="showInviteModal(event.id)">Pozvat</p-button>
+				<button pButton
+					appConfirm
+					(confirm)="removeEvent(event.id)"
+					class="p-button-danger"
+				>
+					Smazat
+				</button>
 			</td>
 		</tr>
 	</ng-template>

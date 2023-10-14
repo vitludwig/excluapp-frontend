@@ -4,6 +4,7 @@ import { environment } from '../../../../../environments/environment';
 import { catchError, combineLatest, filter, firstValueFrom, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { IKeg } from '../../types/IKeg';
 import { IEvent } from '../../types/IEvent';
+import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
 
 @Injectable({
 	providedIn: 'root',
@@ -70,5 +71,9 @@ export class SortimentService {
 
 	public removeKegFromEvent(eventId: number, kegId: number): Observable<void> {
 		return this.http.delete<void>(`${environment.apiUrl}/keg/kegToEvent/${eventId}/${kegId}`);
+	}
+
+	public getKegStatus(kegId: number): Observable<IKegStatus> {
+		return this.http.get<IKegStatus>(`${environment.apiUrl}/keg/${kegId}/status`);
 	}
 }

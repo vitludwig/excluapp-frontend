@@ -70,6 +70,10 @@ export class EventService {
 		return this.http.put<IEvent>(environment.apiUrl + '/events/' + id, value);
 	}
 
+	public removeEvent(id: number): Observable<IEvent> {
+		return this.http.delete<IEvent>(environment.apiUrl + '/events/' + id);
+	}
+
 	public getUsersForEvent(eventId: number): Observable<IUserRead[]> {
 		return this.http.get<IUserRead[]>(environment.apiUrl + '/attendance/getUsersByEventId/' + eventId);
 	}
