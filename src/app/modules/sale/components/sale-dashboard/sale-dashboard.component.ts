@@ -10,7 +10,7 @@ import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { OrderService } from '../../services/order/order.service';
-import { Observable, of, tap } from 'rxjs';
+import { firstValueFrom, Observable, of, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { IBeerpong } from '../../types/IBeerpong';
@@ -110,14 +110,15 @@ export class SaleDashboardComponent implements OnDestroy {
 			.subscribe();
 	}
 
-	protected showBeerpongDialog() {
+	protected async showBeerpongDialog(): Promise<void> {
+		const users = await firstValueFrom(this.$usersInEvent());
 		this.beerpongDialogRef = this.dialogService.open(BeerpongDialogComponent, {
 			header: 'Býrponk!',
 			width: '90%',
 			contentStyle: { overflow: 'auto' },
 			data: {
 				kegs: this.$sortiment(),
-				users: this.usersService.$users(),
+				users: users,
 			},
 		});
 
