@@ -41,7 +41,7 @@
 		<div class="overflow-auto">
 			<p-listbox [options]="users"
 				[(ngModel)]="selectedUser"
-				(ngModelChange)="onUserSelect($event)"
+				(ngModelChange)="submit()"
 				[multiple]="multiple"
 				[metaKeySelection]="false"
 				optionLabel="name"

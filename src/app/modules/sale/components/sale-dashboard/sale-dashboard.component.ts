@@ -114,6 +114,7 @@ export class SaleDashboardComponent implements OnDestroy {
 		const users = await firstValueFrom(this.$usersInEvent());
 		this.beerpongDialogRef = this.dialogService.open(BeerpongDialogComponent, {
 			header: 'Býrponk!',
+
 			width: '90%',
 			contentStyle: { overflow: 'auto' },
 			data: {

@@ -98,6 +98,13 @@ export const routes: Routes = [
 				},
 				loadComponent: () => import('./modules/admin/components/statistics/statistics.component').then((m) => m.StatisticsComponent),
 			},
+			{
+				path: 'payments',
+				data: {
+					title: 'Platby',
+				},
+				loadComponent: () => import('./modules/admin/components/payments/payments.component').then((m) => m.PaymentsComponent),
+			},
 		],
 	},
 	{

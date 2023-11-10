@@ -7,6 +7,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'primeng/api';
 import { IUserRead } from '../../types/IUser';
+import { IUserSelectResponse } from '../../types/IUserSelectResponse';
 
 @Component({
 	selector: 'app-select-user',
@@ -27,25 +28,22 @@ export class SelectUserComponent {
 	public users: IUserRead[] = [];
 
 	@Output()
-	public select: EventEmitter<{ newUser: string | null; existingUser: IUserRead[] | null }> = new EventEmitter();
+	public select: EventEmitter<IUserSelectResponse> = new EventEmitter();
 
-	protected selectedUser: IUserRead[] | IUserRead | null = null;
+	protected selectedUser: IUserRead[] | null = null;
 
 	protected newUser: string | null = null;
 
 	protected submit() {
-		this.select.emit({
-			newUser: this.newUser,
-			existingUser: this.selectedUser as IUserRead[],
-		});
-	}
-
-	protected onUserSelect(user: IUserRead) {
 		if (!this.multiple) {
 			if (this.selectedUser && !Array.isArray(this.selectedUser)) {
 				this.selectedUser = [this.selectedUser];
 			}
-			this.submit();
 		}
+
+		this.select.emit({
+			newUser: this.newUser,
+			existingUser: this.selectedUser as IUserRead[],
+		});
 	}
 }

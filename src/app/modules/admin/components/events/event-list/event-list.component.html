@@ -12,9 +12,9 @@
 <p-table #eventsTable [value]="$events()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
-			<th>Name</th>
+			<th>Název</th>
 			<th>Start</th>
-			<th>End</th>
+			<th>Konec</th>
 			<th></th>
 		</tr>
 	</ng-template>
@@ -30,6 +30,7 @@
 					appConfirm
 					(confirm)="removeEvent(event.id)"
 					class="p-button-danger"
+					icon="pi pi-fw pi-trash"
 				>
 					Smazat
 				</button>

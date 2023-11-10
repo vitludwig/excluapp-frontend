@@ -8,7 +8,7 @@
 
 <ng-container *ngIf="!$selectedUser()">
 	<p-card (click)="showBeerpongDialog()"
-		[header]="'Býrponk'"
+		[header]="'Zapsat býrponk'"
 		[class.active]="(orderService.$cartCount()['beerpong'] | json) !== '{}'"
 		class="card card-beerpong"
 	/>

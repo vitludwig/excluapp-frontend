@@ -82,6 +82,10 @@ export class SidebarComponent implements OnDestroy {
 					label: 'Infoporno',
 					routerLink: ['/admin/statistics'],
 				},
+				{
+					label: 'Platby',
+					routerLink: ['/admin/payments'],
+				},
 			],
 		},
 	];

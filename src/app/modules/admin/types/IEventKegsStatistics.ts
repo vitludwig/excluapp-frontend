@@ -7,7 +7,7 @@ export interface IEventKegsStatistics {
 }
 
 export interface IEventUsersStatistics {
-	userId: number;
+	order_userId: number;
 	volume: number; // in litres
 	userName: string;
 	price: number;

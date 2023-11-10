@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../admin/services/event/event.service';
@@ -8,18 +8,20 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageService, SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { IEvent } from '../../../admin/types/IEvent';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
 import { IUserRead } from '../../../user/types/IUser';
 import { UserService } from '../../../user/services/user/user.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmComponent } from '../../../../common/components/confirm/confirm.component';
+import { DialogModule } from 'primeng/dialog';
+import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
+import { IUserSelectResponse } from '../../../user/types/IUserSelectResponse';
 
 @Component({
 	selector: 'app-registration-detail',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, TooltipModule, ConfirmComponent],
-	providers: [DialogService],
+	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, TooltipModule, ConfirmComponent, DialogModule, SelectUserDialogComponent, SelectUserComponent],
 	templateUrl: './registration-detail.component.html',
 	styleUrls: ['./registration-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,13 +29,14 @@ import { ConfirmComponent } from '../../../../common/components/confirm/confirm.
 export class RegistrationDetailComponent implements OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly eventService: EventService = inject(EventService);
-	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly usersService: UserService = inject(UserService);
 	private readonly messageService = inject(MessageService);
 
 	protected eventId: number;
 	protected event: Observable<IEvent>;
 	protected $eventUsers = signal<IUserRead[]>([]);
+	protected $usersToPick = computed(() => this.usersService.$users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)));
+	protected showSelectUserModal = false;
 
 	private attendDialogRef: DynamicDialogRef;
 
@@ -48,25 +51,17 @@ export class RegistrationDetailComponent implements OnDestroy {
 	}
 
 	protected showAttendModal(): void {
-		this.attendDialogRef = this.dialogService.open(SelectUserDialogComponent, {
-			header: 'Přidat pijáka',
-			width: '50%',
-			contentStyle: { overflow: 'auto' },
-			data: {
-				users: this.usersService.$users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)),
-			},
-		});
+		this.showSelectUserModal = true;
+	}
 
-		this.attendDialogRef.onClose.subscribe((data: { newUser: string | null; existingUser: IUserRead | null }) => {
-			if (data.newUser) {
-				this.usersService.addUser({ name: data.newUser }).subscribe((user) => {
-					this.attendEvent(user.id, this.eventId);
-				});
-			}
-			if (data.existingUser) {
-				this.attendEvent(data.existingUser.id, this.eventId);
-			}
-		});
+	protected selectUser(data: IUserSelectResponse): void {
+		// TODO: refactor user select component to always return array or better type it, THIS IS UGLY
+		// this is single user select, object and not array is passed
+		if (data.existingUser && !Array.isArray(data.existingUser)) {
+			this.attendEvent((<IUserRead>data.existingUser).id, this.eventId);
+		}
+
+		this.showSelectUserModal = false;
 	}
 
 	public ngOnDestroy() {
