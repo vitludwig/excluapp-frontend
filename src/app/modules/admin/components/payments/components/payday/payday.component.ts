@@ -7,32 +7,31 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { forkJoin, map, Observable } from 'rxjs';
-import { IEventUsersStatistics } from '../../../../types/IEventKegsStatistics';
 import { TableModule } from 'primeng/table';
-import { MessageService } from 'primeng/api';
 import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
+import { PaydayTableComponent } from '../payday-table/payday-table.component';
+import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
 
 @Component({
 	selector: 'app-payday',
 	standalone: true,
-	imports: [CommonModule, MultiSelectModule, FormsModule, DropdownModule, ButtonModule, TableModule, SortPipe],
+	imports: [CommonModule, MultiSelectModule, FormsModule, DropdownModule, ButtonModule, TableModule, SortPipe, PaydayTableComponent],
 	templateUrl: './payday.component.html',
 	styleUrls: ['./payday.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaydayComponent {
 	protected readonly eventService = inject(EventService);
-	private readonly messageService: MessageService = inject(MessageService);
 
 	protected $selectedEvents = signal<IEvent[]>([]);
-	protected $paydayResult = signal<Observable<IEventUsersStatistics[]> | null>(null);
+	protected $paydayResult = signal<Observable<IEventPaydayStatistics[]> | null>(null);
 
 	protected createPayday(): void {
-		const result = forkJoin(this.$selectedEvents().map((event) => this.eventService.getUsersStatistics(event.id))).pipe(
+		const result = forkJoin(this.$selectedEvents().map((event) => this.eventService.getEventPayday(event.id))).pipe(
 			map((statistics) => {
 				return statistics.reduce((accumulator, current) => {
 					current.map((c) => {
-						let found = accumulator.find((element) => element.order_userId === c.order_userId);
+						let found = accumulator.find((element) => element.userId === c.userId);
 						if (found) {
 							found.price = Number(found.price) + Number(c.price);
 							found.volume = Number(found.volume) + Number(c.volume);
@@ -45,15 +44,5 @@ export class PaydayComponent {
 			}),
 		);
 		this.$paydayResult.set(result);
-	}
-
-	protected async copyPaydayResult(payday: IEventUsersStatistics[]): Promise<void> {
-		const result = payday
-			.map((value) => {
-				return `${value.userName}: ${value.price}Kč`;
-			})
-			.join('\n');
-		await navigator.clipboard.writeText(result);
-		this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Zkopírováno do schránky' });
 	}
 }

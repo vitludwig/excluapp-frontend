@@ -11,11 +11,12 @@ import { AuthService } from '../../../common/services/auth.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { EventService } from '../../../modules/admin/services/event/event.service';
 import { FormsModule } from '@angular/forms';
+import { SortPipe } from '../../../common/pipes/sort.pipe';
 
 @Component({
 	selector: 'app-sidebar',
 	standalone: true,
-	imports: [CommonModule, MenuModule, SidebarModule, ButtonModule, DropdownModule, FormsModule],
+	imports: [CommonModule, MenuModule, SidebarModule, ButtonModule, DropdownModule, FormsModule, SortPipe],
 	templateUrl: './sidebar.component.html',
 	styleUrls: ['./sidebar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

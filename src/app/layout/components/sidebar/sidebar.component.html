@@ -5,7 +5,7 @@
 		</div>
 
 		<p-dropdown *ngIf="authService.$isLogged()"
-			[options]="eventService.$events()"
+			[options]="eventService.$events() | sort: 'start'"
 			[ngModel]="eventService.$activeEvent()"
 			(ngModelChange)="eventService.setActiveEvent($event)"
 			optionLabel="name"

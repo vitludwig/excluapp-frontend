@@ -5,6 +5,7 @@ import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IUserRead } from '../../../user/types/IUser';
 import { IEventKegsStatistics, IEventUsersStatistics } from '../../types/IEventKegsStatistics';
+import { IEventPaydayStatistics } from '../../types/IEventPaydayStatistics';
 
 @Injectable({
 	providedIn: 'root',
@@ -92,5 +93,9 @@ export class EventService {
 
 	public getUsersStatistics(eventId: number): Observable<IEventUsersStatistics[]> {
 		return this.http.get<IEventUsersStatistics[]>(`${environment.apiUrl}/events/${eventId}/user-statistics/`);
+	}
+
+	public getEventPayday(eventId: number): Observable<IEventPaydayStatistics[]> {
+		return this.http.get<IEventPaydayStatistics[]>(`${environment.apiUrl}/events/${eventId}/payday/`);
 	}
 }

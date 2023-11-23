@@ -22,9 +22,10 @@
 		<tr>
 			<th></th>
 			<th>Název</th>
+			<th>Payday</th>
 			<th>Objem</th>
 			<th>Cena</th>
-			<th>Prázdný</th>
+			<th>Stav</th>
 			<th>Událost</th>
 			<th></th>
 		</tr>
@@ -35,12 +36,17 @@
 				<i class="pi pi-shield" pTooltip="Pivní předloha" *ngIf="sortiment.isOriginal"></i>
 			</td>
 			<td>{{ sortiment.name }} ({{ sortiment.sourceName }})</td>
+			<td>
+				<ng-container *ngIf="!sortiment.isOriginal">
+					{{ sortiment.isCashed ? 'Ano' : 'Ne' }}
+				</ng-container>
+			</td>
 			<td>{{ sortiment.volume }}</td>
 			<td>{{ sortiment.price }} Kč</td>
-			<td>{{ sortiment.isEmpty }}</td>
+			<td>{{ sortiment.isEmpty ? 'Prázdný' : 'Neprázdný' }}</td>
 			<td>
-				<ng-container *ngIf="sortiment.event">
-					{{ sortiment.event?.event.name }} ({{sortiment.event?.event.start | date: 'dd.MM YYYY' }})
+				<ng-container *ngIf="sortiment.event?.event as event">
+					{{ event.name }}
 				</ng-container>
 			</td>
 			<td class="flex gap-2">
@@ -50,20 +56,11 @@
 					icon="pi pi-fw pi-pencil"
 				/>
 
-				<p-button (click)="emptyKeg(sortiment.id)"
-					pTooltip="Vypít"
+				<p-button (click)="setKegEmptyStatus(sortiment.id, !sortiment.isEmpty)"
+					[pTooltip]="sortiment.isEmpty ? 'Nastavit sud jakov nevypitý' : 'Nastavit sud jako vypitý'"
 					styleClass="p-button-warning"
-					icon="pi pi-fw pi-circle"
+					[icon]="'pi pi-fw ' + (sortiment.isEmpty ? 'pi-circle-fill' : 'pi-circle')"
 				/>
-
-				<button pButton
-					appConfirm
-					confirmMessage="Smazat?"
-					(confirm)="removeKeg(sortiment.id)"
-					pTooltip="Odstranit"
-					class="p-button-danger"
-					icon="pi pi-fw pi-trash"
-				></button>
 
 				<p-button
 					*ngIf="!sortiment.isOriginal"
@@ -71,6 +68,24 @@
 					[severity]="'info'"
 					icon="pi pi-fw pi-question-circle"
 				/>
+
+				<div class="ml-auto flex gap-2">
+
+					<p-button (click)="setKegDefectiveStatus(sortiment.id, !sortiment.isDefective)"
+						[pTooltip]="sortiment.isDefective ? 'Nastavit sud jako v pohodě' : 'Nastavit sud jako vadný'"
+						[styleClass]="sortiment.isDefective ? 'p-button-success' : 'p-button-danger'"
+						[icon]="'pi pi-fw ' + (sortiment.isDefective ? 'pi-check' : 'pi-times')"
+					/>
+
+					<button pButton
+						appConfirm
+						confirmMessage="Smazat?"
+						(confirm)="removeKeg(sortiment.id)"
+						pTooltip="Odstranit"
+						class="p-button-danger"
+						icon="pi pi-fw pi-trash"
+					></button>
+				</div>
 			</td>
 		</tr>
 	</ng-template>

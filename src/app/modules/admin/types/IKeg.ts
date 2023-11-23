@@ -8,6 +8,8 @@ export interface IKeg {
 	price: number;
 	isEmpty: boolean;
 	isActive: boolean;
+	isCashed: boolean;
+	isDefective: boolean;
 	isOriginal: boolean;
 	event?: IEvent;
 }

@@ -4,24 +4,28 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
 import { FormsModule } from '@angular/forms';
-import { of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { IEventKegsStatistics } from '../../../../types/IEventKegsStatistics';
 import { ChartModule } from 'primeng/chart';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { PaydayTableComponent } from '../../../payments/components/payday-table/payday-table.component';
+import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
 
 @Component({
 	selector: 'app-event-statistics',
 	standalone: true,
-	imports: [CommonModule, DropdownModule, FormsModule, ChartModule, ButtonModule, TableModule, TooltipModule],
+	imports: [CommonModule, DropdownModule, FormsModule, ChartModule, ButtonModule, TableModule, TooltipModule, PaydayTableComponent],
 	templateUrl: './event-statistics.component.html',
 	styleUrls: ['./event-statistics.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventStatisticsComponent {
 	protected eventService = inject(EventService);
+
 	protected $selectedEvent = signal<IEvent | null>(this.eventService.$activeEvent());
+	protected $paydayResult = signal<Observable<IEventPaydayStatistics[]> | null>(null);
 
 	protected $kegsStatistics = computed(() => {
 		const event = this.$selectedEvent();
@@ -53,6 +57,16 @@ export class EventStatisticsComponent {
 
 	public set selectedEvent(value: IEvent) {
 		this.$selectedEvent.set(value);
+	}
+
+	protected payday(eventId: number | undefined): void {
+		if (!eventId) {
+			console.warn('No event selected');
+			return;
+		}
+		const result$ = this.eventService.getEventPayday(eventId).pipe(tap(() => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 0)));
+
+		this.$paydayResult.set(result$);
 	}
 
 	private createKegsChartData(value: IEventKegsStatistics[]): any {

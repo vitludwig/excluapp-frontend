@@ -11,26 +11,6 @@
 
 <br>
 
-<ng-container *ngIf="($paydayResult() | async) as paydayResult">
-	<p-table [value]="$any(paydayResult)">
-		<ng-template pTemplate="header">
-			<tr>
-				<th>Pijan</th>
-				<th>Propito (Kč)</th>
-				<th>Propito (ks)</th>
-			</tr>
-		</ng-template>
-		<ng-template pTemplate="body"
-			let-item>
-			<tr>
-				<td>{{ item.userName }}</td>
-				<td>{{ item.price }} Kč</td>
-				<td>{{ item.volume / 0.5 }} ks</td>
-			</tr>
-		</ng-template>
-	</p-table>
-
-	<br>
-
-	<p-button (click)="copyPaydayResult(paydayResult)" styleClass="p-button-lg p-button-primary">Zkopírovat do schránky</p-button>
-</ng-container>
+<app-payday-table *ngIf="($paydayResult() | async) as paydayResult"
+	[data]="paydayResult"
+/>

@@ -80,9 +80,16 @@ export class SortimentListComponent implements OnInit, OnDestroy {
 			.subscribe();
 	}
 
-	protected emptyKeg(id: number) {
+	protected setKegEmptyStatus(id: number, isEmpty: boolean) {
 		this.sortimentService
-			.updateSortiment(id, { isEmpty: true })
+			.updateSortiment(id, { isEmpty })
+			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
+			.subscribe();
+	}
+
+	protected setKegDefectiveStatus(id: number, isDefective: boolean) {
+		this.sortimentService
+			.updateSortiment(id, { isDefective })
 			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
 			.subscribe();
 	}
