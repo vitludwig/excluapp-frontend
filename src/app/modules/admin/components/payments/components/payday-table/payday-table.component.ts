@@ -1,0 +1,49 @@
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { MessageService, SharedModule } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
+
+@Component({
+	selector: 'app-payday-table',
+	standalone: true,
+	imports: [CommonModule, ButtonModule, SharedModule, TableModule],
+	templateUrl: './payday-table.component.html',
+	styleUrls: ['./payday-table.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PaydayTableComponent {
+	private readonly messageService: MessageService = inject(MessageService);
+
+	private _data: IEventPaydayStatistics[] = [];
+
+	@Input({ required: true })
+	public set data(value: IEventPaydayStatistics[]) {
+		value.sort((a, b) => {
+			if (a.name < b.name) {
+				return -1;
+			}
+			if (a.name > b.name) {
+				return 1;
+			}
+			return 0;
+		});
+
+		this._data = value;
+	}
+
+	public get data(): IEventPaydayStatistics[] {
+		return this._data;
+	}
+
+	protected async copyPaydayResult(): Promise<void> {
+		const result = this._data
+			.map((value) => {
+				return `${value.name}: ${value.price}Kč`;
+			})
+			.join('\n');
+		await navigator.clipboard.writeText(result);
+		this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Zkopírováno do schránky' });
+	}
+}
