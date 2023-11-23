@@ -6,13 +6,25 @@
 		</div>
 	</div>
 
-	<p-selectButton [options]="filterOptions"
-		[(ngModel)]="filter"
-		(ngModelChange)="filterKegs(filter)"
-		[multiple]="true"
-		optionLabel="name"
-		optionValue="value"
-	/>
+	<div class="flex">
+		<p-button
+			severity="info"
+			[outlined]="!('empty' | isIncluded: $filter())"
+			(click)="toggleFilter('empty')"
+		>
+			<i class="pi pi-fw pi-check mr-2" *ngIf="'empty' | isIncluded: $filter()"></i>
+			Prázdné
+		</p-button>
+
+		<p-button
+			severity="info"
+			[outlined]="!('inEvent' | isIncluded: $filter())"
+			(click)="toggleFilter('inEvent')"
+		>
+			<i class="pi pi-fw pi-check mr-2" *ngIf="'inEvent' | isIncluded: $filter()"></i>
+			Na párty
+		</p-button>
+	</div>
 
 	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" [routerLink]="['new']"></p-button>
 </div>

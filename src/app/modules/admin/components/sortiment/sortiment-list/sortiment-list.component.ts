@@ -15,6 +15,7 @@ import { ConfirmComponent } from '../../../../../common/components/confirm/confi
 import { LoginDialogComponent } from '../../../../../layout/components/sidebar/components/login-dialog/login-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KegStatusDialogComponent } from '../components/keg-status-dialog/keg-status-dialog.component';
+import { IsIncludedPipe } from '../../../../../common/pipes/is-included.pipe';
 
 @Component({
 	selector: 'app-sortiment-list',
@@ -31,6 +32,7 @@ import { KegStatusDialogComponent } from '../components/keg-status-dialog/keg-st
 		SelectButtonModule,
 		TooltipModule,
 		ConfirmComponent,
+		IsIncludedPipe,
 	],
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
@@ -56,12 +58,12 @@ export class SortimentListComponent implements OnInit, OnDestroy {
 		return result;
 	});
 
-	protected filterOptions: { name: string; value: string }[] = [
-		{ name: 'Prázdné', value: 'empty' },
-		{ name: 'Na párty', value: 'inEvent' },
+	protected filterOptions: { name: string; value: string; styleClass: string }[] = [
+		{ name: 'Prázdné', value: 'empty', styleClass: 'p-button-info' },
+		{ name: 'Na párty', value: 'inEvent', styleClass: 'p-button-info' },
 	];
-	protected filter: string[] = [];
-	protected $filter = signal(this.filter);
+
+	protected $filter = signal<string[]>([]);
 
 	private kegStatusDialogRef: DynamicDialogRef | undefined;
 
@@ -94,8 +96,14 @@ export class SortimentListComponent implements OnInit, OnDestroy {
 			.subscribe();
 	}
 
-	protected filterKegs(value: string[]) {
-		this.$filter.set(value);
+	protected toggleFilter(filter: string) {
+		this.$filter.update((filters) => {
+			if (filters.includes(filter)) {
+				return filters.filter((f) => f !== filter);
+			} else {
+				return [...filters, filter];
+			}
+		});
 	}
 
 	protected showKegStatusDialog(kegId: number) {
