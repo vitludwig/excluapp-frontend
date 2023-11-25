@@ -1,23 +1,23 @@
 <div class="flex gap-2">
 	<div class="beerpong-item flex-1"
-		*ngFor="let keg of kegs">
-		<h3>{{ keg.name }}</h3>
+		*ngFor="let keg of kegs"
+	>
+		<h3 class="keg-title">{{ keg.name }}</h3>
 		<p-listbox [options]="users"
 			[(ngModel)]="data[keg.id]"
 			[multiple]="true"
 			[metaKeySelection]="false"
 			optionLabel="name"
 			[style]="{'width':'100%'}"
-			[listStyle]="{'max-height':'30%'}"
 		/>
 	</div>
 </div>
 
-<p>
+<div class="p-dialog-footer">
 	<p-button (click)="submit()"
 		[style]="{'width': '100%'}"
 		class="w-full mt-3"
 		styleClass="p-button-lg"
 		label="Potvrdit"
 	/>
-</p>
+</div>

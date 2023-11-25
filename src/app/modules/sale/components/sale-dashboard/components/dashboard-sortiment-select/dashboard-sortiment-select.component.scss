@@ -1,3 +1,5 @@
+@import "variables";
+
 :host {
 	::ng-deep {
 		.card {
@@ -22,7 +24,7 @@
 
 			&.card-beerpong {
 				.p-card {
-					//background-color: var(--orange-900);
+					background-color: var(--orange-900);
 				}
 			}
 		}
@@ -44,7 +46,7 @@
 	flex: 40%;
 	height: auto;
 
-	@media (max-width: 480px) {
+	@media (max-width: $mobile-screen-width) {
 		flex: 100%;
 	}
 }

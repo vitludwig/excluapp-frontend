@@ -17,11 +17,24 @@ import { ConfirmComponent } from '../../../../common/components/confirm/confirm.
 import { DialogModule } from 'primeng/dialog';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
 import { IUserSelectResponse } from '../../../user/types/IUserSelectResponse';
+import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
 
 @Component({
 	selector: 'app-registration-detail',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule, SharedModule, TableModule, TooltipModule, ConfirmComponent, DialogModule, SelectUserDialogComponent, SelectUserComponent],
+	imports: [
+		CommonModule,
+		ButtonModule,
+		InputTextModule,
+		SharedModule,
+		TableModule,
+		TooltipModule,
+		ConfirmComponent,
+		DialogModule,
+		SelectUserDialogComponent,
+		SelectUserComponent,
+		BackBtnDirective,
+	],
 	templateUrl: './registration-detail.component.html',
 	styleUrls: ['./registration-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

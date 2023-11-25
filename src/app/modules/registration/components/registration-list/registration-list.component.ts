@@ -6,6 +6,7 @@ import { SharedModule } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { EventService } from '../../../admin/services/event/event.service';
 import { RouterLink } from '@angular/router';
+import { IEvent } from '../../../admin/types/IEvent';
 
 @Component({
 	selector: 'app-registration-list',
@@ -18,13 +19,7 @@ import { RouterLink } from '@angular/router';
 export class RegistrationListComponent {
 	protected readonly eventService: EventService = inject(EventService);
 
-	protected $events = computed(() =>
-		this.eventService.$events().filter((e) => {
-			const now = new Date().getTime();
-			const start = new Date(e.start).getTime();
-			return Math.floor(Math.abs(start - now) / (1000 * 60 * 60 * 24)) < 2; // filter events, that starts max day ago, so we dont show old events
-		}),
-	);
+	protected $events = computed(() => this.filterNearEvents(this.eventService.$events()));
 
 	constructor() {
 		this.eventService.loadEvents();
@@ -32,5 +27,21 @@ export class RegistrationListComponent {
 
 	protected clearSearch(table: Table) {
 		table.clear();
+	}
+
+	/**
+	 * Return events, that starts max day ago and not ended yet (for continuous events
+	 * @param events
+	 * @private
+	 */
+	private filterNearEvents(events: IEvent[]): IEvent[] {
+		const now = new Date().getTime();
+		return events.filter((e) => {
+			const start = new Date(e.start).getTime();
+			const end = new Date(e.end).getTime();
+			const isBeforeEventStart = Math.floor(Math.abs(start - now) / (1000 * 60 * 60 * 24)) < 2; // filter events, that starts max day ago, so we don't show old events
+			const isAfterEventEnd = now > end;
+			return isBeforeEventStart || !isAfterEventEnd;
+		});
 	}
 }

@@ -12,15 +12,13 @@
 		<tr>
 			<th>Název</th>
 			<th>Začátek</th>
-			<th>Konec</th>
 			<th></th>
 		</tr>
 	</ng-template>
 	<ng-template pTemplate="body" let-event>
-		<tr>
+		<tr [routerLink]="[event.id]">
 			<td>{{ event.name }}</td>
 			<td>{{ event.start | date: 'dd.MM YYYY' }}</td>
-			<td>{{ event.end | date: 'dd.MM YYYY' }}</td>
 			<td>
 				<p-button [routerLink]="[event.id]">Přidat se</p-button>
 			</td>

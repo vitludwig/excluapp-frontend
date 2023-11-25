@@ -1,0 +1,9 @@
+@import "variables";
+
+.registration-btn {
+	justify-content: center;
+
+	@media (max-width: $mobile-screen-width) {
+		width: 100%;
+	}
+}
