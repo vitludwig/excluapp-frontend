@@ -27,13 +27,6 @@
 					</div>
 				</ng-template>
 			</p-dropdown>
-
-<!--			<h4 class="text-center">Nebo</h4>-->
-
-<!--			<input type="text"-->
-<!--				pInputText-->
-<!--				placeholder="Nový piják"-->
-<!--				[(ngModel)]="newUser"/>-->
 		</div>
 	</ng-container>
 
@@ -47,6 +40,7 @@
 				optionLabel="name"
 				[style]="{'width':'100%'}"
 				[class.big-list-items]="users.length < 6"
+				emptyMessage="Žádní uživatelé"
 			/>
 		</div>
 	</ng-container>

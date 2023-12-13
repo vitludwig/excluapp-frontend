@@ -10,7 +10,7 @@ import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { OrderService } from '../../services/order/order.service';
-import { firstValueFrom, Observable, of, tap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { IBeerpong } from '../../types/IBeerpong';
@@ -61,12 +61,20 @@ export class SaleDashboardComponent implements OnDestroy {
 	protected $sortiment = computed(() => {
 		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive);
 	});
+
 	protected $kegStats = computed(() => {
 		const stats: Record<number, { keg: IKeg; status: Observable<IKegStatus> }> = {};
 		for (const keg of this.$sortiment()) {
 			stats[keg.id] = {
 				keg,
-				status: this.sortimentService.getKegStatus(keg.id),
+				status: this.sortimentService.getKegStatus(keg.id).pipe(
+					map((status) => {
+						status.consumedVolume *= 2;
+						status.totalVolume *= 2;
+
+						return status;
+					}),
+				),
 			};
 		}
 
