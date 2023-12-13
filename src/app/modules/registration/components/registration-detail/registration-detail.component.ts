@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../admin/services/event/event.service';
@@ -18,6 +18,8 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
 import { IUserSelectResponse } from '../../../user/types/IUserSelectResponse';
 import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../../common/services/auth.service';
 
 @Component({
 	selector: 'app-registration-detail',
@@ -44,11 +46,24 @@ export class RegistrationDetailComponent implements OnDestroy {
 	private readonly eventService: EventService = inject(EventService);
 	private readonly usersService: UserService = inject(UserService);
 	private readonly messageService = inject(MessageService);
+	protected readonly authService: AuthService = inject(AuthService);
 
 	protected eventId: number;
-	protected event: Observable<IEvent>;
+	protected $event: Signal<IEvent | undefined> = signal(undefined);
 	protected $eventUsers = signal<IUserRead[]>([]);
 	protected $usersToPick = computed(() => this.usersService.$users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)));
+	protected $enableRegistration = computed(() => {
+		if (this.authService.$isLogged()) {
+			return true;
+		}
+
+		const event = this.$event();
+		if (!event) {
+			return false;
+		}
+
+		return this.$eventUsers().length < event.capacity;
+	});
 	protected showSelectUserModal = false;
 
 	private attendDialogRef: DynamicDialogRef;
@@ -59,7 +74,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 
 		if (this.eventId) {
 			this.loadUsers();
-			this.event = this.eventService.getEvent(this.eventId);
+			this.$event = toSignal(this.eventService.getEvent(this.eventId));
 		}
 	}
 

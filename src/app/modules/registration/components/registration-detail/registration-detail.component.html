@@ -1,5 +1,5 @@
 <ng-container *ngIf="eventId; else missingId">
-	<ng-container *ngIf="(event | async) as currentEvent">
+	<ng-container *ngIf="$event() as currentEvent">
 		<h2 class="mb-0">{{ currentEvent.name }}</h2>
 
 		<div class="flex justify-content-between align-items-center">
@@ -10,6 +10,7 @@
 		<div class="mb-2">
 			<button pButton
 				class="registration-btn p-button-lg"
+				*ngIf="$enableRegistration()"
 				(click)="showAttendModal()"
 			>
 				<i class="pi pi-plus mr-2"></i>
