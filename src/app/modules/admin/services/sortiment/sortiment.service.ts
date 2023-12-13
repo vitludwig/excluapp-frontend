@@ -1,10 +1,11 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { catchError, combineLatest, filter, firstValueFrom, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { IKeg } from '../../types/IKeg';
 import { IEvent } from '../../types/IEvent';
 import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
+import { capitalizeEachFirstLetter } from '../../../../common/utils/StringUtils';
 
 @Injectable({
 	providedIn: 'root',
@@ -23,6 +24,11 @@ export class SortimentService {
 	 */
 	public $copySortiment = signal<IKeg[]>([]);
 
+	/**
+	 * Capitalized and trimmed unique keg's source names
+	 */
+	public $sources = signal<string[]>([]);
+
 	public loadSortiment(): Observable<IKeg[]> {
 		return this.http.get<IKeg[]>(environment.apiUrl + '/keg').pipe(
 			switchMap((kegs) => {
@@ -36,7 +42,8 @@ export class SortimentService {
 				this.$allSortiment.set(value);
 				this.$originalSortiment.set(value.filter((obj) => obj.isOriginal));
 				this.$copySortiment.set(value.filter((obj) => !obj.isOriginal));
-				console.log('all sortiment', this.$allSortiment());
+				this.$sources.set([...new Set(value.map((obj) => capitalizeEachFirstLetter(obj.sourceName.toLowerCase().trim())))]);
+
 				return value;
 			}),
 		);
