@@ -2,17 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageService, SharedModule } from 'primeng/api';
+import { SharedModule } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
-import { switchMap, tap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
-import { LoginDialogComponent } from '../../../../../layout/components/sidebar/components/login-dialog/login-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KegStatusDialogComponent } from '../components/keg-status-dialog/keg-status-dialog.component';
 import { IsIncludedPipe } from '../../../../../common/pipes/is-included.pipe';
@@ -57,11 +56,6 @@ export class SortimentListComponent implements OnInit, OnDestroy {
 
 		return result;
 	});
-
-	protected filterOptions: { name: string; value: string; styleClass: string }[] = [
-		{ name: 'Prázdné', value: 'empty', styleClass: 'p-button-info' },
-		{ name: 'Na párty', value: 'inEvent', styleClass: 'p-button-info' },
-	];
 
 	protected $filter = signal<string[]>([]);
 

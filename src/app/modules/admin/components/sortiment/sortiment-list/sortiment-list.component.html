@@ -1,7 +1,7 @@
 <div class="flex justify-content-between mb-3">
 	<div class="flex align-items-center">
 		<div class="ml-auto p-inputgroup">
-			<input pInputText type="text" (input)="sortimentsTable.filterGlobal($any($event.target).value, 'contains')" placeholder="Search" />
+			<input pInputText type="text" (input)="sortimentsTable.filterGlobal($any($event.target).value, 'contains')" placeholder="Vyhledat" />
 			<button pButton icon="pi pi-filter-slash" class="p-button-outlined" (click)="clearSearch(sortimentsTable)"></button>
 		</div>
 	</div>
@@ -29,7 +29,7 @@
 	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" [routerLink]="['new']"></p-button>
 </div>
 
-<p-table #sortimentsTable [value]="$kegs()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+<p-table #sortimentsTable [value]="$kegs()" [rowsPerPageOptions]="[10,20,50, {showAll:'All'}]" [paginator]="true" [rows]="10" [globalFilterFields]="['name', 'sourceName']">
 	<ng-template pTemplate="header">
 		<tr>
 			<th></th>
