@@ -4,11 +4,12 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService, SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
 	selector: 'app-payday-table',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, SharedModule, TableModule],
+	imports: [CommonModule, ButtonModule, SharedModule, TableModule, DialogModule],
 	templateUrl: './payday-table.component.html',
 	styleUrls: ['./payday-table.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +18,9 @@ export class PaydayTableComponent {
 	private readonly messageService: MessageService = inject(MessageService);
 
 	private _data: IEventPaydayStatistics[] = [];
+
+	protected showPaydayDialog: boolean = false;
+	protected paydayResult: string = '';
 
 	@Input({ required: true })
 	public set data(value: IEventPaydayStatistics[]) {
@@ -43,7 +47,12 @@ export class PaydayTableComponent {
 				return `${value.name}: ${value.price}Kč`;
 			})
 			.join('\n');
-		await navigator.clipboard.writeText(result);
-		this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Zkopírováno do schránky' });
+		if (window.isSecureContext) {
+			await navigator.clipboard.writeText(result);
+			this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Zkopírováno do schránky' });
+		} else {
+			this.paydayResult = result;
+			this.showPaydayDialog = true;
+		}
 	}
 }

@@ -21,3 +21,11 @@
 <p-button (click)="copyPaydayResult()"
 	styleClass="p-button-lg p-button-primary">Zkopírovat do schránky
 </p-button>
+
+<p-dialog header="Pejdej" [(visible)]="showPaydayDialog" [style]="{width: '50vw'}">
+	<textarea readonly="readonly" [value]="paydayResult" [rows]="data.length" class="w-full"></textarea>
+
+	<ng-template pTemplate="footer">
+		<p-button (click)="showPaydayDialog=false" label="Zavřít" styleClass="p-button-text"></p-button>
+	</ng-template>
+</p-dialog>

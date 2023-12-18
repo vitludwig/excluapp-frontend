@@ -34,7 +34,7 @@ export class PaydayComponent {
 						let found = accumulator.find((element) => element.userId === c.userId);
 						if (found) {
 							found.price = Number(found.price) + Number(c.price);
-							found.volume = Number(found.volume) + Number(c.volume);
+							found.amount = Number(found.amount) + Number(c.amount);
 						} else {
 							accumulator.push(c);
 						}
