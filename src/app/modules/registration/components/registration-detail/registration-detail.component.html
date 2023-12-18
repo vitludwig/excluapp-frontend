@@ -45,6 +45,11 @@
 		>
 			<app-select-user [users]="$usersToPick()" (select)="selectUser($event)" />
 		</p-dialog>
+
+		<h2>Na čepu</h2>
+		<ul>
+			<li *ngFor="let keg of $eventKegs()">{{keg.name}} ({{keg.sourceName}})</li>
+		</ul>
 	</ng-container>
 </ng-container>
 

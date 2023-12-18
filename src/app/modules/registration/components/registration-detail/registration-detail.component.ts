@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, Signal
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../admin/services/event/event.service';
-import { Observable, tap } from 'rxjs';
+import { firstValueFrom, Observable, tap } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService, SharedModule } from 'primeng/api';
@@ -20,6 +20,8 @@ import { IUserSelectResponse } from '../../../user/types/IUserSelectResponse';
 import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../common/services/auth.service';
+import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
+import { IKeg } from '../../../admin/types/IKeg';
 
 @Component({
 	selector: 'app-registration-detail',
@@ -46,6 +48,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 	private readonly eventService: EventService = inject(EventService);
 	private readonly usersService: UserService = inject(UserService);
 	private readonly messageService = inject(MessageService);
+	private readonly sortimentService = inject(SortimentService);
 	protected readonly authService: AuthService = inject(AuthService);
 
 	protected eventId: number;
@@ -64,6 +67,15 @@ export class RegistrationDetailComponent implements OnDestroy {
 
 		return this.$eventUsers().length < event.capacity;
 	});
+	protected $eventKegs: Signal<IKeg[]> = computed(() => {
+		const event = this.$event();
+		if (!event) {
+			return [];
+		}
+
+		return this.sortimentService.$copySortiment().filter((keg) => event.kegs.includes(keg.id));
+	});
+
 	protected showSelectUserModal = false;
 
 	private attendDialogRef: DynamicDialogRef;
@@ -98,11 +110,9 @@ export class RegistrationDetailComponent implements OnDestroy {
 		}
 	}
 
-	protected unattend(userId: number): void {
-		this.eventService
-			.unAttendEvent(userId, this.eventId)
-			.pipe(tap(() => this.loadUsers()))
-			.subscribe();
+	protected async unattend(userId: number): Promise<void> {
+		await firstValueFrom(this.eventService.unAttendEvent(userId, this.eventId));
+		this.loadUsers();
 	}
 
 	private attendEvent(userId: number, eventId: number): void {
@@ -115,14 +125,9 @@ export class RegistrationDetailComponent implements OnDestroy {
 			});
 	}
 
-	private loadUsers(): void {
-		this.eventService
-			.getUsersForEvent(this.eventId)
-			.pipe(
-				tap((users) => {
-					this.$eventUsers.set(users);
-				}),
-			)
-			.subscribe();
+	private async loadUsers(): Promise<void> {
+		const users = await firstValueFrom(this.eventService.getUsersForEvent(this.eventId));
+
+		this.$eventUsers.set(users);
 	}
 }
