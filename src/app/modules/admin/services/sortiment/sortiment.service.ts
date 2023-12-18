@@ -36,7 +36,8 @@ export class SortimentService {
 				if (kegs.length === 0) {
 					return of([]);
 				}
-				return forkJoin(kegs.map((k) => this.getKegEvent(k.id).pipe(map((event) => ({ ...k, event })))));
+				return of(kegs ?? []);
+				// return forkJoin(kegs.map((k) => this.getKegEvent(k.id).pipe(map((event) => ({ ...k, event })))));
 			}),
 			map((value) => {
 				this.$allSortiment.set(value);

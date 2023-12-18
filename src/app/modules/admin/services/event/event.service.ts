@@ -24,7 +24,7 @@ export class EventService {
 		this.http
 			.get<IEvent[]>(environment.apiUrl + '/events')
 			.pipe(
-				switchMap((events) => forkJoin(events.map((e) => this.appendsKegsToEvent(e)))),
+				// switchMap((events) => forkJoin(events.map((e) => this.appendsKegsToEvent(e)))),
 				tap((events) => {
 					events.forEach((e) => (e.kegs = e.kegs.map((k) => +k))); // TODO: do this on higher level, so everywhere kegs are numbers
 					this.$events.set(events);
@@ -47,14 +47,14 @@ export class EventService {
 		}
 	}
 
-	public appendsKegsToEvent(event: IEvent): Observable<IEvent> {
-		return this.http.get<{ eventId: number; kegId: number }[]>(`${environment.apiUrl}/events/${event.id}/kegs`).pipe(
-			map((result) => ({
-				...event,
-				kegs: result.map((obj) => obj.kegId),
-			})),
-		);
-	}
+	// public appendsKegsToEvent(event: IEvent): Observable<IEvent> {
+	// 	return this.http.get<{ eventId: number; kegId: number }[]>(`${environment.apiUrl}/events/${event.id}/kegs`).pipe(
+	// 		map((result) => ({
+	// 			...event,
+	// 			kegs: result.map((obj) => obj.kegId),
+	// 		})),
+	// 	);
+	// }
 
 	public addEvent(value: IEvent): Observable<IEvent> {
 		return this.http.post<IEvent>(environment.apiUrl + '/events', value);
@@ -62,7 +62,8 @@ export class EventService {
 
 	public getEvent(id: number): Observable<IEvent> {
 		// TODO: map kegs to event on backend
-		return this.http.get<IEvent>(environment.apiUrl + '/events/' + id).pipe(switchMap((event) => this.appendsKegsToEvent(event)));
+		// return this.http.get<IEvent>(environment.apiUrl + '/events/' + id).pipe(switchMap((event) => this.appendsKegsToEvent(event)));
+		return this.http.get<IEvent>(environment.apiUrl + '/events/' + id);
 	}
 
 	public updateEvent(id: number, value: IEvent): Observable<IEvent> {
