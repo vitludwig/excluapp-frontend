@@ -63,6 +63,7 @@ export class OrderService {
 		if ($event) {
 			$event.stopPropagation();
 		}
+
 		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong, volume }]);
 	}
 

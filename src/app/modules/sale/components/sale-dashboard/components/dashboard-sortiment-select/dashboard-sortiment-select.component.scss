@@ -27,6 +27,10 @@
 					background-color: var(--orange-900);
 				}
 			}
+
+			.p-card-subtitle {
+				font-size: 20px;
+			}
 		}
 
 		.order-control-btn {
@@ -37,6 +41,13 @@
 				.p-button-icon {
 					font-size: 2.5rem;
 				}
+			}
+		}
+
+		p-confirmDialog {
+			.p-dialog-footer {
+				display: flex;
+				justify-content: space-between;
 			}
 		}
 	}

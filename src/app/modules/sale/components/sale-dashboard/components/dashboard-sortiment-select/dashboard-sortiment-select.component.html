@@ -56,13 +56,15 @@
 	</div>
 </div>
 
+<p-confirmDialog header="Potvrdit" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
 <ng-template #sortimentCard
 	let-category="category"
 	let-item="item"
 	let-subheader="subheader"
 >
 	<p-card
-		(click)="orderService.addOneToCart(item.id, selectedUser.id, category)"
+		(click)="addToCart(item.id, selectedUser.id, category)"
 		[header]="item.name"
 		[subheader]="subheader"
 		[class.active]="orderService.$cartCount()[category | asSortimentCategory][item.id]"
@@ -70,7 +72,8 @@
 		class="card"
 	>
 		<div class="card-controls w-full flex justify-content-between align-items-center"
-			*ngIf="orderService.$cartCount()[category | asSortimentCategory][item.id]">
+			*ngIf="orderService.$cartCount()[category | asSortimentCategory][item.id]"
+		>
 			<p-button type="button"
 				icon="pi pi-minus"
 				class="p-button-rounded"

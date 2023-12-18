@@ -14,16 +14,17 @@ import { OrderService } from '../../../../services/order/order.service';
 import { IOrderRead, IOrderReadGroup } from '../../../../types/IOrder';
 import { IKeg } from '../../../../../admin/types/IKeg';
 import { SummaryItemDialogComponent } from '../../../summary-item-dialog/summary-item-dialog.component';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
 	selector: 'app-dashboard-sortiment-select',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, CardModule],
+	imports: [CommonModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, CardModule, ConfirmDialogModule],
 	templateUrl: './dashboard-sortiment-select.component.html',
 	styleUrls: ['./dashboard-sortiment-select.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [DialogService],
+	providers: [DialogService, ConfirmationService],
 })
 export class DashboardSortimentSelectComponent implements OnDestroy {
 	protected readonly sortimentService = inject(SortimentService);
@@ -31,6 +32,7 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 	protected readonly orderService = inject(OrderService);
 	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly messageService = inject(MessageService);
+	private readonly confirmationService = inject(ConfirmationService);
 
 	protected readonly EBeerVolume = EBeerVolume;
 
@@ -103,6 +105,23 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 
 	protected cancelOrder(): void {
 		this.cancel.emit();
+	}
+
+	public addToCart(kegId: number, userId: number, volume: EBeerVolume = EBeerVolume.BIG, isBeerpong: boolean = false, $event?: MouseEvent) {
+		if (volume === EBeerVolume.SMALL) {
+			this.confirmationService.confirm({
+				message: 'Fakt seš taková křupka a piješ malý pivo?',
+				acceptLabel: 'Ano',
+				rejectLabel: 'Ne',
+				acceptButtonStyleClass: 'p-button-success',
+				rejectButtonStyleClass: 'p-button-danger',
+				accept: () => {
+					this.orderService.addOneToCart(kegId, userId, volume, isBeerpong, $event);
+				},
+			});
+		} else {
+			this.orderService.addOneToCart(kegId, userId, volume, isBeerpong, $event);
+		}
 	}
 
 	private groupOrderBySortiment(orders: IOrderRead[]): IOrderReadGroup[] {
