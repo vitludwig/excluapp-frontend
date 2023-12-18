@@ -26,14 +26,12 @@ export class EventService {
 			.pipe(
 				switchMap((events) => forkJoin(events.map((e) => this.appendsKegsToEvent(e)))),
 				tap((events) => {
-					console.log('events', events);
 					events.forEach((e) => (e.kegs = e.kegs.map((k) => +k))); // TODO: do this on higher level, so everywhere kegs are numbers
 					this.$events.set(events);
 
 					const activeEventId = JSON.parse(localStorage.getItem('activeEvent') ?? '');
 					if (activeEventId) {
 						const event = events.find((e) => e.id === activeEventId) ?? null;
-						console.log('found saved event', event);
 						this.$activeEvent.set(event);
 					}
 				}),

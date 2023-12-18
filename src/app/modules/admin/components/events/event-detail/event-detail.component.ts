@@ -183,7 +183,7 @@ export class EventDetailComponent {
 					event.start = new Date(event.start);
 					event.end = new Date(event.end);
 					event.kegs = event.kegs.map((k) => +k);
-					console.log('all srotiment in detail', this.sortimentService.$allSortiment());
+
 					const eventKegs = this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id));
 					this.originalKegs = eventKegs;
 					this.form.patchValue(event);

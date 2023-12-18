@@ -36,8 +36,4 @@ export class UserListComponent {
 			.pipe(tap(() => this.userService.loadUsers()))
 			.subscribe();
 	}
-
-	protected test(value: any) {
-		console.log('confirmed', value);
-	}
 }

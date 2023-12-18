@@ -3,18 +3,19 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SharedModule } from 'primeng/api';
-import { Table, TableModule } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
-import { switchMap } from 'rxjs';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { KegStatusDialogComponent } from '../components/keg-status-dialog/keg-status-dialog.component';
+import { DialogService } from 'primeng/dynamicdialog';
 import { IsIncludedPipe } from '../../../../../common/pipes/is-included.pipe';
+import { SortimentListTableComponent } from './components/sortiment-list-table/sortiment-list-table.component';
+import { TabViewModule } from 'primeng/tabview';
+import { IKeg } from '../../../types/IKeg';
 
 @Component({
 	selector: 'app-sortiment-list',
@@ -32,62 +33,33 @@ import { IsIncludedPipe } from '../../../../../common/pipes/is-included.pipe';
 		TooltipModule,
 		ConfirmComponent,
 		IsIncludedPipe,
+		SortimentListTableComponent,
+		TabViewModule,
 	],
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [DialogService],
 })
-export class SortimentListComponent implements OnInit, OnDestroy {
+export class SortimentListComponent implements OnInit {
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
-	private readonly dialogService: DialogService = inject(DialogService);
 
-	protected $kegs = computed(() => {
-		let result = this.sortimentService.$allSortiment();
+	protected $originalKegs = computed(() => {
+		let result = this.sortimentService.$originalSortiment();
 
-		if (this.$filter().includes('inEvent')) {
-			result = result.filter((k) => k.event);
-		}
-		if (this.$filter().includes('empty')) {
-			result = result.filter((k) => k.isEmpty);
-		} else {
-			result = result.filter((k) => !k.isEmpty);
-		}
+		return this.applyFilter(this.$filter(), result);
+	});
 
-		return result;
+	protected $copyKegs = computed(() => {
+		let result = this.sortimentService.$copySortiment();
+
+		return this.applyFilter(this.$filter(), result);
 	});
 
 	protected $filter = signal<string[]>([]);
 
-	private kegStatusDialogRef: DynamicDialogRef | undefined;
-
 	public ngOnInit(): void {
 		this.sortimentService.loadSortiment().subscribe();
-	}
-
-	protected clearSearch(table: Table) {
-		table.clear();
-	}
-
-	protected removeKeg(id: string) {
-		this.sortimentService
-			.removeSortiment(id)
-			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
-			.subscribe();
-	}
-
-	protected setKegEmptyStatus(id: number, isEmpty: boolean) {
-		this.sortimentService
-			.updateSortiment(id, { isEmpty })
-			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
-			.subscribe();
-	}
-
-	protected setKegDefectiveStatus(id: number, isDefective: boolean) {
-		this.sortimentService
-			.updateSortiment(id, { isDefective })
-			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
-			.subscribe();
 	}
 
 	protected toggleFilter(filter: string) {
@@ -100,17 +72,18 @@ export class SortimentListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	protected showKegStatusDialog(kegId: number) {
-		this.kegStatusDialogRef = this.dialogService.open(KegStatusDialogComponent, {
-			header: 'Vypito ze sudu',
-			width: '400px',
-			data: {
-				kegId,
-			},
-		});
-	}
+	private applyFilter(filter: string[], data: IKeg[]): IKeg[] {
+		let result;
 
-	public ngOnDestroy() {
-		this.kegStatusDialogRef?.close();
+		if (filter.includes('inEvent')) {
+			result = data.filter((k) => k.event);
+		}
+		if (filter.includes('empty')) {
+			result = data.filter((k) => k.isEmpty);
+		} else {
+			result = data.filter((k) => !k.isEmpty);
+		}
+
+		return result;
 	}
 }

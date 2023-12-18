@@ -83,4 +83,10 @@ export class SortimentService {
 	public getKegStatus(kegId: number): Observable<IKegStatus> {
 		return this.http.get<IKegStatus>(`${environment.apiUrl}/keg/${kegId}/status`);
 	}
+
+	public getDuplicateKegs(keg: IKeg): IKeg[] {
+		return this.$originalSortiment().filter(
+			(k) => k.sourceName.toLowerCase().trim() === keg.sourceName.toLowerCase().trim() && k.name.toLowerCase().trim() === keg.name.toLowerCase().trim() && k.volume === keg.volume,
+		);
+	}
 }

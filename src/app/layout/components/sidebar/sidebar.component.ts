@@ -100,7 +100,7 @@ export class SidebarComponent implements OnDestroy {
 
 		this.loginDialogRef.onClose.subscribe((result: string) => {
 			const isCorrect = this.authService.login(result);
-			console.log('isCorrect', isCorrect);
+
 			if (isCorrect) {
 				this.messageService.add({ severity: 'success', summary: 'Přihlášení úspěšné', detail: 'Vítej!' });
 			} else {

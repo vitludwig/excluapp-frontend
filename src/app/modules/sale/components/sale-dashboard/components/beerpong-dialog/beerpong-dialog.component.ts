@@ -48,7 +48,6 @@ export class BeerpongDialogComponent implements OnInit {
 	}
 
 	protected onUserSelect(event: MouseEvent): void {
-		console.log(Object.values(this.data));
 		const kegs = Object.values(this.data).map((e) => e.length);
 		if (kegs.some((e) => e > 2)) {
 			event.preventDefault();
