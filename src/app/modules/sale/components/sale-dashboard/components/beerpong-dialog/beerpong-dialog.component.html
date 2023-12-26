@@ -1,16 +1,17 @@
 <div class="flex gap-2">
-	<div class="beerpong-item flex-1"
-		*ngFor="let keg of kegs"
-	>
-		<h3 class="keg-title">{{ keg.name }}</h3>
-		<p-listbox [options]="users"
-			[(ngModel)]="data[keg.id]"
-			[multiple]="true"
-			[metaKeySelection]="false"
-			optionLabel="name"
-			[style]="{'width':'100%'}"
-		/>
-	</div>
+	@for (keg of kegs; track keg) {
+		<div class="beerpong-item flex-1"
+		>
+			<h3 class="keg-title">{{ keg.name }}</h3>
+			<p-listbox [options]="users"
+				[(ngModel)]="data[keg.id]"
+				[multiple]="true"
+				[metaKeySelection]="false"
+				optionLabel="name"
+				[style]="{'width':'100%'}"
+			/>
+		</div>
+	}
 </div>
 
 <div class="p-dialog-footer">

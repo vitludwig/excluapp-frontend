@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 @Component({
 	selector: 'app-invite-dialog',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule],
+	imports: [ButtonModule, InputTextModule],
 	templateUrl: './invite-dialog.component.html',
 	styleUrls: ['./invite-dialog.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

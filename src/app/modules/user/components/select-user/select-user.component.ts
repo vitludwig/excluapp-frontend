@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -12,7 +12,7 @@ import { IUserSelectResponse } from '../../types/IUserSelectResponse';
 @Component({
 	selector: 'app-select-user',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, DropdownModule, InputTextModule, ListboxModule, PaginatorModule, SharedModule],
+	imports: [ButtonModule, DropdownModule, InputTextModule, ListboxModule, PaginatorModule, SharedModule],
 	templateUrl: './select-user.component.html',
 	styleUrls: ['./select-user.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

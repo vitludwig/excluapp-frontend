@@ -5,7 +5,9 @@
 			[outlined]="!('empty' | isIncluded: $filter())"
 			(click)="toggleFilter('empty')"
 		>
-			<i class="pi pi-fw pi-check mr-2" *ngIf="'empty' | isIncluded: $filter()"></i>
+			@if('empty' | isIncluded: $filter()) {
+				<i class="pi pi-fw pi-check mr-2"></i>
+			}
 			Prázdné
 		</p-button>
 
@@ -14,19 +16,28 @@
 			[outlined]="!('inEvent' | isIncluded: $filter())"
 			(click)="toggleFilter('inEvent')"
 		>
-			<i class="pi pi-fw pi-check mr-2" *ngIf="'inEvent' | isIncluded: $filter()"></i>
+			@if('inEvent' | isIncluded: $filter()) {
+				<i class="pi pi-fw pi-check mr-2"></i>
+			}
 			Na párty
 		</p-button>
 	</div>
 
-	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" label="Přidat předlohu" [routerLink]="['new']"></p-button>
+	<p-button styleClass="p-button-lg p-button-success"
+		icon="pi pi-fw pi-plus"
+		label="Přidat předlohu"
+		[routerLink]="['new']"></p-button>
 </div>
 
 <p-tabView>
 	<p-tabPanel header="Sudy na akcích">
-		<app-sortiment-list-table *ngIf="$copyKegs() as kegs" [kegs]="kegs"></app-sortiment-list-table>
+		@if($copyKegs(); as kegs) {
+			<app-sortiment-list-table [kegs]="kegs" />
+		}
 	</p-tabPanel>
 	<p-tabPanel header="Předlohy">
-		<app-sortiment-list-table *ngIf="$originalKegs() as kegs" [kegs]="kegs"></app-sortiment-list-table>
+		@if($originalKegs(); as kegs) {
+			<app-sortiment-list-table [kegs]="kegs" />
+		}
 	</p-tabPanel>
 </p-tabView>

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { MessageService, SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -9,7 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 @Component({
 	selector: 'app-payday-table',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, SharedModule, TableModule, DialogModule],
+	imports: [ButtonModule, SharedModule, TableModule, DialogModule],
 	templateUrl: './payday-table.component.html',
 	styleUrls: ['./payday-table.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

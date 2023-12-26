@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -7,7 +7,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
 	selector: 'app-login-dialog',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputTextModule],
+	imports: [ButtonModule, InputTextModule],
 	templateUrl: './login-dialog.component.html',
 	styleUrls: ['./login-dialog.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

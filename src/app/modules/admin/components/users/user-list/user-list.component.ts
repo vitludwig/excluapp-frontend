@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
@@ -13,7 +13,7 @@ import { ConfirmComponent } from '../../../../../common/components/confirm/confi
 @Component({
 	selector: 'app-user-list',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, SharedModule, TableModule, RouterLink, InputTextModule, ConfirmPopupModule, ConfirmComponent],
+	imports: [ButtonModule, SharedModule, TableModule, RouterLink, InputTextModule, ConfirmPopupModule, ConfirmComponent],
 	templateUrl: './user-list.component.html',
 	styleUrls: ['./user-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

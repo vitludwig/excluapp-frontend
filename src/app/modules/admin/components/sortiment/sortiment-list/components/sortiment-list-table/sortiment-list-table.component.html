@@ -1,11 +1,22 @@
 <div class="flex align-items-center mb-3">
 	<div class="ml-auto p-inputgroup">
-		<input pInputText type="text" (input)="sortimentsTable.filterGlobal($any($event.target).value, 'startsWith')" placeholder="Vyhledat" />
-		<button pButton icon="pi pi-filter-slash" class="p-button-outlined" (click)="clearSearch(sortimentsTable)"></button>
+		<input pInputText
+			type="text"
+			(input)="sortimentsTable.filterGlobal($any($event.target).value, 'startsWith')"
+			placeholder="Vyhledat"/>
+		<button pButton
+			icon="pi pi-filter-slash"
+			class="p-button-outlined"
+			(click)="clearSearch(sortimentsTable)"></button>
 	</div>
 </div>
 
-<p-table #sortimentsTable [value]="kegs" [rowsPerPageOptions]="[10,20,50, {showAll:'All'}]" [paginator]="true" [rows]="10" [globalFilterFields]="['name', 'sourceName']">
+<p-table #sortimentsTable
+	[value]="kegs"
+	[rowsPerPageOptions]="[10,20,50, {showAll:'All'}]"
+	[paginator]="true"
+	[rows]="10"
+	[globalFilterFields]="['name', 'sourceName']">
 	<ng-template pTemplate="header">
 		<tr>
 			<th></th>
@@ -18,24 +29,29 @@
 			<th></th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body" let-sortiment>
+	<ng-template pTemplate="body"
+		let-sortiment>
 		<tr>
 			<td>
-				<i class="pi pi-shield" pTooltip="Pivní předloha" *ngIf="sortiment.isOriginal"></i>
+				@if (sortiment.isOriginal) {
+					<i class="pi pi-shield"
+						pTooltip="Pivní předloha">
+					</i>
+				}
 			</td>
 			<td>{{ sortiment.name }} ({{ sortiment.sourceName }})</td>
 			<td>
-				<ng-container *ngIf="!sortiment.isOriginal">
+				@if (!sortiment.isOriginal) {
 					{{ sortiment.isCashed ? 'Ano' : 'Ne' }}
-				</ng-container>
+				}
 			</td>
 			<td>{{ sortiment.volume }}</td>
 			<td>{{ sortiment.price }} Kč</td>
 			<td>{{ sortiment.isEmpty ? 'Prázdný' : 'Neprázdný' }}</td>
 			<td>
-				<ng-container *ngIf="sortiment.event?.event as event">
+				@if (sortiment.event?.event; as event) {
 					{{ event.name }}
-				</ng-container>
+				}
 			</td>
 			<td class="flex gap-2">
 				<p-button [routerLink]="['detail', sortiment.id]"
@@ -50,12 +66,13 @@
 					[icon]="'pi pi-fw ' + (sortiment.isEmpty ? 'pi-circle-fill' : 'pi-circle')"
 				/>
 
-				<p-button
-					*ngIf="!sortiment.isOriginal"
-					(click)="showKegStatusDialog(sortiment.id)"
-					[severity]="'info'"
-					icon="pi pi-fw pi-question-circle"
-				/>
+				@if (!sortiment.isOriginal) {
+					<p-button
+						(click)="showKegStatusDialog(sortiment.id)"
+						[severity]="'info'"
+						icon="pi pi-fw pi-question-circle"
+					/>
+				}
 
 				<div class="ml-auto flex gap-2">
 

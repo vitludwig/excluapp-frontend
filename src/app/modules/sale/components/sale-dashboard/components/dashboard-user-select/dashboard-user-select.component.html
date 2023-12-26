@@ -1,6 +1,8 @@
-<app-select-user *ngIf="users"
-	[users]="users"
-	layout="list"
-	[multiple]="false"
-	(select)="selectUser($event.existingUser![0])"
-/>
+@if (users) {
+	<app-select-user
+		[users]="users"
+		layout="list"
+		[multiple]="false"
+		(select)="selectUser($event.existingUser![0])"
+	/>
+}

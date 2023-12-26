@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
@@ -12,7 +12,7 @@ import { UserService } from '../../../../user/services/user/user.service';
 @Component({
 	selector: 'app-user-detail',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, CalendarModule, InputTextModule, PaginatorModule, ReactiveFormsModule],
+	imports: [ButtonModule, CalendarModule, InputTextModule, PaginatorModule, ReactiveFormsModule],
 	templateUrl: './user-detail.component.html',
 	styleUrls: ['./user-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

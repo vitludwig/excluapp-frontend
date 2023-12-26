@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { LayoutService } from '../../services/layout/layout.service';
@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
 	selector: 'app-topbar',
 	standalone: true,
-	imports: [CommonModule, ToolbarModule, ButtonModule, DropdownModule, FormsModule],
+	imports: [ToolbarModule, ButtonModule, DropdownModule, FormsModule],
 	templateUrl: './topbar.component.html',
 	styleUrls: ['./topbar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

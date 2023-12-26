@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 @Component({
 	selector: 'app-sortiment-list-table',
 	standalone: true,
-	imports: [CommonModule, TableModule, TooltipModule, ButtonModule, ConfirmComponent, RouterLink, InputTextModule],
+	imports: [TableModule, TooltipModule, ButtonModule, ConfirmComponent, RouterLink, InputTextModule],
 	templateUrl: './sortiment-list-table.component.html',
 	styleUrls: ['./sortiment-list-table.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

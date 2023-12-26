@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MenuModule } from 'primeng/menu';
 import { MenuItem, MessageService } from 'primeng/api';
 import { SidebarModule } from 'primeng/sidebar';
@@ -16,7 +16,7 @@ import { SortPipe } from '../../../common/pipes/sort.pipe';
 @Component({
 	selector: 'app-sidebar',
 	standalone: true,
-	imports: [CommonModule, MenuModule, SidebarModule, ButtonModule, DropdownModule, FormsModule, SortPipe],
+	imports: [MenuModule, SidebarModule, ButtonModule, DropdownModule, FormsModule, SortPipe],
 	templateUrl: './sidebar.component.html',
 	styleUrls: ['./sidebar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

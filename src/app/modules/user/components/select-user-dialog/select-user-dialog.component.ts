@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,7 +13,7 @@ import { SelectUserComponent } from '../select-user/select-user.component';
 @Component({
 	selector: 'app-select-user-dialog',
 	standalone: true,
-	imports: [CommonModule, DropdownModule, FormsModule, InputTextModule, ButtonModule, ListboxModule, SelectUserComponent],
+	imports: [DropdownModule, FormsModule, InputTextModule, ButtonModule, ListboxModule, SelectUserComponent],
 	templateUrl: './select-user-dialog.component.html',
 	styleUrls: ['./select-user-dialog.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

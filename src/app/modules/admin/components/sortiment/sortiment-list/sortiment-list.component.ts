@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SharedModule } from 'primeng/api';
@@ -21,21 +21,20 @@ import { IKeg } from '../../../types/IKeg';
 	selector: 'app-sortiment-list',
 	standalone: true,
 	imports: [
-		CommonModule,
-		ButtonModule,
-		InputTextModule,
-		SharedModule,
-		TableModule,
-		RouterLink,
-		InputSwitchModule,
-		FormsModule,
-		SelectButtonModule,
-		TooltipModule,
-		ConfirmComponent,
-		IsIncludedPipe,
-		SortimentListTableComponent,
-		TabViewModule,
-	],
+    ButtonModule,
+    InputTextModule,
+    SharedModule,
+    TableModule,
+    RouterLink,
+    InputSwitchModule,
+    FormsModule,
+    SelectButtonModule,
+    TooltipModule,
+    ConfirmComponent,
+    IsIncludedPipe,
+    SortimentListTableComponent,
+    TabViewModule
+],
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

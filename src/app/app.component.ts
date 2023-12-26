@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './layout/components/sidebar/sidebar.component';
 import { TopbarComponent } from './layout/components/topbar/topbar.component';
@@ -14,7 +14,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent, ToastModule, ConfirmPopupModule],
+	imports: [RouterOutlet, SidebarComponent, TopbarComponent, ToastModule, ConfirmPopupModule],
 	providers: [MessageService, ConfirmationService],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],

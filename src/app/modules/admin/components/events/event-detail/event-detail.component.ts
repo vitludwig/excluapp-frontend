@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -20,17 +20,16 @@ import { ConfirmComponent } from '../../../../../common/components/confirm/confi
 	selector: 'app-event-detail',
 	standalone: true,
 	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		InputTextModule,
-		CalendarModule,
-		TableModule,
-		RouterLink,
-		EventSortimentComponent,
-		TooltipModule,
-		ConfirmDialogModule,
-		ConfirmComponent,
-	],
+    ReactiveFormsModule,
+    InputTextModule,
+    CalendarModule,
+    TableModule,
+    RouterLink,
+    EventSortimentComponent,
+    TooltipModule,
+    ConfirmDialogModule,
+    ConfirmComponent
+],
 	providers: [ConfirmationService, MessageService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],

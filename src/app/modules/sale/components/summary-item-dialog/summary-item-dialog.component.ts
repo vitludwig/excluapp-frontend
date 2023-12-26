@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
 	selector: 'app-summary-item-dialog',
 	standalone: true,
-	imports: [CommonModule, InputNumberModule, FormsModule, ButtonModule],
+	imports: [InputNumberModule, FormsModule, ButtonModule],
 	templateUrl: './summary-item-dialog.component.html',
 	styleUrls: ['./summary-item-dialog.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

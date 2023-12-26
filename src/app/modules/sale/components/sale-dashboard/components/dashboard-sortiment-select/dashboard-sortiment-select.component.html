@@ -1,15 +1,15 @@
 <div class="flex gap-3 flex-wrap">
-	<ng-container *ngFor="let item of sortiment">
+	@for (item of sortiment; track item) {
 		<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.BIG, item: item}"></ng-container>
-	</ng-container>
+	}
 </div>
 
 <p-divider/>
 
 <div class="flex gap-3 flex-wrap">
-	<ng-container *ngFor="let item of sortiment">
+	@for (item of sortiment; track item) {
 		<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.SMALL, item: item, subheader: 'malé'}"></ng-container>
-	</ng-container>
+	}
 </div>
 
 <div class="slide-panel">
@@ -37,26 +37,30 @@
 		[class.visible]="$showSummary()"
 	>
 		<h4>Už jsi vypil/a</h4>
-		<ng-container *ngIf="($summary() | async) as summary">
-			<h5 *ngIf="summary.length === 0">Nic jsi nevypil/a, křupko!</h5>
-			<div class="summary-item"
-				*ngFor="let item of summary"
-			>
-				<span>{{item.kegName ?? 'Pivečko nebo kyseláček'}}</span>
-				<div class="flex align-items-center">
-					<span>{{item.count}}ks</span>
-					<p-button icon="pi pi-pencil"
-						class="ml-4"
-						styleClass="p-button-raised p-button-info p-button-sm"
-						(click)="showSummaryDetail(item)"
-					/>
+		@if ($summary() | async; as summary) {
+			@if (summary.length === 0) {
+				<h5>Nic jsi nevypil/a, křupko!</h5>
+			}
+			@for (item of summary; track item) {
+				<div class="summary-item"
+				>
+					<span>{{ item.kegName ?? 'Pivečko nebo kyseláček' }}</span>
+					<div class="flex align-items-center">
+						<span>{{ item.count }}ks</span>
+						<p-button icon="pi pi-pencil"
+							class="ml-4"
+							styleClass="p-button-raised p-button-info p-button-sm"
+							(click)="showSummaryDetail(item)"
+						/>
+					</div>
 				</div>
-			</div>
-		</ng-container>
+			}
+		}
 	</div>
 </div>
 
-<p-confirmDialog header="Potvrdit" icon="pi pi-exclamation-triangle" />
+<p-confirmDialog header="Potvrdit"
+	icon="pi pi-exclamation-triangle"/>
 
 <ng-template #sortimentCard
 	let-category="category"
@@ -71,23 +75,24 @@
 		[class.card-outline]="category === EBeerVolume.SMALL"
 		class="card"
 	>
-		<div class="card-controls w-full flex justify-content-between align-items-center"
-			*ngIf="orderService.$cartCount()[category | asSortimentCategory][item.id]"
-		>
-			<p-button type="button"
-				icon="pi pi-minus"
-				class="p-button-rounded"
-				styleClass="p-button-lg"
-				(click)="orderService.removeOneFromCart(item, $event, category)"></p-button>
-
-			<span *ngIf="orderService.$cartCount()[category | asSortimentCategory][item.id] as count">+ {{ count }}ks</span>
-
-			<p-button type="button"
-				icon="pi pi-plus"
-				class="p-button-rounded"
-				styleClass="p-button-lg"
-				(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"></p-button>
-		</div>
+		@if (orderService.$cartCount()[category | asSortimentCategory][item.id]) {
+			<div class="card-controls w-full flex justify-content-between align-items-center"
+			>
+				<p-button type="button"
+					icon="pi pi-minus"
+					class="p-button-rounded"
+					styleClass="p-button-lg"
+					(click)="orderService.removeOneFromCart(item, $event, category)"></p-button>
+				@if (orderService.$cartCount()[category | asSortimentCategory][item.id]; as count) {
+					<span>+ {{ count }}ks</span>
+				}
+				<p-button type="button"
+					icon="pi pi-plus"
+					class="p-button-rounded"
+					styleClass="p-button-lg"
+					(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"></p-button>
+			</div>
+		}
 
 		<ng-template pTemplate="footer">
 			<div class="w-full text-right">{{ item.sourceName }}</div>

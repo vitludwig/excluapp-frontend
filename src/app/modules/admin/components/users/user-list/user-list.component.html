@@ -1,22 +1,35 @@
 <div class="flex justify-content-between mb-3">
 	<div class="flex">
 		<div class="ml-auto p-inputgroup">
-			<input pInputText type="text" (input)="usersTable.filterGlobal($any($event.target).value, 'contains')" placeholder="Search" />
-			<button pButton icon="pi pi-filter-slash" class="p-button-outlined" (click)="clearSearch(usersTable)"></button>
+			<input pInputText
+				type="text"
+				(input)="usersTable.filterGlobal($any($event.target).value, 'contains')"
+				placeholder="Search"/>
+			<button pButton
+				icon="pi pi-filter-slash"
+				class="p-button-outlined"
+				(click)="clearSearch(usersTable)"></button>
 		</div>
 	</div>
 
-	<p-button styleClass="p-button-lg p-button-success" icon="pi pi-fw pi-plus" [routerLink]="['new']"></p-button>
+	<p-button styleClass="p-button-lg p-button-success"
+		icon="pi pi-fw pi-plus"
+		[routerLink]="['new']"></p-button>
 </div>
 
-<p-table #usersTable [value]="userService.$users()" [paginator]="true" [rows]="10" [globalFilterFields]="['name']">
+<p-table #usersTable
+	[value]="userService.$users()"
+	[paginator]="true"
+	[rows]="10"
+	[globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Name</th>
 			<th></th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body" let-user>
+	<ng-template pTemplate="body"
+		let-user>
 		<tr>
 			<td>{{ user.name }}</td>
 			<td>

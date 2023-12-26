@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IKeg } from '../../../../../admin/types/IKeg';
 import { ListboxModule } from 'primeng/listbox';
@@ -11,7 +11,7 @@ import { IBeerpong } from '../../../../types/IBeerpong';
 @Component({
 	selector: 'app-beerpong-dialog',
 	standalone: true,
-	imports: [CommonModule, ListboxModule, FormsModule, ButtonModule],
+	imports: [ListboxModule, FormsModule, ButtonModule],
 	templateUrl: './beerpong-dialog.component.html',
 	styleUrls: ['./beerpong-dialog.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

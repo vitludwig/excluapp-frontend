@@ -1,20 +1,24 @@
 <div class="flex flex-column justify-content-center">
 	<div class="p-inputgroup">
-		<input type="password" pInputText [value]="password" />
+		<input type="password"
+			pInputText
+			[value]="password"/>
 		<button type="button"
-			pButton icon="pi pi-delete-left"
+			pButton
+			icon="pi pi-delete-left"
 			styleClass="p-button-danger"
 			(click)="removeNumber()"
 		></button>
 	</div>
 
 	<div class="numpad mt-5">
-		<p-button *ngFor="let number of numpad"
-			class="numpad-item"
-			[outlined]="true"
-			[label]="number"
-			(click)="addNumber(number)"
-		/>
+		@for (number of numpad; track number) {
+			<p-button class="numpad-item"
+				[outlined]="true"
+				[label]="number"
+				(click)="addNumber(number)"
+			/>
+		}
 	</div>
 
 	<p-button severity="success"

@@ -2,15 +2,19 @@
 	<p-multiSelect [options]="eventService.$events() | sort: 'start'"
 		[ngModel]="$selectedEvents()"
 		(ngModelChange)="$selectedEvents.set($event)"
-		defaultLabel="Vyber události"
+		placeholder="Vyber události"
 		optionLabel="name"
 		display="chip"
 	/>
-	<p-button (click)="createPayday()" styleClass="p-button-lg p-button-primary">Vyrobit pejdej</p-button>
+	<p-button (click)="createPayday()"
+		styleClass="p-button-lg p-button-primary">Vyrobit pejdej
+	</p-button>
 </div>
 
 <br>
 
-<app-payday-table *ngIf="($paydayResult() | async) as paydayResult"
-	[data]="paydayResult"
-/>
+@if (($paydayResult() | async); as paydayResult) {
+	<app-payday-table
+		[data]="paydayResult"
+	/>
+}
