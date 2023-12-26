@@ -4,7 +4,8 @@
 		>
 			<h3 class="keg-title">{{ keg.name }}</h3>
 			<p-listbox [options]="users"
-				[(ngModel)]="data[keg.id]"
+				[ngModel]="data[keg.id]"
+				(ngModelChange)="onUserSelect($event, keg.id)"
 				[multiple]="true"
 				[metaKeySelection]="false"
 				optionLabel="name"
@@ -22,3 +23,7 @@
 		label="Potvrdit"
 	/>
 </div>
+
+<p-confirmDialog header="Málo lidí"
+	icon="pi pi-exclamation-triangle"
+/>
