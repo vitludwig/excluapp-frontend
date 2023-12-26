@@ -4,15 +4,15 @@
 		(confirm)="confirmOrder()"
 		(cancel)="clearOrder()"
 	/>
-}
-
-@if (!$selectedUser()) {
+} @else {
 	<p-card (click)="showBeerpongDialog()"
 		[header]="'Zapsat býrponk'"
 		[class.active]="(orderService.$cartCount()['beerpong'] | json) !== '{}'"
 		class="card card-beerpong"
 	/>
+
 	<p-divider align="center">nebo</p-divider>
+
 	<h3>Vyber pijáka</h3>
 	<div>
 		<app-dashboard-user-select

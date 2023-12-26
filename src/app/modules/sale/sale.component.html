@@ -1,7 +1,6 @@
 @if (eventService.$activeEvent()) {
-	<app-sale-dashboard/>
-}
-@if (!eventService.$activeEvent()) {
+	<app-sale-dashboard />
+} @else {
 	<div class="flex flex-column align-items-center justify-content-center h-full">
 		<h1>Nejdřív vyber událost</h1>
 		<h3>To může udělat jen admin</h3>

@@ -18,6 +18,7 @@
 			styleClass="p-button-rounded p-button-raised p-button-lg p-button-danger"
 			class="order-control-btn"
 			(click)="cancelOrder()"
+			[disabled]="orderService.$orderProcessing()"
 		/>
 
 		<p-button icon="pi pi-fw pi-{{$showSummary() ? 'chevron-down' : 'chevron-up'}}"
@@ -30,6 +31,7 @@
 			styleClass="p-button-rounded p-button-raised p-button-lg p-button-success"
 			class="order-control-btn"
 			(click)="confirmOrder()"
+			[disabled]="orderService.$orderProcessing()"
 		/>
 	</div>
 
@@ -82,15 +84,19 @@
 					icon="pi pi-minus"
 					class="p-button-rounded"
 					styleClass="p-button-lg"
-					(click)="orderService.removeOneFromCart(item, $event, category)"></p-button>
+					(click)="orderService.removeOneFromCart(item, $event, category)"
+				/>
+
 				@if (orderService.$cartCount()[category | asSortimentCategory][item.id]; as count) {
 					<span>+ {{ count }}ks</span>
 				}
+
 				<p-button type="button"
 					icon="pi pi-plus"
 					class="p-button-rounded"
 					styleClass="p-button-lg"
-					(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"></p-button>
+					(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"
+				/>
 			</div>
 		}
 

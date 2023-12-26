@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { IEvent } from '../../../admin/types/IEvent';
 import { EventService } from '../../../admin/services/event/event.service';
 import { IOrderCreate, IOrderRead } from '../../types/IOrder';
-import { forkJoin, Observable, tap } from 'rxjs';
+import { forkJoin, Observable, tap, timeout } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { EBeerVolume } from '../../types/EBeerVolume';
@@ -18,6 +18,8 @@ export class OrderService {
 
 	public $activeEvent = signal<IEvent | null>(null);
 	public $cart = signal<ICartItem[]>([]);
+	public $orderProcessing = signal<boolean>(false);
+
 	// TODO: write this using reduce maybe?
 	public $cartCount = computed(() => {
 		const result: Record<EBeerVolume | 'beerpong', Record<string, number>> = {
@@ -72,15 +74,18 @@ export class OrderService {
 			$event.stopPropagation();
 		}
 		this.$cart.update((cart) => {
+			// remove only first occurrence, because there might be multiple duplicate items
 			const index = cart.findIndex((obj) => obj.kegId === value.id && obj.volume === volume);
 			if (index !== -1) {
 				cart.splice(index, 1);
 			}
-			return cart;
+			return [...cart];
 		});
 	}
 
 	public confirmOrder() {
+		this.$orderProcessing.set(true);
+
 		const requests = [];
 		for (const item of this.$cart()) {
 			const req = this.addOrder({
@@ -94,6 +99,7 @@ export class OrderService {
 
 		return forkJoin(requests).pipe(
 			tap(() => {
+				this.$orderProcessing.set(false);
 				this.clearOrder();
 			}),
 		);
