@@ -61,12 +61,21 @@ export class BeerpongDialogComponent implements OnInit {
 			this.data[kegId] = [];
 		}
 
-		this.data[kegId] = value;
+		this.removeDuplicateUsers(value, kegId, this.data);
 
-		// const kegs = Object.values(this.data).map((e) => e.length);
-		// if (kegs.some((e) => e > 2)) {
-		// 	event.preventDefault();
-		// }
+		this.data[kegId] = value;
+	}
+
+	private removeDuplicateUsers(newUsers: IUserRead[], kegId: number, data: Record<number, IUserRead[]>): void {
+		const userIds = newUsers.map((e) => e.id);
+		for (const [index, users] of Object.entries(this.data)) {
+			if (index === kegId.toString()) {
+				continue;
+			}
+			if (users.some((e) => userIds.includes(e.id))) {
+				data[Number(index)] = data[Number(index)].filter((e) => !userIds.includes(e.id));
+			}
+		}
 	}
 
 	private confirmBeerpong(): void {

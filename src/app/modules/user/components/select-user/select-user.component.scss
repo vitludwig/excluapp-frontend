@@ -4,14 +4,18 @@
 
 	::ng-deep {
 		p-listbox {
-			.p-listbox-item {
-				padding: 25px 16px !important;
-				border-bottom: 1px solid #333 !important;
-			}
+			.p-listbox-list-wrapper {
+				max-height: 100% !important;
 
-			&.big-list-items {
 				.p-listbox-item {
-					padding: 35px 16px !important;
+					padding: 25px 16px !important;
+					border-bottom: 1px solid #333 !important;
+				}
+
+				&.big-list-items {
+					.p-listbox-item {
+						padding: 35px 16px !important;
+					}
 				}
 			}
 		}
