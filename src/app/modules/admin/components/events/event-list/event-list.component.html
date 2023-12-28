@@ -18,7 +18,7 @@
 </div>
 
 <p-table #eventsTable
-	[value]="$events()"
+	[value]="eventService.$events()"
 	[paginator]="true"
 	[rows]="10"
 	[globalFilterFields]="['name']">

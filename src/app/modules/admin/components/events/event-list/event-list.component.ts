@@ -26,21 +26,6 @@ export class EventListComponent implements OnDestroy {
 
 	private inviteDialogRef: DynamicDialogRef;
 
-	// TODO: add filtering by date
-	protected $events = computed(
-		() => this.eventService.$events(),
-		// this.eventService.$events().filter((e) => {
-		// 	const now = new Date().getTime();
-		// 	const start = new Date(e.start).getTime();
-		// 	const isNear = Math.floor(Math.abs(start - now) / (1000 * 60 * 60 * 24)) < 2;
-		// 	return isNear;
-		// }),
-	);
-
-	constructor() {
-		this.eventService.loadEvents();
-	}
-
 	protected clearSearch(table: Table) {
 		table.clear();
 	}
