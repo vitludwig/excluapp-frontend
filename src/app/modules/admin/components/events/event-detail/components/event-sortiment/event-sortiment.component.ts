@@ -18,7 +18,7 @@ import { tap } from 'rxjs';
 	styleUrls: ['./event-sortiment.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventSortimentComponent {
+export class EventSortimentComponent implements OnInit {
 	@Input()
 	public options: IKeg[] = [];
 
@@ -31,6 +31,10 @@ export class EventSortimentComponent {
 	protected selectedSortiment: IKeg | null = null;
 
 	constructor() {}
+
+	public ngOnInit(): void {
+		console.log('options', this.options);
+	}
 
 	protected addSortiment(value: IKeg | null) {
 		if (!value) {

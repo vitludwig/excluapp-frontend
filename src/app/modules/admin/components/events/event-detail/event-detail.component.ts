@@ -15,21 +15,12 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-event-detail',
 	standalone: true,
-	imports: [
-    ReactiveFormsModule,
-    InputTextModule,
-    CalendarModule,
-    TableModule,
-    RouterLink,
-    EventSortimentComponent,
-    TooltipModule,
-    ConfirmDialogModule,
-    ConfirmComponent
-],
+	imports: [ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent, TooltipModule, ConfirmDialogModule, ConfirmComponent, JsonPipe],
 	providers: [ConfirmationService, MessageService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],
@@ -60,7 +51,12 @@ export class EventDetailComponent {
 
 	protected $eventKegs = signal<IKeg[]>([]);
 	// get existing kegs, that are not "original" kegs and are not connected to this event
-	protected $existingKegs = computed(() => this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !this.$eventKegs().some((e) => e.event?.id === k.event?.id)));
+	protected $existingKegs = computed(() => {
+		const eventKegs = this.$eventKegs() ?? [];
+		const result = this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.event?.id === k.event?.id));
+		console.log('existing kegs', result);
+		return result;
+	});
 
 	constructor() {
 		this.eventId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -184,6 +180,7 @@ export class EventDetailComponent {
 					event.kegs = event.kegs.map((k) => +k);
 
 					const eventKegs = this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id));
+					console.log('eventKegs', eventKegs);
 					this.originalKegs = eventKegs;
 					this.form.patchValue(event);
 					this.$eventKegs.set(eventKegs);
