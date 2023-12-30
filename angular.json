@@ -70,7 +70,8 @@
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
                 }
-              ]
+              ],
+              "sourceMap": true
             },
             "development": {
               "buildOptimizer": false,
