@@ -53,9 +53,7 @@ export class EventDetailComponent {
 	// get existing kegs, that are not "original" kegs and are not connected to this event
 	protected $existingKegs = computed(() => {
 		const eventKegs = this.$eventKegs() ?? [];
-		const result = this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.id === k.id));
-		console.log('existing kegs', result);
-		return result;
+		return this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.id === k.id));
 	});
 
 	constructor() {
@@ -180,7 +178,7 @@ export class EventDetailComponent {
 					event.kegs = event.kegs.map((k) => +k);
 
 					const eventKegs = this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id));
-					console.log('eventKegs', eventKegs);
+
 					this.originalKegs = eventKegs;
 					this.form.patchValue(event);
 					this.$eventKegs.set(eventKegs);

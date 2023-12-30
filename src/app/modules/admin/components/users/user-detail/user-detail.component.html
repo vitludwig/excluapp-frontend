@@ -1,15 +1,19 @@
-<div>
-	<form [formGroup]="form"
-		(ngSubmit)="onSubmit()"
-		class="flex flex-column gap-4">
-		<div class="flex flex-column gap-2">
-			<label htmlFor="eventName">Username</label>
-			<input pInputText
-				id="eventName"
-				formControlName="name"/>
-		</div>
+<form [formGroup]="form"
+	(ngSubmit)="onSubmit()"
+	class="flex flex-column gap-4"
+>
+	<div class="flex flex-column gap-2">
+		<label htmlFor="userName">Jméno</label>
+		<input pInputText
+			id="userName"
+			formControlName="name" />
+	</div>
 
-		<p-button label="Save"
-			type="submit"/>
-	</form>
-</div>
+	<div class="flex flex-column gap-2">
+		<label htmlFor="isRegular">Exkluzivní</label>
+		<p-checkbox formControlName="isRegular" [binary]="true" inputId="isRegular" />
+	</div>
+
+	<p-button label="Save"
+		type="submit"/>
+</form>

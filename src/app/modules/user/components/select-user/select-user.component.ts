@@ -9,8 +9,12 @@ import { SharedModule } from 'primeng/api';
 import { IUserRead } from '../../types/IUser';
 import { IUserSelectResponse } from '../../types/IUserSelectResponse';
 
-function orderUsernameAlphabetically(value: IUserRead[]) {
-	return value.sort((a, b) => a.name.localeCompare(b.name));
+/**
+ * First put Regular users, then put the rest in alphabetical order
+ * @param value
+ */
+function orderUsernames(value: IUserRead[]) {
+	return value.sort((a, b) => a.name.localeCompare(b.name)).sort((a, b) => (a.isRegular ? -1 : 1));
 }
 
 @Component({
@@ -28,7 +32,7 @@ export class SelectUserComponent {
 	@Input()
 	public multiple: boolean = true;
 
-	@Input({ transform: orderUsernameAlphabetically })
+	@Input({ transform: orderUsernames })
 	public users: IUserRead[] = [];
 
 	@Output()

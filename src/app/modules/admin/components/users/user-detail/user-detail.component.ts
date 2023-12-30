@@ -6,13 +6,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { firstValueFrom, Observable, tap } from 'rxjs';
 import { IUserRead } from '../../../../user/types/IUser';
 import { UserService } from '../../../../user/services/user/user.service';
+import { CheckboxModule } from 'primeng/checkbox';
 @Component({
 	selector: 'app-user-detail',
 	standalone: true,
-	imports: [ButtonModule, CalendarModule, InputTextModule, PaginatorModule, ReactiveFormsModule],
+	imports: [ButtonModule, CalendarModule, InputTextModule, PaginatorModule, ReactiveFormsModule, CheckboxModule],
 	templateUrl: './user-detail.component.html',
 	styleUrls: ['./user-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +27,7 @@ export class UserDetailComponent {
 
 	protected form = new FormGroup({
 		name: new FormControl('', Validators.required),
+		isRegular: new FormControl(false),
 	});
 
 	constructor() {
@@ -36,31 +38,20 @@ export class UserDetailComponent {
 		}
 	}
 
-	protected onSubmit() {
-		let request;
+	protected async onSubmit(): Promise<void> {
+		let request: Observable<IUserRead>;
 		if (this.userId) {
 			request = this.userService.updateUser(this.userId, this.form.value as IUserRead);
 		} else {
 			request = this.userService.addUser(this.form.value as IUserRead);
 		}
 
-		request
-			.pipe(
-				tap(() => {
-					this.router.navigate(['/admin/users']);
-				}),
-			)
-			.subscribe();
+		await firstValueFrom(request);
+		this.router.navigate(['/admin/users']);
 	}
 
-	private loadUser(id: number) {
-		this.userService
-			.getUser(id)
-			.pipe(
-				tap((event) => {
-					this.form.patchValue(event);
-				}),
-			)
-			.subscribe();
+	private async loadUser(id: number): Promise<void> {
+		const user = await firstValueFrom(this.userService.getUser(id));
+		this.form.patchValue(user);
 	}
 }
