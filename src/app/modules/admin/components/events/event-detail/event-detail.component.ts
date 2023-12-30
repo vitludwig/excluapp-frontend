@@ -53,7 +53,7 @@ export class EventDetailComponent {
 	// get existing kegs, that are not "original" kegs and are not connected to this event
 	protected $existingKegs = computed(() => {
 		const eventKegs = this.$eventKegs() ?? [];
-		const result = this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.event?.id === k.event?.id));
+		const result = this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.id === k.id));
 		console.log('existing kegs', result);
 		return result;
 	});
