@@ -3,9 +3,17 @@
 		.p-dialog-content {
 			padding-bottom: 0;
 		}
+
 		p-listbox {
 			.p-listbox-list-wrapper {
 				max-height: unset !important;
+			}
+		}
+
+		p-confirmDialog {
+			.p-dialog-footer {
+				display: flex;
+				justify-content: space-between;
 			}
 		}
 	}

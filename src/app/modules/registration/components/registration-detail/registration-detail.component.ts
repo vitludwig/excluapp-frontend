@@ -73,7 +73,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 			return [];
 		}
 
-		return this.sortimentService.$copySortiment().filter((keg) => event.kegs.includes(keg.id));
+		return this.sortimentService.$copySortiment().filter((keg) => event.kegs.includes(keg.id) && !keg.isEmpty);
 	});
 
 	protected showSelectUserModal = false;

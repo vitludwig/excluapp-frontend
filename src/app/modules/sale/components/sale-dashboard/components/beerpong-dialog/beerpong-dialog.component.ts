@@ -10,6 +10,7 @@ import { IBeerpong } from '../../../../types/IBeerpong';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { JsonPipe } from '@angular/common';
+import { orderUsernames } from '../../../../../user/utils/OrderUsernames';
 
 @Component({
 	selector: 'app-beerpong-dialog',
@@ -35,7 +36,7 @@ export class BeerpongDialogComponent implements OnInit {
 
 	public ngOnInit() {
 		this.kegs = this.dialogConfig.data.kegs;
-		this.users = this.dialogConfig.data.users;
+		this.users = orderUsernames(this.dialogConfig.data.users);
 	}
 
 	protected submit() {

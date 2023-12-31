@@ -10,7 +10,13 @@
 				[metaKeySelection]="false"
 				optionLabel="name"
 				[style]="{'width':'100%'}"
-			/>
+			>
+				<ng-template let-user pTemplate="item">
+					<div class="flex align-items-center gap-2">
+						<div>{{ user.name }}</div>
+					</div>
+				</ng-template>
+			</p-listbox>
 		</div>
 	}
 </div>

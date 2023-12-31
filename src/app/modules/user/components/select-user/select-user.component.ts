@@ -8,14 +8,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'primeng/api';
 import { IUserRead } from '../../types/IUser';
 import { IUserSelectResponse } from '../../types/IUserSelectResponse';
-
-/**
- * First put Regular users, then put the rest in alphabetical order
- * @param value
- */
-function orderUsernames(value: IUserRead[]) {
-	return value.sort((a, b) => a.name.localeCompare(b.name)).sort((a, b) => (a.isRegular ? -1 : 1));
-}
+import { orderUsernames } from '../../utils/OrderUsernames';
 
 @Component({
 	selector: 'app-select-user',
