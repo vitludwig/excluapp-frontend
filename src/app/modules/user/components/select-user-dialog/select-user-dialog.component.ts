@@ -30,7 +30,7 @@ export class SelectUserDialogComponent implements OnInit {
 		this.layout = this.dialogConfig.data.layout ?? 'form';
 	}
 
-	protected submit(value: { newUser: string | null; existingUser: IUserRead[] | null }) {
+	protected submit(value: IUserRead[] | null) {
 		this.dialogRef.close(value);
 	}
 }

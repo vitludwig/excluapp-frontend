@@ -34,7 +34,7 @@ export class UserService {
 		return this.http.get<IUserRead>(environment.apiUrl + '/user/' + id);
 	}
 
-	public updateUser(id: number, value: IUserRead): Observable<IUserRead> {
+	public updateUser(id: number, value: Partial<IUserRead>): Observable<IUserRead> {
 		return this.http.put<IUserRead>(environment.apiUrl + '/user/' + id, value);
 	}
 }

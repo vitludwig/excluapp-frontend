@@ -1,1 +1,12 @@
-<p>user-face-recognition works!</p>
+@if ($showOverlay()) {
+	<div class="recognition-overlay"
+		(click)="initRecognition()">
+		<h1>Ťapni pro pokračování</h1>
+	</div>
+}
+<video autoplay="true"
+	class="hidden"
+	#videoElement>
+</video>
+
+<p-toast position="bottom-center"></p-toast>

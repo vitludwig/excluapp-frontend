@@ -49,3 +49,7 @@
 		}
 	</div>
 }
+
+@if(faceRecognitionService.faceRecognitionEnabled) {
+	<app-user-face-recognition [users]="$usersInEvent() | async" [enabled]="$selectedUser() === null" (detected)="selectUser($event)" />
+}

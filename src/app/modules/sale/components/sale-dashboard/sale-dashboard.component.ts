@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { EventService } from '../../../admin/services/event/event.service';
 import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
 import { CardModule } from 'primeng/card';
-import { WebcamModule } from 'ngx-webcam';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UserService } from '../../../user/services/user/user.service';
@@ -24,6 +23,8 @@ import { KnobModule } from 'primeng/knob';
 import { IKegStatus } from '../../../admin/components/sortiment/types/IKegStatus';
 import { FormsModule } from '@angular/forms';
 import { IKeg } from '../../../admin/types/IKeg';
+import { UserFaceRecognitionComponent } from '../../../user/components/user-face-recognition/user-face-recognition.component';
+import { FaceRecognitionService } from '../../../user/services/face-recognition/face-recognition.service';
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -31,7 +32,6 @@ import { IKeg } from '../../../admin/types/IKeg';
 	imports: [
 		CommonModule,
 		CardModule,
-		WebcamModule,
 		ButtonModule,
 		DividerModule,
 		AsSortimentCategoryPipe,
@@ -40,6 +40,7 @@ import { IKeg } from '../../../admin/types/IKeg';
 		AccordionModule,
 		KnobModule,
 		FormsModule,
+		UserFaceRecognitionComponent,
 	],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
@@ -50,11 +51,12 @@ export class SaleDashboardComponent implements OnDestroy {
 	protected readonly eventService = inject(EventService);
 	protected readonly sortimentService = inject(SortimentService);
 	protected readonly orderService = inject(OrderService);
+	protected readonly userService: UserService = inject(UserService);
+	protected readonly faceRecognitionService = inject(FaceRecognitionService);
 
 	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly layoutService = inject(LayoutService);
 	private readonly messageService = inject(MessageService);
-	private readonly usersService: UserService = inject(UserService);
 
 	private beerpongDialogRef: DynamicDialogRef | null = null;
 
@@ -88,7 +90,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			return this.eventService.getUsersForEvent(event.id).pipe(
 				tap((users) => {
 					const usersInEventIds = users.map((u) => u.id);
-					this.$usersOther.set(this.usersService.$users().filter((u) => !usersInEventIds.includes(u.id)));
+					this.$usersOther.set(this.userService.$users().filter((u) => !usersInEventIds.includes(u.id)));
 				}),
 			);
 		}

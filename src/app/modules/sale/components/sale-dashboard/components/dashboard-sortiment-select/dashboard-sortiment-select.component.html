@@ -31,7 +31,7 @@
 			styleClass="p-button-rounded p-button-raised p-button-lg p-button-success"
 			class="order-control-btn"
 			(click)="confirmOrder()"
-			[disabled]="orderService.$orderProcessing()"
+			[disabled]="orderService.$orderProcessing() || orderService.$cart().length === 0"
 		/>
 	</div>
 

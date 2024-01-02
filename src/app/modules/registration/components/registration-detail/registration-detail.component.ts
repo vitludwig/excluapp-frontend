@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, Signal
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../../admin/services/event/event.service';
-import { firstValueFrom, Observable, tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageService, SharedModule } from 'primeng/api';
@@ -16,7 +16,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmComponent } from '../../../../common/components/confirm/confirm.component';
 import { DialogModule } from 'primeng/dialog';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
-import { IUserSelectResponse } from '../../../user/types/IUserSelectResponse';
 import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../../common/services/auth.service';
@@ -94,11 +93,11 @@ export class RegistrationDetailComponent implements OnDestroy {
 		this.showSelectUserModal = true;
 	}
 
-	protected selectUser(data: IUserSelectResponse): void {
+	protected selectUser(data: IUserRead[] | null): void {
 		// TODO: refactor user select component to always return array or better type it, THIS IS UGLY
 		// this is single user select, object and not array is passed
-		if (data.existingUser && !Array.isArray(data.existingUser)) {
-			this.attendEvent((<IUserRead>data.existingUser).id, this.eventId);
+		if (data && !Array.isArray(data)) {
+			this.attendEvent((<IUserRead>data).id, this.eventId);
 		}
 
 		this.showSelectUserModal = false;

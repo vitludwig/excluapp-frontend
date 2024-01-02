@@ -3,6 +3,7 @@ export interface IUserRead {
 	name: string;
 	isRegular: boolean;
 	masterUsedId: number | null;
+	faceDescriptor: string | null;
 }
 
 export interface IUserCreate {

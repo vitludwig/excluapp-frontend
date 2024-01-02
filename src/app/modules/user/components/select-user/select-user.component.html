@@ -4,6 +4,7 @@
 			<p-dropdown
 				[options]="users"
 				[(ngModel)]="selectedUser"
+				(ngModelChange)="submit()"
 				optionLabel="name"
 				[filter]="true"
 				filterBy="name"

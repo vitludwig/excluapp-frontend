@@ -7,9 +7,9 @@ import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'primeng/api';
 import { IUserRead } from '../../types/IUser';
-import { IUserSelectResponse } from '../../types/IUserSelectResponse';
 import { orderUsernames } from '../../utils/OrderUsernames';
 
+// TODO: refactor, return only true response, multiple select, submit button - CLEANUP
 @Component({
 	selector: 'app-select-user',
 	standalone: true,
@@ -29,11 +29,9 @@ export class SelectUserComponent {
 	public users: IUserRead[] = [];
 
 	@Output()
-	public select: EventEmitter<IUserSelectResponse> = new EventEmitter();
+	public select: EventEmitter<IUserRead[] | null> = new EventEmitter();
 
 	protected selectedUser: IUserRead[] | null = null;
-
-	protected newUser: string | null = null;
 
 	protected submit() {
 		if (!this.multiple) {
@@ -41,10 +39,7 @@ export class SelectUserComponent {
 				this.selectedUser = [this.selectedUser];
 			}
 		}
-
-		this.select.emit({
-			newUser: this.newUser,
-			existingUser: this.selectedUser as IUserRead[],
-		});
+		console.log('selecting', this.selectedUser);
+		this.select.emit(this.selectedUser);
 	}
 }

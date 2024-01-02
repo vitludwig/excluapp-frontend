@@ -47,6 +47,11 @@
 			}
 
 			@if (authService.$isLogged()) {
+				<div class="flex gap-2 mb-4">
+					<label htmlFor="faceRecognition">Face recognition</label>
+					<p-inputSwitch [(ngModel)]="faceRecognitionService.faceRecognitionEnabled" id="faceRecognition"></p-inputSwitch>
+				</div>
+
 				<p-button class="mt-auto"
 					[style]="{'width': '100%'}"
 					(click)="authService.logout()"

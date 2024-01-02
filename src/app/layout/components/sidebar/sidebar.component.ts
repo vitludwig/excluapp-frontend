@@ -10,13 +10,18 @@ import { LoginDialogComponent } from './components/login-dialog/login-dialog.com
 import { AuthService } from '../../../common/services/auth.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { EventService } from '../../../modules/admin/services/event/event.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortPipe } from '../../../common/pipes/sort.pipe';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { UserService } from '../../../modules/user/services/user/user.service';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
+import { FaceRecognitionService } from '../../../modules/user/services/face-recognition/face-recognition.service';
 
 @Component({
 	selector: 'app-sidebar',
 	standalone: true,
-	imports: [MenuModule, SidebarModule, ButtonModule, DropdownModule, FormsModule, SortPipe],
+	imports: [MenuModule, SidebarModule, ButtonModule, DropdownModule, FormsModule, SortPipe, InputSwitchModule, InputTextModule, ReactiveFormsModule],
 	templateUrl: './sidebar.component.html',
 	styleUrls: ['./sidebar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +31,7 @@ export class SidebarComponent implements OnDestroy {
 	protected readonly layoutService = inject(LayoutService);
 	protected readonly authService: AuthService = inject(AuthService);
 	protected readonly eventService = inject(EventService);
+	protected readonly faceRecognitionService = inject(FaceRecognitionService);
 	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly messageService: MessageService = inject(MessageService);
 

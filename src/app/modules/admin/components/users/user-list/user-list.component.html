@@ -24,7 +24,8 @@
 	[globalFilterFields]="['name']">
 	<ng-template pTemplate="header">
 		<tr>
-			<th>Name</th>
+			<th>Jméno</th>
+			<th>Obličej</th>
 			<th></th>
 		</tr>
 	</ng-template>
@@ -32,6 +33,11 @@
 		let-user>
 		<tr>
 			<td>{{ user.name }}</td>
+			<td>
+				@if(user.faceDescriptor) {
+					<i class="pi pi-check"></i>
+				}
+			</td>
 			<td>
 				<p-button [routerLink]="['detail', user.id]"
 					styleClass="p-button-info"
