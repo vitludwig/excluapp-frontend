@@ -76,6 +76,9 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 		// this.$detectFaceEnabled.set(false);
 		// await this.faceRecognitionService.loadModels();
 		// await this.faceRecognitionService.initWebcam(this.videoElement.nativeElement);
+		if (!this.faceRecognitionService.overlayEnabled) {
+			this.initRecognition();
+		}
 	}
 
 	public async ngAfterViewInit(): Promise<void> {
@@ -160,7 +163,9 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 				});
 
 			console.log('descriptors', descriptors);
-			this.matcher = new FaceMatcher(descriptors);
+			if (descriptors.length) {
+				this.matcher = new FaceMatcher(descriptors);
+			}
 			resolve();
 		});
 	}
