@@ -41,7 +41,11 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 
 		if (value && value !== this._enabled) {
 			this.enabledTimeout = window.setTimeout(() => {
-				this.$showOverlay.set(true);
+				if (this.faceRecognitionService.overlayEnabled) {
+					this.$showOverlay.set(true);
+				} else {
+					this.initRecognition();
+				}
 			}, 5000);
 		}
 
@@ -118,7 +122,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 					clearInterval(this.recognitionInterval);
 				}
 			}
-		}, 800);
+		}, 500);
 	}
 
 	private async detectFace(): Promise<string | void> {
