@@ -9,7 +9,6 @@ import { FaceRecognitionService } from '../../services/face-recognition/face-rec
 import { FaceScanningError } from './types/FaceScanningError';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
 	selector: 'app-user-face-recognition',

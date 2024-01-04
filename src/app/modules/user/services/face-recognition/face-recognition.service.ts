@@ -22,6 +22,7 @@ export class FaceRecognitionService {
 	}
 
 	public async loadModels(): Promise<void> {
+		// TODO: load models from server if face recognition is enabled
 		await loadTinyFaceDetectorModel('/assets/face-models');
 		await loadFaceLandmarkModel('/assets/face-models');
 		await loadFaceRecognitionModel('/assets/face-models');
