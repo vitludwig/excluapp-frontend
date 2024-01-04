@@ -13,6 +13,14 @@ export class FaceRecognitionService {
 		localStorage.setItem('faceRecognitionEnabled', value.toString());
 	}
 
+	public get overlayEnabled(): boolean {
+		return localStorage.getItem('faceRecognitionOverlay') === 'true';
+	}
+
+	public set overlayEnabled(value: boolean) {
+		localStorage.setItem('faceRecognitionOverlay', value.toString());
+	}
+
 	public async loadModels(): Promise<void> {
 		await loadTinyFaceDetectorModel('/assets/face-models');
 		await loadFaceLandmarkModel('/assets/face-models');
@@ -21,8 +29,15 @@ export class FaceRecognitionService {
 	}
 
 	public async initWebcam(videoElement: HTMLVideoElement): Promise<void> {
-		if (navigator.mediaDevices.getUserMedia && videoElement) {
-			videoElement.srcObject = await navigator.mediaDevices.getUserMedia({ video: true });
+		try {
+			if (navigator.mediaDevices.getUserMedia && videoElement) {
+				videoElement.srcObject = await navigator.mediaDevices.getUserMedia({ video: true });
+			}
+		} catch (e) {
+			console.error(e);
+			if (e instanceof DOMException) {
+				throw new DOMException(e.message, e.name);
+			}
 		}
 	}
 }

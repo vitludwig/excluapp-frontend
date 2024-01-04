@@ -71,6 +71,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 	private matcher: FaceMatcher;
 	private recognitionInterval: number;
 	private enabledTimeout: number;
+	private enableRecognition: boolean = true;
 
 	public async ngOnInit(): Promise<void> {
 		// this.$detectFaceEnabled.set(false);
@@ -78,14 +79,26 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 		// await this.faceRecognitionService.initWebcam(this.videoElement.nativeElement);
 	}
 
-	public ngAfterViewInit() {
-		this.faceRecognitionService.initWebcam(this.videoElement.nativeElement);
+	public async ngAfterViewInit(): Promise<void> {
+		try {
+			await this.faceRecognitionService.initWebcam(this.videoElement.nativeElement);
+			this.enableRecognition = true;
+		} catch (e) {
+			this.enableRecognition = false;
+			console.error('Error while initializing webcam', e);
+			clearInterval(this.recognitionInterval);
+		}
 	}
 
 	protected initRecognition(): void {
 		this.$showOverlay.set(false);
 		// TODO: zjistit, proc se rekurzivni funkce zasekne (na detectSingleFace metode - mozna race conditiona kvuli stejnemu vlaknu?)
 		this.recognitionInterval = window.setInterval(async () => {
+			if (!this.enableRecognition) {
+				clearInterval(this.recognitionInterval);
+				return;
+			}
+
 			if (this.matcher) {
 				console.log('detecting');
 				const detection = await detectSingleFace(this.videoElement.nativeElement, new TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor();
@@ -100,7 +113,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 						//this.messageService.add({ severity: 'warn', summary: 'Obličej nerozpoznán', detail: '' });
 					}
 
-					window.clearInterval(this.recognitionInterval);
+					clearInterval(this.recognitionInterval);
 				}
 			}
 		}, 800);

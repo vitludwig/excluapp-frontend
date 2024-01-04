@@ -52,6 +52,11 @@
 					<p-inputSwitch [(ngModel)]="faceRecognitionService.faceRecognitionEnabled" id="faceRecognition"></p-inputSwitch>
 				</div>
 
+				<div class="flex gap-2 mb-4">
+					<label htmlFor="faceRecognitionOverlay">Face recognition overlay</label>
+					<p-inputSwitch [(ngModel)]="faceRecognitionService.overlayEnabled" id="faceRecognitionOverlay"></p-inputSwitch>
+				</div>
+
 				<p-button class="mt-auto"
 					[style]="{'width': '100%'}"
 					(click)="authService.logout()"
