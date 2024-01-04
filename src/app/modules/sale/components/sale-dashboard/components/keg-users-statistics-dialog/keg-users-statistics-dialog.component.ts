@@ -14,11 +14,11 @@ import { UserByIdPipe } from '../../../../../user/pipes/user-by-id.pipe';
 })
 export class KegUsersStatisticsDialogComponent {
 	public readonly dialogRef = inject(DynamicDialogRef);
-	public readonly dialogConfig = inject(DynamicDialogConfig);
+	public readonly dialogConfig = inject(DynamicDialogConfig<IKegUserStatistics[]>);
 
 	protected statistics: IKegUserStatistics[] = [];
 
 	public ngOnInit() {
-		this.statistics = this.dialogConfig.data.statistics;
+		this.statistics = this.dialogConfig.data.statistics.sort((a: IKegUserStatistics, b: IKegUserStatistics) => b.volume - a.volume);
 	}
 }
