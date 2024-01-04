@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { IKeg } from '../../../admin/types/IKeg';
 import { UserFaceRecognitionComponent } from '../../../user/components/user-face-recognition/user-face-recognition.component';
 import { FaceRecognitionService } from '../../../user/services/face-recognition/face-recognition.service';
+import { KegUsersStatisticsDialogComponent } from './components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -59,6 +60,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly messageService = inject(MessageService);
 
 	private beerpongDialogRef: DynamicDialogRef | null = null;
+	private kegUserStatisticsDialogRef: DynamicDialogRef | null = null;
 
 	protected $sortiment = computed(() => {
 		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive);
@@ -147,7 +149,21 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.layoutService.$topBarTitle.set(value?.name ?? '');
 	}
 
+	protected async showKegStatistics(keg: IKeg): Promise<void> {
+		const result = await firstValueFrom(this.sortimentService.getKegUsersStatistics(keg.id));
+
+		this.kegUserStatisticsDialogRef = this.dialogService.open(KegUsersStatisticsDialogComponent, {
+			header: `Stav ${keg.name}`,
+			width: '90%',
+			data: {
+				statistics: result,
+			},
+			dismissableMask: true,
+		});
+	}
+
 	public ngOnDestroy() {
 		this.beerpongDialogRef?.close();
+		this.kegUserStatisticsDialogRef?.close();
 	}
 }

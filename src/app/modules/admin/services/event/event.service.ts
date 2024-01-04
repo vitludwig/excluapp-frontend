@@ -86,8 +86,8 @@ export class EventService {
 		return this.http.delete<void>(`${environment.apiUrl}/attendance/${eventId}/${userId}`);
 	}
 
-	public getKegsStatistics(eventId: number): Observable<IEventKegsStatistics[]> {
-		return this.http.get<IEventKegsStatistics[]>(`${environment.apiUrl}/events/${eventId}/keg-statistics/`);
+	public getKegsStatistics(eventId: number, kegId?: number): Observable<IEventKegsStatistics[]> {
+		return this.http.get<IEventKegsStatistics[]>(`${environment.apiUrl}/events/${eventId}/keg-statistics/${kegId}`);
 	}
 
 	public getUsersStatistics(eventId: number): Observable<IEventUsersStatistics[]> {

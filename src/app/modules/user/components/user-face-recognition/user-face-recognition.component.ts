@@ -114,12 +114,11 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 					const user = this.usersService.$users().find((user) => user.id.toString() === bestMatch.label) ?? null;
 					if (user) {
 						this.detected.emit(user);
+						clearInterval(this.recognitionInterval);
 					} else {
 						console.log('No user detected');
 						//this.messageService.add({ severity: 'warn', summary: 'Obličej nerozpoznán', detail: '' });
 					}
-
-					clearInterval(this.recognitionInterval);
 				}
 			}
 		}, 500);

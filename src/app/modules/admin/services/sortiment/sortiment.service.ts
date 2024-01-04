@@ -6,6 +6,7 @@ import { IKeg } from '../../types/IKeg';
 import { IEvent } from '../../types/IEvent';
 import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
 import { capitalizeEachFirstLetter } from '../../../../common/utils/StringUtils';
+import { IKegUserStatistics } from '../../components/sortiment/types/IKegUserStatistics';
 
 @Injectable({
 	providedIn: 'root',
@@ -83,6 +84,10 @@ export class SortimentService {
 
 	public getKegStatus(kegId: number): Observable<IKegStatus> {
 		return this.http.get<IKegStatus>(`${environment.apiUrl}/keg/${kegId}/status`);
+	}
+
+	public getKegUsersStatistics(kegId: number): Observable<IKegUserStatistics[]> {
+		return this.http.get<IKegUserStatistics[]>(`${environment.apiUrl}/keg/${kegId}/users-statistics`);
 	}
 
 	public getDuplicateKegs(keg: IKeg): IKeg[] {
