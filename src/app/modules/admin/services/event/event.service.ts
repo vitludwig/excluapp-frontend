@@ -16,10 +16,6 @@ export class EventService {
 	public $events = signal<IEvent[]>([]);
 	public $activeEvent = signal<IEvent | null>(null);
 
-	constructor() {
-		this.loadEvents();
-	}
-
 	public loadEvents(): Observable<IEvent[]> {
 		return this.http.get<IEvent[]>(environment.apiUrl + '/events').pipe(
 			map((events) => {

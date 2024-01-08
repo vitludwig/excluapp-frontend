@@ -30,8 +30,6 @@ export class EventSortimentComponent {
 
 	protected selectedSortiment: IKeg | null = null;
 
-	constructor() {}
-
 	protected addSortiment(value: IKeg | null) {
 		if (!value) {
 			return;

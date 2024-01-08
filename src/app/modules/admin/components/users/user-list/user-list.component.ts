@@ -22,10 +22,6 @@ import { ConfirmComponent } from '../../../../../common/components/confirm/confi
 export class UserListComponent {
 	protected readonly userService: UserService = inject(UserService);
 
-	constructor() {
-		this.userService.loadUsers();
-	}
-
 	protected clearSearch(table: Table) {
 		table.clear();
 	}

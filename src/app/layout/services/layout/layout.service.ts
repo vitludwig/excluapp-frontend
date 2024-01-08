@@ -6,6 +6,4 @@ import { Injectable, signal } from '@angular/core';
 export class LayoutService {
 	public $sidebarVisible = signal(false);
 	public $topBarTitle = signal('');
-
-	constructor() {}
 }

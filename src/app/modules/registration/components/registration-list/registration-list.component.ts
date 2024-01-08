@@ -21,10 +21,6 @@ export class RegistrationListComponent {
 
 	protected $events = computed(() => this.filterNearEvents(this.eventService.$events()));
 
-	constructor() {
-		this.eventService.loadEvents();
-	}
-
 	protected clearSearch(table: Table) {
 		table.clear();
 	}
