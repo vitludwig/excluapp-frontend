@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { IKeg } from '../../types/IKeg';
 import { IEvent } from '../../types/IEvent';
 import { IKegStatus } from '../../components/sortiment/types/IKegStatus';

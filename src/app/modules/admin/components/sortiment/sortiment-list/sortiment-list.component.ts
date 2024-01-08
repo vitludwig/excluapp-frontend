@@ -21,26 +21,26 @@ import { IKeg } from '../../../types/IKeg';
 	selector: 'app-sortiment-list',
 	standalone: true,
 	imports: [
-    ButtonModule,
-    InputTextModule,
-    SharedModule,
-    TableModule,
-    RouterLink,
-    InputSwitchModule,
-    FormsModule,
-    SelectButtonModule,
-    TooltipModule,
-    ConfirmComponent,
-    IsIncludedPipe,
-    SortimentListTableComponent,
-    TabViewModule
-],
+		ButtonModule,
+		InputTextModule,
+		SharedModule,
+		TableModule,
+		RouterLink,
+		InputSwitchModule,
+		FormsModule,
+		SelectButtonModule,
+		TooltipModule,
+		ConfirmComponent,
+		IsIncludedPipe,
+		SortimentListTableComponent,
+		TabViewModule,
+	],
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [DialogService],
 })
-export class SortimentListComponent implements OnInit {
+export class SortimentListComponent {
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 
 	protected $originalKegs = computed(() => {
@@ -56,10 +56,6 @@ export class SortimentListComponent implements OnInit {
 	});
 
 	protected $filter = signal<string[]>([]);
-
-	public ngOnInit(): void {
-		this.sortimentService.loadSortiment().subscribe();
-	}
 
 	protected toggleFilter(filter: string) {
 		this.$filter.update((filters) => {

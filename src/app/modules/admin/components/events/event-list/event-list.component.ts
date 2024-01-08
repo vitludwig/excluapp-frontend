@@ -9,8 +9,9 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
-import { map } from 'rxjs';
 import { SortPipe } from '../../../../../common/pipes/sort.pipe';
+import { firstValueFrom, map, tap } from 'rxjs';
+import { IEvent } from '../../../types/IEvent';
 
 @Component({
 	selector: 'app-event-list',
@@ -45,10 +46,7 @@ export class EventListComponent implements OnDestroy {
 	}
 
 	protected removeEvent(eventId: number) {
-		this.eventService
-			.removeEvent(eventId)
-			.pipe(map(() => this.eventService.loadEvents()))
-			.subscribe();
+		this.eventService.removeEvent(eventId).subscribe();
 	}
 
 	public ngOnDestroy() {

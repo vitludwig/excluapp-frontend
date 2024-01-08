@@ -13,10 +13,6 @@ export class UserService {
 
 	public $users = signal<IUserRead[]>([]);
 
-	constructor() {
-		this.loadUsers();
-	}
-
 	public async loadUsers(): Promise<void> {
 		const result = await firstValueFrom(this.http.get<IUserRead[]>(environment.apiUrl + '/user'));
 		this.$users.set(result);

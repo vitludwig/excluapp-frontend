@@ -9,7 +9,7 @@ import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { OrderService } from '../../services/order/order.service';
-import { firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { IBeerpong } from '../../types/IBeerpong';
@@ -100,8 +100,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	});
 
 	protected $usersOther = signal<IUserRead[]>([]);
-
-	constructor() {}
+	private unsubscribe$: Subject<void> = new Subject<void>();
 
 	protected clearOrder() {
 		this.orderService.clearOrder();
@@ -134,7 +133,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			},
 		});
 
-		this.beerpongDialogRef.onClose.subscribe((data: IBeerpong[]) => {
+		this.beerpongDialogRef.onClose.pipe(takeUntil(this.unsubscribe$)).subscribe((data: IBeerpong[]) => {
 			if (data) {
 				for (const obj of data) {
 					this.orderService.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);
@@ -165,5 +164,6 @@ export class SaleDashboardComponent implements OnDestroy {
 	public ngOnDestroy() {
 		this.beerpongDialogRef?.close();
 		this.kegUserStatisticsDialogRef?.close();
+		this.unsubscribe$.next();
 	}
 }

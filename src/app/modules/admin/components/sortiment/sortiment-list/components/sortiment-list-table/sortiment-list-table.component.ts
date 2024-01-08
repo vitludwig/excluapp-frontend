@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmComponent } from '../../../../../../../common/components/confirm/confirm.component';
 import { IKeg } from '../../../../../types/IKeg';
 import { RouterLink } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs';
 import { SortimentService } from '../../../../../services/sortiment/sortiment.service';
 import { KegStatusDialogComponent } from '../../../components/keg-status-dialog/keg-status-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';

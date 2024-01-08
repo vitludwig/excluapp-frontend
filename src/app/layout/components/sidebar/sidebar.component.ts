@@ -17,6 +17,8 @@ import { UserService } from '../../../modules/user/services/user/user.service';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { FaceRecognitionService } from '../../../modules/user/services/face-recognition/face-recognition.service';
+import { Subject, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
 	selector: 'app-sidebar',
@@ -97,6 +99,8 @@ export class SidebarComponent implements OnDestroy {
 		},
 	];
 
+	private unsubscribe$: Subject<void> = new Subject<void>();
+
 	protected showLoginDialog() {
 		this.loginDialogRef = this.dialogService.open(LoginDialogComponent, {
 			header: 'Přihlásit se',
@@ -104,7 +108,7 @@ export class SidebarComponent implements OnDestroy {
 			baseZIndex: 10000,
 		});
 
-		this.loginDialogRef.onClose.subscribe((result: string) => {
+		this.loginDialogRef.onClose.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
 			const isCorrect = this.authService.login(result);
 
 			if (isCorrect) {
@@ -119,5 +123,6 @@ export class SidebarComponent implements OnDestroy {
 		if (this.loginDialogRef) {
 			this.loginDialogRef.close();
 		}
+		this.unsubscribe$.next();
 	}
 }

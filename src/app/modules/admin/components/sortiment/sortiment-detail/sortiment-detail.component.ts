@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, switchMap, tap } from 'rxjs';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../types/IKeg';
 import { ListboxModule } from 'primeng/listbox';
@@ -44,14 +44,14 @@ export class SortimentDetailComponent {
 		this.sortimentId = this.activatedRoute.snapshot.paramMap.get('id');
 
 		if (this.sortimentId) {
-			this.loadUser(Number(this.sortimentId));
+			this.loadSortiment(Number(this.sortimentId));
 		}
 	}
 
 	protected async onSubmit() {
 		try {
 			if (this.sortimentId) {
-				await firstValueFrom(this.sortimentService.updateSortiment(Number(this.sortimentId), this.form.value as IKeg));
+				await firstValueFrom(this.sortimentService.updateSortiment(Number(this.sortimentId), this.form.value as IKeg).pipe(switchMap(() => this.sortimentService.loadSortiment())));
 				this.router.navigate(['/admin/sortiment']);
 			} else {
 				const keg = this.form.value as IKeg; // TODO: add typeguard?
@@ -89,7 +89,7 @@ export class SortimentDetailComponent {
 		return firstValueFrom(this.sortimentService.addSortiment(keg));
 	}
 
-	private loadUser(id: number) {
+	private loadSortiment(id: number) {
 		this.sortimentService
 			.getSortiment(id)
 			.pipe(

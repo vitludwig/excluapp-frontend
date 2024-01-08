@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { AsSortimentCategoryPipe } from '../../../../pipes/as-sortiment-category.pipe';
 import { CardModule } from 'primeng/card';
-import { map, tap } from 'rxjs';
+import { map, Subject, takeUntil, tap } from 'rxjs';
 import { SortimentService } from '../../../../../admin/services/sortiment/sortiment.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IUserRead } from '../../../../../user/types/IUser';
@@ -16,6 +16,7 @@ import { IKeg } from '../../../../../admin/types/IKeg';
 import { SummaryItemDialogComponent } from '../../../summary-item-dialog/summary-item-dialog.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
 	selector: 'app-dashboard-sortiment-select',
@@ -65,6 +66,7 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 	protected $showSummary = signal<boolean>(false);
 
 	private summaryDialogRef: DynamicDialogRef | null = null;
+	private unsubscribe$: Subject<void> = new Subject<void>();
 
 	protected showSummaryDetail(value: IOrderReadGroup) {
 		this.summaryDialogRef = this.dialogService.open(SummaryItemDialogComponent, {
@@ -77,7 +79,7 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 			},
 		});
 
-		this.summaryDialogRef.onClose.subscribe((data: IOrderReadGroup) => {
+		this.summaryDialogRef.onClose.pipe(takeUntil(this.unsubscribe$)).subscribe((data: IOrderReadGroup) => {
 			if (data && data.orderIds.length > 0) {
 				for (let i = 1; i <= Math.abs(value.count - data.count); i++) {
 					this.orderService
@@ -149,5 +151,6 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 
 	public ngOnDestroy() {
 		this.summaryDialogRef?.close();
+		this.unsubscribe$.next();
 	}
 }

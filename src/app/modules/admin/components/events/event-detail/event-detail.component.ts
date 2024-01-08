@@ -6,7 +6,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { EventService } from '../../../services/event/event.service';
 import { IEvent } from '../../../types/IEvent';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { first, firstValueFrom, map, tap } from 'rxjs';
+import { combineLatest, first, firstValueFrom, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { IKeg } from '../../../types/IKeg';
 import { EventSortimentComponent } from './components/event-sortiment/event-sortiment.component';
@@ -87,36 +87,31 @@ export class EventDetailComponent {
 
 		const newKegsToAdd = await Promise.all(newKegPromises);
 
-		let request;
+		let request: Observable<IEvent>;
 
 		if (this.eventId) {
 			request = this.eventService.updateEvent(this.eventId, this.form.value as IEvent);
 		} else {
 			request = this.eventService.addEvent(this.form.value as IEvent);
 		}
+		const event = await firstValueFrom(request);
+		await this.processEventKegs(event, newKegsToAdd, existingKegsToAdd);
 
-		request
-			.pipe(
-				map((event) => {
-					// TODO: dodelat odstranovani kegu z eventu
-					for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
-						this.sortimentService
-							.addKegToEvent(event.id, keg.id)
-							.pipe(tap(() => this.sortimentService.$allSortiment.update((kegs) => [...kegs, keg])))
-							.subscribe();
-					}
+		this.router.navigate(['/admin/events']);
+	}
 
-					const existingKegIds = existingKegs.map((k) => k.id);
-					const kegsToRemove = this.originalKegs.filter((k) => !existingKegIds.includes(k.id));
+	private async processEventKegs(event: IEvent, newKegsToAdd: IKeg[], existingKegsToAdd: IKeg[]): Promise<void> {
+		for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
+			await firstValueFrom(this.sortimentService.addKegToEvent(event.id, keg.id));
+			this.sortimentService.$allSortiment.update((kegs) => [...kegs, keg]);
+		}
 
-					for (const keg of kegsToRemove) {
-						this.sortimentService.removeKegFromEvent(event.id, keg.id).subscribe();
-					}
+		const existingKegIds = this.$eventKegs().map((k) => k.id);
+		const kegsToRemove = this.originalKegs.filter((k) => !existingKegIds.includes(k.id));
 
-					this.router.navigate(['/admin/events']);
-				}),
-			)
-			.subscribe();
+		for (const keg of kegsToRemove) {
+			await firstValueFrom(this.sortimentService.removeKegFromEvent(event.id, keg.id));
+		}
 	}
 
 	protected addKeg(keg: IKeg) {

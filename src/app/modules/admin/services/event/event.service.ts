@@ -20,23 +20,21 @@ export class EventService {
 		this.loadEvents();
 	}
 
-	public loadEvents(): void {
-		this.http
-			.get<IEvent[]>(environment.apiUrl + '/events')
-			.pipe(
-				// switchMap((events) => forkJoin(events.map((e) => this.appendsKegsToEvent(e)))),
-				tap((events) => {
-					events.forEach((e) => (e.kegs = (e.kegs ?? []).map((k) => +k))); // TODO: do this on higher level, so everywhere kegs are numbers
-					this.$events.set(events);
+	public loadEvents(): Observable<IEvent[]> {
+		return this.http.get<IEvent[]>(environment.apiUrl + '/events').pipe(
+			map((events) => {
+				events.forEach((e) => (e.kegs = (e.kegs ?? []).map((k) => +k))); // TODO: do this on higher level, so everywhere kegs are numbers
+				this.$events.set(events);
 
-					const activeEventId = JSON.parse(localStorage.getItem('activeEvent') ?? '');
-					if (activeEventId) {
-						const event = events.find((e) => e.id === activeEventId) ?? null;
-						this.$activeEvent.set(event);
-					}
-				}),
-			)
-			.subscribe();
+				const activeEventId = this.getActiveEventId();
+				if (activeEventId) {
+					const event = events.find((e) => e.id === activeEventId) ?? null;
+					this.$activeEvent.set(event);
+				}
+
+				return events;
+			}),
+		);
 	}
 
 	public setActiveEvent(event: IEvent | null): void {
@@ -47,31 +45,43 @@ export class EventService {
 		}
 	}
 
-	// public appendsKegsToEvent(event: IEvent): Observable<IEvent> {
-	// 	return this.http.get<{ eventId: number; kegId: number }[]>(`${environment.apiUrl}/events/${event.id}/kegs`).pipe(
-	// 		map((result) => ({
-	// 			...event,
-	// 			kegs: result.map((obj) => obj.kegId),
-	// 		})),
-	// 	);
-	// }
+	public getActiveEventId(): number | null {
+		const id = localStorage.getItem('activeEvent');
+		if (id !== null) {
+			return Number(id);
+		}
+		return null;
+	}
 
 	public addEvent(value: IEvent): Observable<IEvent> {
-		return this.http.post<IEvent>(environment.apiUrl + '/events', value);
+		return this.http.post<IEvent>(environment.apiUrl + '/events', value).pipe(
+			map((event) => {
+				this.$events.update((events) => [...events, event]);
+				return event;
+			}),
+		);
 	}
 
 	public getEvent(id: number): Observable<IEvent> {
-		// TODO: map kegs to event on backend
-		// return this.http.get<IEvent>(environment.apiUrl + '/events/' + id).pipe(switchMap((event) => this.appendsKegsToEvent(event)));
 		return this.http.get<IEvent>(environment.apiUrl + '/events/' + id);
 	}
 
 	public updateEvent(id: number, value: IEvent): Observable<IEvent> {
-		return this.http.put<IEvent>(environment.apiUrl + '/events/' + id, value);
+		return this.http.put<IEvent>(environment.apiUrl + '/events/' + id, value).pipe(
+			map((event) => {
+				this.$events.update((events) => events.map((e) => (e.id === id ? event : e)));
+				return event;
+			}),
+		);
 	}
 
 	public removeEvent(id: number): Observable<IEvent> {
-		return this.http.delete<IEvent>(environment.apiUrl + '/events/' + id);
+		return this.http.delete<IEvent>(environment.apiUrl + '/events/' + id).pipe(
+			map((event) => {
+				this.$events.update((events) => events.filter((e) => e.id !== id));
+				return event;
+			}),
+		);
 	}
 
 	public getUsersForEvent(eventId: number): Observable<IUserRead[]> {
@@ -86,8 +96,8 @@ export class EventService {
 		return this.http.delete<void>(`${environment.apiUrl}/attendance/${eventId}/${userId}`);
 	}
 
-	public getKegsStatistics(eventId: number, kegId?: number): Observable<IEventKegsStatistics[]> {
-		return this.http.get<IEventKegsStatistics[]>(`${environment.apiUrl}/events/${eventId}/keg-statistics/${kegId}`);
+	public getKegsStatistics(eventId: number): Observable<IEventKegsStatistics[]> {
+		return this.http.get<IEventKegsStatistics[]>(`${environment.apiUrl}/events/${eventId}/keg-statistics`);
 	}
 
 	public getUsersStatistics(eventId: number): Observable<IEventUsersStatistics[]> {
