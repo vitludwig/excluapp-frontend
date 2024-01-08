@@ -10,11 +10,12 @@ import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.
 import { ToastModule } from 'primeng/toast';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { map } from 'rxjs';
+import { SortPipe } from '../../../../../common/pipes/sort.pipe';
 
 @Component({
 	selector: 'app-event-list',
 	standalone: true,
-	imports: [CommonModule, TableModule, ButtonModule, RouterLink, InputTextModule, ToastModule, ConfirmComponent],
+	imports: [CommonModule, TableModule, ButtonModule, RouterLink, InputTextModule, ToastModule, ConfirmComponent, SortPipe],
 	providers: [DialogService],
 	templateUrl: './event-list.component.html',
 	styleUrls: ['./event-list.component.scss'],

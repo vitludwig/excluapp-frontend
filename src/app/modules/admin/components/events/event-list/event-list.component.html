@@ -18,7 +18,7 @@
 </div>
 
 <p-table #eventsTable
-	[value]="eventService.$events()"
+	[value]="eventService.$events() | sort : 'start': 'asc'"
 	[paginator]="true"
 	[rows]="10"
 	[globalFilterFields]="['name']">
@@ -52,3 +52,11 @@
 	</ng-template>
 </p-table>
 <p-toast position="bottom-center"></p-toast>
+
+<!--Nejsme schopni dokončit Váš požadavek.-->
+<!--The Saml2 Response is invalid.-->
+
+<!--Údaje pro technickou podporu-->
+<!--TelemetryID: 44ddba1f56133014-4dffccef10809e34-->
+
+<!--Datum a čas: 2024-01-06 15:09:52Z-->
