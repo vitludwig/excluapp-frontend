@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { LayoutService } from '../../services/layout/layout.service';
-import { ActivationEnd, Router } from '@angular/router';
-import { filter, tap } from 'rxjs';
-import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { ActivationEnd, Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { ToolbarModule } from 'primeng/toolbar';
+import { filter, tap } from 'rxjs';
+import { LayoutService } from '../../services/layout/layout.service';
 @Component({
 	selector: 'app-topbar',
 	standalone: true,

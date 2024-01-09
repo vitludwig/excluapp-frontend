@@ -1,35 +1,40 @@
 <div class="flex gap-2">
 	@for (keg of kegs; track keg) {
-		<div class="beerpong-item flex-1"
+	<div class="beerpong-item flex-1">
+		<h3 class="keg-title">{{ keg.name }}</h3>
+		<p-listbox
+			[options]="users"
+			[ngModel]="data[keg.id]"
+			(ngModelChange)="onUserSelect($event, keg.id)"
+			[multiple]="true"
+			[metaKeySelection]="false"
+			optionLabel="name"
+			[style]="{ width: '100%' }"
 		>
-			<h3 class="keg-title">{{ keg.name }}</h3>
-			<p-listbox [options]="users"
-				[ngModel]="data[keg.id]"
-				(ngModelChange)="onUserSelect($event, keg.id)"
-				[multiple]="true"
-				[metaKeySelection]="false"
-				optionLabel="name"
-				[style]="{'width':'100%'}"
+			<ng-template
+				let-user
+				pTemplate="item"
 			>
-				<ng-template let-user pTemplate="item">
-					<div class="flex align-items-center gap-2">
-						<div>{{ user.name }}</div>
-					</div>
-				</ng-template>
-			</p-listbox>
-		</div>
+				<div class="flex align-items-center gap-2">
+					<div>{{ user.name }}</div>
+				</div>
+			</ng-template>
+		</p-listbox>
+	</div>
 	}
 </div>
 
 <div class="p-dialog-footer">
-	<p-button (click)="submit()"
-		[style]="{'width': '100%'}"
+	<p-button
+		(click)="submit()"
+		[style]="{ width: '100%' }"
 		class="w-full mt-3"
 		styleClass="p-button-lg"
 		label="Potvrdit"
 	/>
 </div>
 
-<p-confirmDialog header="Málo lidí"
+<p-confirmDialog
+	header="Málo lidí"
 	icon="pi pi-exclamation-triangle"
 />

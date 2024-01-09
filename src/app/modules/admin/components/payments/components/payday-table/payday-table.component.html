@@ -6,8 +6,10 @@
 			<th>Propito (ks)</th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body"
-		let-item>
+	<ng-template
+		pTemplate="body"
+		let-item
+	>
 		<tr>
 			<td>{{ item.name }}</td>
 			<td>{{ item.price }} Kč</td>
@@ -16,23 +18,31 @@
 	</ng-template>
 </p-table>
 
-<br>
+<br />
 
-<p-button (click)="copyPaydayResult()"
-	styleClass="p-button-lg p-button-primary">Zkopírovat do schránky
+<p-button
+	(click)="copyPaydayResult()"
+	styleClass="p-button-lg p-button-primary"
+	>Zkopírovat do schránky
 </p-button>
 
-<p-dialog header="Pejdej"
+<p-dialog
+	header="Pejdej"
 	[(visible)]="showPaydayDialog"
-	[style]="{width: '50vw'}">
-	<textarea readonly="readonly"
+	[style]="{ width: '50vw' }"
+>
+	<textarea
+		readonly="readonly"
 		[value]="paydayResult"
 		[rows]="data.length"
-		class="w-full"></textarea>
+		class="w-full"
+	></textarea>
 
 	<ng-template pTemplate="footer">
-		<p-button (click)="showPaydayDialog=false"
+		<p-button
+			(click)="showPaydayDialog = false"
 			label="Zavřít"
-			styleClass="p-button-text"></p-button>
+			styleClass="p-button-text"
+		></p-button>
 	</ng-template>
 </p-dialog>

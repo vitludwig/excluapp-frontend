@@ -1,27 +1,35 @@
 <div class="flex justify-content-between mb-3">
 	<div class="flex">
 		<div class="ml-auto p-inputgroup">
-			<input pInputText
+			<input
+				pInputText
 				type="text"
 				(input)="eventsTable.filterGlobal($any($event.target).value, 'contains')"
-				placeholder="Search"/>
-			<button pButton
+				placeholder="Search"
+			/>
+			<button
+				pButton
 				icon="pi pi-filter-slash"
 				class="p-button-outlined"
-				(click)="clearSearch(eventsTable)"></button>
+				(click)="clearSearch(eventsTable)"
+			></button>
 		</div>
 	</div>
 
-	<p-button styleClass="p-button-lg p-button-success"
+	<p-button
+		styleClass="p-button-lg p-button-success"
 		icon="pi pi-fw pi-plus"
-		[routerLink]="['new']"></p-button>
+		[routerLink]="['new']"
+	></p-button>
 </div>
 
-<p-table #eventsTable
-	[value]="eventService.$events() | sort : 'start': 'asc'"
+<p-table
+	#eventsTable
+	[value]="eventService.$events() | sort: 'start' : 'asc'"
 	[paginator]="true"
 	[rows]="10"
-	[globalFilterFields]="['name']">
+	[globalFilterFields]="['name']"
+>
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Název</th>
@@ -30,16 +38,19 @@
 			<th></th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body"
-		let-event>
+	<ng-template
+		pTemplate="body"
+		let-event
+	>
 		<tr>
 			<td>{{ event.name }}</td>
-			<td>{{ event.start | date: 'dd.MM YY, HH:mm' }}</td>
-			<td>{{ event.end | date: 'dd.MM YY, HH:mm' }}</td>
+			<td>{{ event.start | date: "dd.MM YY, HH:mm" }}</td>
+			<td>{{ event.end | date: "dd.MM YY, HH:mm" }}</td>
 			<td class="flex gap-2">
 				<p-button [routerLink]="['detail', event.id]">Upravit</p-button>
 				<p-button (click)="showInviteModal(event.id)">Pozvat</p-button>
-				<button pButton
+				<button
+					pButton
 					appConfirm
 					(confirm)="removeEvent(event.id)"
 					class="p-button-danger"

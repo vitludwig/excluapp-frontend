@@ -1,6 +1,6 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { IUserRead } from '../types/IUser';
 import { UserService } from '../services/user/user.service';
+import { IUserRead } from '../types/IUser';
 
 @Pipe({
 	name: 'userById',

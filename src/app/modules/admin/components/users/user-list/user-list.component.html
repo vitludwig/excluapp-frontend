@@ -1,27 +1,35 @@
 <div class="flex justify-content-between mb-3">
 	<div class="flex">
 		<div class="ml-auto p-inputgroup">
-			<input pInputText
+			<input
+				pInputText
 				type="text"
 				(input)="usersTable.filterGlobal($any($event.target).value, 'contains')"
-				placeholder="Search"/>
-			<button pButton
+				placeholder="Search"
+			/>
+			<button
+				pButton
 				icon="pi pi-filter-slash"
 				class="p-button-outlined"
-				(click)="clearSearch(usersTable)"></button>
+				(click)="clearSearch(usersTable)"
+			></button>
 		</div>
 	</div>
 
-	<p-button styleClass="p-button-lg p-button-success"
+	<p-button
+		styleClass="p-button-lg p-button-success"
 		icon="pi pi-fw pi-plus"
-		[routerLink]="['new']"></p-button>
+		[routerLink]="['new']"
+	></p-button>
 </div>
 
-<p-table #usersTable
+<p-table
+	#usersTable
 	[value]="userService.$users()"
 	[paginator]="true"
 	[rows]="10"
-	[globalFilterFields]="['name']">
+	[globalFilterFields]="['name']"
+>
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Jméno</th>
@@ -29,22 +37,26 @@
 			<th></th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body"
-		let-user>
+	<ng-template
+		pTemplate="body"
+		let-user
+	>
 		<tr>
 			<td>{{ user.name }}</td>
 			<td>
 				@if(user.faceDescriptor) {
-					<i class="pi pi-check"></i>
+				<i class="pi pi-check"></i>
 				}
 			</td>
 			<td>
-				<p-button [routerLink]="['detail', user.id]"
+				<p-button
+					[routerLink]="['detail', user.id]"
 					styleClass="p-button-info"
 					icon="pi pi-fw pi-pencil"
 				/>
 
-				<button pButton
+				<button
+					pButton
 					appConfirm
 					(confirm)="removeUser(user.id)"
 					confirmMessage="Smazat?"

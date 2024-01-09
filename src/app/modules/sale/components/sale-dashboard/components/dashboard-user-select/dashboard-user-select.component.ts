@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 
 import { CardModule } from 'primeng/card';
 import { SelectUserComponent } from '../../../../../user/components/select-user/select-user.component';
-import { IUserRead } from '../../../../../user/types/IUser';
 import { UserFaceRecognitionComponent } from '../../../../../user/components/user-face-recognition/user-face-recognition.component';
+import { IUserRead } from '../../../../../user/types/IUser';
 
 @Component({
 	selector: 'app-dashboard-user-select',

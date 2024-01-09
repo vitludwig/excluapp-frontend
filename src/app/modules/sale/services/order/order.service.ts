@@ -1,13 +1,13 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { IEvent } from '../../../admin/types/IEvent';
-import { EventService } from '../../../admin/services/event/event.service';
-import { IOrderCreate, IOrderRead } from '../../types/IOrder';
-import { forkJoin, Observable, tap, timeout } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { forkJoin, Observable, tap } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { EventService } from '../../../admin/services/event/event.service';
+import { IEvent } from '../../../admin/types/IEvent';
+import { IKeg } from '../../../admin/types/IKeg';
 import { EBeerVolume } from '../../types/EBeerVolume';
 import { ICartItem } from '../../types/ICartItem';
-import { IKeg } from '../../../admin/types/IKeg';
+import { IOrderCreate, IOrderRead } from '../../types/IOrder';
 
 @Injectable({
 	providedIn: 'root',

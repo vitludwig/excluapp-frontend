@@ -1,13 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { MessageService } from 'primeng/api';
-import { FormsModule } from '@angular/forms';
-import { IUserRead } from '../../types/IUser';
 import { ListboxModule } from 'primeng/listbox';
+import { IUserRead } from '../../types/IUser';
 import { SelectUserComponent } from '../select-user/select-user.component';
 
 @Component({

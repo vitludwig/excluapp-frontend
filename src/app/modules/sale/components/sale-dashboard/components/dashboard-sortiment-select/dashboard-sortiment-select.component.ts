@@ -1,22 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, Input, OnDestroy, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EBeerVolume } from '../../../../types/EBeerVolume';
-import { ButtonModule } from 'primeng/button';
-import { DividerModule } from 'primeng/divider';
-import { AsSortimentCategoryPipe } from '../../../../pipes/as-sortiment-category.pipe';
-import { CardModule } from 'primeng/card';
-import { map, Subject, takeUntil, tap } from 'rxjs';
-import { SortimentService } from '../../../../../admin/services/sortiment/sortiment.service';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { IUserRead } from '../../../../../user/types/IUser';
-import { EventService } from '../../../../../admin/services/event/event.service';
-import { OrderService } from '../../../../services/order/order.service';
-import { IOrderRead, IOrderReadGroup } from '../../../../types/IOrder';
-import { IKeg } from '../../../../../admin/types/IKeg';
-import { SummaryItemDialogComponent } from '../../../summary-item-dialog/summary-item-dialog.component';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, Input, OnDestroy, Output, signal } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DividerModule } from 'primeng/divider';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { map, Subject, takeUntil, tap } from 'rxjs';
+import { EventService } from '../../../../../admin/services/event/event.service';
+import { SortimentService } from '../../../../../admin/services/sortiment/sortiment.service';
+import { IKeg } from '../../../../../admin/types/IKeg';
+import { IUserRead } from '../../../../../user/types/IUser';
+import { AsSortimentCategoryPipe } from '../../../../pipes/as-sortiment-category.pipe';
+import { OrderService } from '../../../../services/order/order.service';
+import { EBeerVolume } from '../../../../types/EBeerVolume';
+import { IOrderRead, IOrderReadGroup } from '../../../../types/IOrder';
+import { SummaryItemDialogComponent } from '../../../summary-item-dialog/summary-item-dialog.component';
 
 @Component({
 	selector: 'app-dashboard-sortiment-select',

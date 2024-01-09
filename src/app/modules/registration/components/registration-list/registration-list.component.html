@@ -1,23 +1,29 @@
 <div class="flex justify-content-between mb-3">
 	<div class="flex">
 		<div class="ml-auto p-inputgroup">
-			<input pInputText
+			<input
+				pInputText
 				type="text"
 				(input)="eventsTable.filterGlobal($any($event.target).value, 'contains')"
-				placeholder="Search"/>
-			<button pButton
+				placeholder="Search"
+			/>
+			<button
+				pButton
 				icon="pi pi-filter-slash"
 				class="p-button-outlined"
-				(click)="clearSearch(eventsTable)"></button>
+				(click)="clearSearch(eventsTable)"
+			></button>
 		</div>
 	</div>
 </div>
 
-<p-table #eventsTable
+<p-table
+	#eventsTable
 	[value]="$events()"
 	[paginator]="true"
 	[rows]="10"
-	[globalFilterFields]="['name']">
+	[globalFilterFields]="['name']"
+>
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Název</th>
@@ -25,11 +31,13 @@
 			<th></th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body"
-		let-event>
+	<ng-template
+		pTemplate="body"
+		let-event
+	>
 		<tr [routerLink]="[event.id]">
 			<td>{{ event.name }}</td>
-			<td>{{ event.start | date: 'dd.MM YYYY' }}</td>
+			<td>{{ event.start | date: "dd.MM YYYY" }}</td>
 			<td>
 				<p-button [routerLink]="[event.id]">Přidat se</p-button>
 			</td>

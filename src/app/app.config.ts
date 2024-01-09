@@ -1,12 +1,12 @@
 import { ApplicationConfig, ErrorHandler, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { InitializerService } from './common/services/initializer.service';
-import { HttpErrorHandler } from './common/errors/HttpErrorHandler';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
+import { routes } from './app.routes';
+import { HttpErrorHandler } from './common/errors/HttpErrorHandler';
+import { InitializerService } from './common/services/initializer.service';
 
 export const appConfig: ApplicationConfig = {
 	providers: [

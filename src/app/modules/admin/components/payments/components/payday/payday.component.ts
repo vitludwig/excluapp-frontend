@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { TableModule } from 'primeng/table';
+import { Observable, forkJoin, map } from 'rxjs';
+import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
-import { FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { ButtonModule } from 'primeng/button';
-import { forkJoin, map, Observable } from 'rxjs';
-import { TableModule } from 'primeng/table';
-import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
-import { PaydayTableComponent } from '../payday-table/payday-table.component';
 import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
+import { PaydayTableComponent } from '../payday-table/payday-table.component';
 
 @Component({
 	selector: 'app-payday',

@@ -1,8 +1,8 @@
 import { APP_INITIALIZER, inject, Injectable, Provider } from '@angular/core';
-import { SortimentService } from '../../modules/admin/services/sortiment/sortiment.service';
 import { firstValueFrom } from 'rxjs';
-import { FaceRecognitionService } from '../../modules/user/services/face-recognition/face-recognition.service';
 import { EventService } from '../../modules/admin/services/event/event.service';
+import { SortimentService } from '../../modules/admin/services/sortiment/sortiment.service';
+import { FaceRecognitionService } from '../../modules/user/services/face-recognition/face-recognition.service';
 import { UserService } from '../../modules/user/services/user/user.service';
 
 @Injectable({

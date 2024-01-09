@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
+import { JsonPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
-import { EventService } from '../../../services/event/event.service';
-import { IEvent } from '../../../types/IEvent';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { combineLatest, first, firstValueFrom, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CalendarModule } from 'primeng/calendar';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { Observable, firstValueFrom, map, tap } from 'rxjs';
+import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
+import { EventService } from '../../../services/event/event.service';
+import { SortimentService } from '../../../services/sortiment/sortiment.service';
+import { IEvent } from '../../../types/IEvent';
 import { IKeg } from '../../../types/IKeg';
 import { EventSortimentComponent } from './components/event-sortiment/event-sortiment.component';
-import { SortimentService } from '../../../services/sortiment/sortiment.service';
-import { TooltipModule } from 'primeng/tooltip';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
-import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'app-event-detail',

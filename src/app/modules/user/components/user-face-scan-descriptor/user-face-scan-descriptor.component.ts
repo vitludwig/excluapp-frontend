@@ -1,8 +1,4 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { IUserRead } from '../../types/IUser';
-import { UserService } from '../../services/user/user.service';
 import {
 	detectSingleFace,
 	FaceDetection,
@@ -13,11 +9,15 @@ import {
 	WithFaceExpressions,
 	WithFaceLandmarks,
 } from 'face-api.js';
-import { FaceScanningError, MoodScanningError } from '../user-face-recognition/types/FaceScanningError';
 import { FaceExpressions } from 'face-api.js/build/commonjs/faceExpressionNet/FaceExpressions';
-import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
-import { firstValueFrom } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { firstValueFrom } from 'rxjs';
+import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
+import { UserService } from '../../services/user/user.service';
+import { IUserRead } from '../../types/IUser';
+import { FaceScanningError, MoodScanningError } from '../user-face-recognition/types/FaceScanningError';
 
 /**
  * Scans new face definition for user and save it

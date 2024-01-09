@@ -1,33 +1,37 @@
 <div class="flex gap-3 flex-wrap">
 	@for (item of sortiment; track item) {
-		<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.BIG, item: item}"></ng-container>
+	<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.BIG, item: item }"></ng-container>
 	}
 </div>
 
-<p-divider/>
+<p-divider />
 
 <div class="flex gap-3 flex-wrap">
 	@for (item of sortiment; track item) {
-		<ng-container *ngTemplateOutlet="sortimentCard; context: {category: EBeerVolume.SMALL, item: item, subheader: 'malé'}"></ng-container>
+	<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.SMALL, item: item, subheader: 'malé' }"></ng-container>
 	}
 </div>
 
 <div class="slide-panel">
 	<div class="w-full flex align-items-end justify-content-between">
-		<p-button icon="pi pi-times"
+		<p-button
+			icon="pi pi-times"
 			styleClass="p-button-rounded p-button-raised p-button-lg p-button-danger"
 			class="order-control-btn"
 			(click)="cancelOrder()"
 			[disabled]="orderService.$orderProcessing()"
 		/>
 
-		<p-button icon="pi pi-fw pi-{{$showSummary() ? 'chevron-down' : 'chevron-up'}}"
+		<p-button
+			icon="pi pi-fw pi-{{ $showSummary() ? 'chevron-down' : 'chevron-up' }}"
 			class="slide-open-btn"
 			styleClass="p-button-raised p-button-lg p-button-info"
-			(click)="toggleSummary()">
+			(click)="toggleSummary()"
+		>
 		</p-button>
 
-		<p-button icon="pi pi-check"
+		<p-button
+			icon="pi pi-check"
 			styleClass="p-button-rounded p-button-raised p-button-lg p-button-success"
 			class="order-control-btn"
 			(click)="confirmOrder()"
@@ -35,36 +39,37 @@
 		/>
 	</div>
 
-	<div class="summary"
+	<div
+		class="summary"
 		[class.visible]="$showSummary()"
 	>
 		<h4>Už jsi vypil/a</h4>
-		@if ($summary() | async; as summary) {
-			@if (summary.length === 0) {
-				<h5>Nic jsi nevypil/a, křupko!</h5>
-			}
-			@for (item of summary; track item) {
-				<div class="summary-item"
-				>
-					<span>{{ item.kegName ?? 'Pivečko nebo kyseláček' }}</span>
-					<div class="flex align-items-center">
-						<span>{{ item.count }}ks</span>
-						<p-button icon="pi pi-pencil"
-							class="ml-4"
-							styleClass="p-button-raised p-button-info p-button-sm"
-							(click)="showSummaryDetail(item)"
-						/>
-					</div>
-				</div>
-			}
-		}
+		@if ($summary() | async; as summary) { @if (summary.length === 0) {
+		<h5>Nic jsi nevypil/a, křupko!</h5>
+		} @for (item of summary; track item) {
+		<div class="summary-item">
+			<span>{{ item.kegName ?? "Pivečko nebo kyseláček" }}</span>
+			<div class="flex align-items-center">
+				<span>{{ item.count }}ks</span>
+				<p-button
+					icon="pi pi-pencil"
+					class="ml-4"
+					styleClass="p-button-raised p-button-info p-button-sm"
+					(click)="showSummaryDetail(item)"
+				/>
+			</div>
+		</div>
+		} }
 	</div>
 </div>
 
-<p-confirmDialog header="Potvrdit"
-	icon="pi pi-exclamation-triangle"/>
+<p-confirmDialog
+	header="Potvrdit"
+	icon="pi pi-exclamation-triangle"
+/>
 
-<ng-template #sortimentCard
+<ng-template
+	#sortimentCard
 	let-category="category"
 	let-item="item"
 	let-subheader="subheader"
@@ -78,26 +83,27 @@
 		class="card"
 	>
 		@if (orderService.$cartCount()[category | asSortimentCategory][item.id]) {
-			<div class="card-controls w-full flex justify-content-between align-items-center"
-			>
-				<p-button type="button"
-					icon="pi pi-minus"
-					class="p-button-rounded"
-					styleClass="p-button-lg"
-					(click)="orderService.removeOneFromCart(item, $event, category)"
-				/>
+		<div class="card-controls w-full flex justify-content-between align-items-center">
+			<p-button
+				type="button"
+				icon="pi pi-minus"
+				class="p-button-rounded"
+				styleClass="p-button-lg"
+				(click)="orderService.removeOneFromCart(item, $event, category)"
+			/>
 
-				@if (orderService.$cartCount()[category | asSortimentCategory][item.id]; as count) {
-					<span>+ {{ count }}ks</span>
-				}
+			@if (orderService.$cartCount()[category | asSortimentCategory][item.id]; as count) {
+			<span>+ {{ count }}ks</span>
+			}
 
-				<p-button type="button"
-					icon="pi pi-plus"
-					class="p-button-rounded"
-					styleClass="p-button-lg"
-					(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"
-				/>
-			</div>
+			<p-button
+				type="button"
+				icon="pi pi-plus"
+				class="p-button-rounded"
+				styleClass="p-button-lg"
+				(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"
+			/>
+		</div>
 		}
 
 		<ng-template pTemplate="footer">

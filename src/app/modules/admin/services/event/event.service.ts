@@ -1,9 +1,9 @@
-import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IEvent } from '../../types/IEvent';
-import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IUserRead } from '../../../user/types/IUser';
+import { IEvent } from '../../types/IEvent';
 import { IEventKegsStatistics, IEventUsersStatistics } from '../../types/IEventKegsStatistics';
 import { IEventPaydayStatistics } from '../../types/IEventPaydayStatistics';
 

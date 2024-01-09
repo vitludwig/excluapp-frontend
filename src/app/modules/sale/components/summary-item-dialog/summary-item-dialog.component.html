@@ -1,27 +1,35 @@
 <div class="mb-5 w-full flex">
-	<p-button type="button"
+	<p-button
+		type="button"
 		icon="pi pi-minus"
 		class="p-button-rounded"
 		styleClass="p-button-lg"
-		(click)="count = count - 1"/>
+		(click)="count = count - 1"
+	/>
 
-	<p-inputNumber [(ngModel)]="count"
+	<p-inputNumber
+		[(ngModel)]="count"
 		inputId="minmax"
 		mode="decimal"
 		class="flex-grow-1"
-		[style]="{'width': '100%'}"
+		[style]="{ width: '100%' }"
 		[min]="0"
-		[max]="100"></p-inputNumber>
+		[max]="100"
+	></p-inputNumber>
 
-	<p-button type="button"
+	<p-button
+		type="button"
 		icon="pi pi-plus"
 		class="p-button-rounded"
 		styleClass="p-button-lg"
-		(click)="count = count + 1"/>
+		(click)="count = count + 1"
+	/>
 </div>
 
-<p-button (click)="submit()"
-	[style]="{'width': '100%'}"
+<p-button
+	(click)="submit()"
+	[style]="{ width: '100%' }"
 	class="w-full"
 	styleClass="p-button-lg"
-	label="Potvrdit"/>
+	label="Potvrdit"
+/>

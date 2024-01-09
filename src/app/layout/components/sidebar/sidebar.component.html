@@ -5,65 +5,72 @@
 		</div>
 
 		@if (authService.$isLogged()) {
-			<p-dropdown
-				[options]="eventService.$events() | sort: 'start': 'asc'"
-				[ngModel]="eventService.$activeEvent()"
-				(ngModelChange)="eventService.setActiveEvent($event)"
-				optionLabel="name"
-				[filter]="true"
-				[autofocusFilter]="false"
-				filterBy="name"
-				[showClear]="true"
-				placeholder="Select event"
-				[style]="{ width: '100%' }"
-				class="mt-5"
-			>
-				<ng-template pTemplate="selectedItem">
-					@if (eventService.$activeEvent(); as event) {
-						<div class="flex align-items-center gap-2">
-							<div>{{ event.name }}</div>
-						</div>
-					}
-				</ng-template>
+		<p-dropdown
+			[options]="eventService.$events() | sort: 'start' : 'asc'"
+			[ngModel]="eventService.$activeEvent()"
+			(ngModelChange)="eventService.setActiveEvent($event)"
+			optionLabel="name"
+			[filter]="true"
+			[autofocusFilter]="false"
+			filterBy="name"
+			[showClear]="true"
+			placeholder="Select event"
+			[style]="{ width: '100%' }"
+			class="mt-5"
+		>
+			<ng-template pTemplate="selectedItem">
+				@if (eventService.$activeEvent(); as event) {
+				<div class="flex align-items-center gap-2">
+					<div>{{ event.name }}</div>
+				</div>
+				}
+			</ng-template>
 
-				<ng-template let-item
-					pTemplate="item">
-					<div class="flex align-items-center gap-2">
-						<div>{{ item.name }}</div>
-					</div>
-				</ng-template>
-			</p-dropdown>
+			<ng-template
+				let-item
+				pTemplate="item"
+			>
+				<div class="flex align-items-center gap-2">
+					<div>{{ item.name }}</div>
+				</div>
+			</ng-template>
+		</p-dropdown>
 		}
 		<div class="mt-auto">
 			@if (!authService.$isLogged()) {
-				<p-button
-					class="mt-auto"
-					[style]="{'width': '100%'}"
-					(click)="showLoginDialog()"
-				>
-					<i class="pi pi-fw pi-user mr-2"></i>
-					Admin
-				</p-button>
-			}
+			<p-button
+				class="mt-auto"
+				[style]="{ width: '100%' }"
+				(click)="showLoginDialog()"
+			>
+				<i class="pi pi-fw pi-user mr-2"></i>
+				Admin
+			</p-button>
+			} @if (authService.$isLogged()) {
+			<div class="flex gap-2 mb-4">
+				<label htmlFor="faceRecognition">Face recognition</label>
+				<p-inputSwitch
+					[(ngModel)]="faceRecognitionService.faceRecognitionEnabled"
+					id="faceRecognition"
+				></p-inputSwitch>
+			</div>
 
-			@if (authService.$isLogged()) {
-				<div class="flex gap-2 mb-4">
-					<label htmlFor="faceRecognition">Face recognition</label>
-					<p-inputSwitch [(ngModel)]="faceRecognitionService.faceRecognitionEnabled" id="faceRecognition"></p-inputSwitch>
-				</div>
+			<div class="flex gap-2 mb-4">
+				<label htmlFor="faceRecognitionOverlay">Face recognition overlay</label>
+				<p-inputSwitch
+					[(ngModel)]="faceRecognitionService.overlayEnabled"
+					id="faceRecognitionOverlay"
+				></p-inputSwitch>
+			</div>
 
-				<div class="flex gap-2 mb-4">
-					<label htmlFor="faceRecognitionOverlay">Face recognition overlay</label>
-					<p-inputSwitch [(ngModel)]="faceRecognitionService.overlayEnabled" id="faceRecognitionOverlay"></p-inputSwitch>
-				</div>
-
-				<p-button class="mt-auto"
-					[style]="{'width': '100%'}"
-					(click)="authService.logout()"
-				>
-					<i class="pi pi-fw pi-sign-out mr-2"></i>
-					Odhlásit
-				</p-button>
+			<p-button
+				class="mt-auto"
+				[style]="{ width: '100%' }"
+				(click)="authService.logout()"
+			>
+				<i class="pi pi-fw pi-sign-out mr-2"></i>
+				Odhlásit
+			</p-button>
 			}
 		</div>
 	</div>

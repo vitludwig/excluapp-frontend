@@ -1,21 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
-import { RouterLink } from '@angular/router';
-import { SortimentService } from '../../../services/sortiment/sortiment.service';
-import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogService } from 'primeng/dynamicdialog';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
-import { DialogService } from 'primeng/dynamicdialog';
 import { IsIncludedPipe } from '../../../../../common/pipes/is-included.pipe';
-import { SortimentListTableComponent } from './components/sortiment-list-table/sortiment-list-table.component';
-import { TabViewModule } from 'primeng/tabview';
+import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../types/IKeg';
+import { SortimentListTableComponent } from './components/sortiment-list-table/sortiment-list-table.component';
 
 @Component({
 	selector: 'app-sortiment-list',

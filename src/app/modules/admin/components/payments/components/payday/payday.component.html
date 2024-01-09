@@ -1,20 +1,21 @@
 <div class="flex align-items-center gap-5">
-	<p-multiSelect [options]="eventService.$events() | sort: 'start'"
+	<p-multiSelect
+		[options]="eventService.$events() | sort: 'start'"
 		[ngModel]="$selectedEvents()"
 		(ngModelChange)="$selectedEvents.set($event)"
 		placeholder="Vyber události"
 		optionLabel="name"
 		display="chip"
 	/>
-	<p-button (click)="createPayday()"
-		styleClass="p-button-lg p-button-primary">Vyrobit pejdej
+	<p-button
+		(click)="createPayday()"
+		styleClass="p-button-lg p-button-primary"
+		>Vyrobit pejdej
 	</p-button>
 </div>
 
-<br>
+<br />
 
 @if (($paydayResult() | async); as paydayResult) {
-	<app-payday-table
-		[data]="paydayResult"
-	/>
+<app-payday-table [data]="paydayResult" />
 }

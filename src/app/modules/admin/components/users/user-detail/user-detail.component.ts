@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
-import { InputTextModule } from 'primeng/inputtext';
-import { PaginatorModule } from 'primeng/paginator';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom, Observable, tap } from 'rxjs';
-import { IUserRead } from '../../../../user/types/IUser';
-import { UserService } from '../../../../user/services/user/user.service';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { PaginatorModule } from 'primeng/paginator';
+import { Observable, firstValueFrom } from 'rxjs';
 import { UserFaceScanDescriptorComponent } from '../../../../user/components/user-face-scan-descriptor/user-face-scan-descriptor.component';
 import { FaceRecognitionService } from '../../../../user/services/face-recognition/face-recognition.service';
+import { UserService } from '../../../../user/services/user/user.service';
+import { IUserRead } from '../../../../user/types/IUser';
 @Component({
 	selector: 'app-user-detail',
 	standalone: true,

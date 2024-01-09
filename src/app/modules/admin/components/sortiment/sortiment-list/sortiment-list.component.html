@@ -6,9 +6,8 @@
 			(click)="toggleFilter('empty')"
 		>
 			@if('empty' | isIncluded: $filter()) {
-				<i class="pi pi-fw pi-check mr-2"></i>
-			}
-			Prázdné
+			<i class="pi pi-fw pi-check mr-2"></i>
+			} Prázdné
 		</p-button>
 
 		<p-button
@@ -17,27 +16,28 @@
 			(click)="toggleFilter('inEvent')"
 		>
 			@if('inEvent' | isIncluded: $filter()) {
-				<i class="pi pi-fw pi-check mr-2"></i>
-			}
-			Na párty
+			<i class="pi pi-fw pi-check mr-2"></i>
+			} Na párty
 		</p-button>
 	</div>
 
-	<p-button styleClass="p-button-lg p-button-success"
+	<p-button
+		styleClass="p-button-lg p-button-success"
 		icon="pi pi-fw pi-plus"
 		label="Přidat předlohu"
-		[routerLink]="['new']"></p-button>
+		[routerLink]="['new']"
+	></p-button>
 </div>
 
 <p-tabView>
 	<p-tabPanel header="Sudy na akcích">
 		@if($copyKegs(); as kegs) {
-			<app-sortiment-list-table [kegs]="kegs" />
+		<app-sortiment-list-table [kegs]="kegs" />
 		}
 	</p-tabPanel>
 	<p-tabPanel header="Předlohy">
 		@if($originalKegs(); as kegs) {
-			<app-sortiment-list-table [kegs]="kegs" />
+		<app-sortiment-list-table [kegs]="kegs" />
 		}
 	</p-tabPanel>
 </p-tabView>

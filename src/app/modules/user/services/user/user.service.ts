@@ -1,9 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { firstValueFrom, Observable, tap } from 'rxjs';
 import { IUserCreate, IUserRead } from '../../types/IUser';
-import { IEvent } from '../../../admin/types/IEvent';
 
 @Injectable({
 	providedIn: 'root',

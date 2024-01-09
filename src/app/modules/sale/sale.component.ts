@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { SaleDashboardComponent } from './components/sale-dashboard/sale-dashboard.component';
-import { LoginDialogComponent } from '../../layout/components/sidebar/components/login-dialog/login-dialog.component';
 import { EventService } from '../admin/services/event/event.service';
+import { SaleDashboardComponent } from './components/sale-dashboard/sale-dashboard.component';
 
 @Component({
 	selector: 'app-sale',

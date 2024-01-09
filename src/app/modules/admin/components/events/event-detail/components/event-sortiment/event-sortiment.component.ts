@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, effect, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
-import { IKeg } from '../../../../../types/IKeg';
-import { SortimentService } from '../../../../../services/sortiment/sortiment.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { tap } from 'rxjs';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
+import { IKeg } from '../../../../../types/IKeg';
 
 @Component({
 	selector: 'app-event-sortiment',

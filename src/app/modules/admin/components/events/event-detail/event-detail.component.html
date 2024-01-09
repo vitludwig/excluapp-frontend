@@ -1,70 +1,88 @@
 <div class="flex flex-column">
 	<div class="flex gap-4">
-		<form [formGroup]="form"
+		<form
+			[formGroup]="form"
 			(ngSubmit)="onSubmit()"
-			class="flex flex-column flex-1 gap-4">
+			class="flex flex-column flex-1 gap-4"
+		>
 			<div class="flex flex-column gap-2">
 				<label htmlFor="eventName">Name</label>
-				<input pInputText
+				<input
+					pInputText
 					id="eventName"
-					formControlName="name"/>
+					formControlName="name"
+				/>
 			</div>
 
 			<div class="flex flex-column gap-2">
 				<label htmlFor="eventCapacity">Capacity</label>
-				<input pInputText
+				<input
+					pInputText
 					id="eventCapacity"
-					formControlName="capacity"/>
+					formControlName="capacity"
+				/>
 			</div>
 
 			<div class="flex flex-column gap-2">
 				<label htmlFor="eventStart">Start</label>
-				<p-calendar id="eventStart"
+				<p-calendar
+					id="eventStart"
 					[style]="{ width: '100%' }"
 					formControlName="start"
 					[showTime]="true"
-					[showIcon]="true"/>
+					[showIcon]="true"
+				/>
 			</div>
 
 			<div class="flex flex-column gap-2">
 				<label htmlFor="eventEnd">End</label>
-				<p-calendar id="eventEnd"
+				<p-calendar
+					id="eventEnd"
 					[style]="{ width: '100%' }"
 					formControlName="end"
 					[showTime]="true"
-					[showIcon]="true"/>
+					[showIcon]="true"
+				/>
 			</div>
 		</form>
 
 		<div class="flex-1">
-			<app-event-sortiment label="Sud z minula"
+			<app-event-sortiment
+				label="Sud z minula"
 				[options]="$existingKegs()"
-				(select)="addKeg($event)"></app-event-sortiment>
-			<app-event-sortiment label="Nový sud"
+				(select)="addKeg($event)"
+			></app-event-sortiment>
+			<app-event-sortiment
+				label="Nový sud"
 				[options]="sortimentService.$originalSortiment()"
-				(select)="addKeg($event)"></app-event-sortiment>
+				(select)="addKeg($event)"
+			></app-event-sortiment>
 
 			<h4>Sudy na akci</h4>
 			<p-table [value]="$eventKegs()">
-				<ng-template pTemplate="body"
-					let-item>
+				<ng-template
+					pTemplate="body"
+					let-item
+				>
 					<tr>
 						<td>
 							@if (item.isActive) {
-								<i class="pi pi-fw pi-check"></i>
+							<i class="pi pi-fw pi-check"></i>
 							}
 						</td>
 						<td>{{ item.name }} ({{ item.sourceName }})</td>
-						<td>{{ item.isEmpty ? 'Prázdný' : 'Plný' }}</td>
+						<td>{{ item.isEmpty ? "Prázdný" : "Plný" }}</td>
 						<td>{{ item.volume }} l</td>
 						<td class="flex gap-2">
-							<p-button (click)="openToggleConfirm(item)"
+							<p-button
+								(click)="openToggleConfirm(item)"
 								[styleClass]="item.isActive ? 'p-button-warning' : 'p-button-success'"
 								icon="pi pi-fw {{ item.isActive ? 'pi-circle' : 'pi-circle-fill' }}"
 								[pTooltip]="item.isActive ? 'Deaktivovat' : 'Aktivovat'"
 							/>
 
-							<button pButton
+							<button
+								pButton
 								appConfirm
 								confirmMessage="Smazat?"
 								(confirm)="removeKeg(item.id)"
@@ -77,11 +95,13 @@
 			</p-table>
 		</div>
 	</div>
-	<p-button label="Save"
+	<p-button
+		label="Save"
 		(click)="onSubmit()"
 		type="submit"
 		class="mt-4"
-		[style]="{'width': '100%'}"/>
+		[style]="{ width: '100%' }"
+	/>
 </div>
 
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { SharedModule } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { EventService } from '../../../admin/services/event/event.service';
-import { RouterLink } from '@angular/router';
 import { IEvent } from '../../../admin/types/IEvent';
 
 @Component({

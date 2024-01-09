@@ -1,26 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { EventService } from '../../../admin/services/event/event.service';
-import { firstValueFrom, tap } from 'rxjs';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageService, SharedModule } from 'primeng/api';
-import { TableModule } from 'primeng/table';
-import { IEvent } from '../../../admin/types/IEvent';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
-import { IUserRead } from '../../../user/types/IUser';
-import { UserService } from '../../../user/services/user/user.service';
-import { TooltipModule } from 'primeng/tooltip';
-import { ConfirmComponent } from '../../../../common/components/confirm/confirm.component';
-import { DialogModule } from 'primeng/dialog';
-import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
-import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { MessageService, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { firstValueFrom, tap } from 'rxjs';
+import { ConfirmComponent } from '../../../../common/components/confirm/confirm.component';
+import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
 import { AuthService } from '../../../../common/services/auth.service';
+import { EventService } from '../../../admin/services/event/event.service';
 import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
+import { IEvent } from '../../../admin/types/IEvent';
 import { IKeg } from '../../../admin/types/IKeg';
+import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
+import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
+import { UserService } from '../../../user/services/user/user.service';
+import { IUserRead } from '../../../user/types/IUser';
 
 @Component({
 	selector: 'app-registration-detail',

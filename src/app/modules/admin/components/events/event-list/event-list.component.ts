@@ -1,17 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Table, TableModule } from 'primeng/table';
-import { EventService } from '../../../services/event/event.service';
-import { ButtonModule } from 'primeng/button';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { Table, TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { SortPipe } from '../../../../../common/pipes/sort.pipe';
-import { firstValueFrom, map, tap } from 'rxjs';
-import { IEvent } from '../../../types/IEvent';
+import { EventService } from '../../../services/event/event.service';
+import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
 
 @Component({
 	selector: 'app-event-list',

@@ -1,14 +1,13 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { detectSingleFace, FaceMatcher, LabeledFaceDescriptors, TinyFaceDetectorOptions } from 'face-api.js';
 import { WebcamModule } from 'ngx-webcam';
-import { SelectUserComponent } from '../select-user/select-user.component';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
 import { UserService } from '../../services/user/user.service';
 import { IUserRead } from '../../types/IUser';
-import { ButtonModule } from 'primeng/button';
-import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
+import { SelectUserComponent } from '../select-user/select-user.component';
 import { FaceScanningError } from './types/FaceScanningError';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 
 @Component({
 	selector: 'app-user-face-recognition',

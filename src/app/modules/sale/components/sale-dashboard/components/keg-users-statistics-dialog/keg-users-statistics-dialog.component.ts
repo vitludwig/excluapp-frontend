@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { DividerModule } from 'primeng/divider';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IKegUserStatistics } from '../../../../../admin/components/sortiment/types/IKegUserStatistics';
-import { DividerModule } from 'primeng/divider';
 import { UserByIdPipe } from '../../../../../user/pipes/user-by-id.pipe';
 
 @Component({

@@ -1,17 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DropdownModule } from 'primeng/dropdown';
-import { EventService } from '../../../../services/event/event.service';
-import { IEvent } from '../../../../types/IEvent';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Observable, of, switchMap, tap } from 'rxjs';
-import { IEventKegsStatistics } from '../../../../types/IEventKegsStatistics';
-import { ChartModule } from 'primeng/chart';
 import { ButtonModule } from 'primeng/button';
+import { ChartModule } from 'primeng/chart';
+import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { PaydayTableComponent } from '../../../payments/components/payday-table/payday-table.component';
+import { Observable, of, switchMap, tap } from 'rxjs';
+import { EventService } from '../../../../services/event/event.service';
+import { IEvent } from '../../../../types/IEvent';
+import { IEventKegsStatistics } from '../../../../types/IEventKegsStatistics';
 import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
+import { PaydayTableComponent } from '../../../payments/components/payday-table/payday-table.component';
 
 @Component({
 	selector: 'app-event-statistics',

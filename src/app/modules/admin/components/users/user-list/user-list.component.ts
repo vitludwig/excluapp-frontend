@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
-import { ConfirmationService, SharedModule } from 'primeng/api';
-import { Table, TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { tap } from 'rxjs';
-import { UserService } from '../../../../user/services/user/user.service';
+import { ConfirmationService, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { InputTextModule } from 'primeng/inputtext';
+import { Table, TableModule } from 'primeng/table';
+import { tap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
+import { UserService } from '../../../../user/services/user/user.service';
 
 @Component({
 	selector: 'app-user-list',

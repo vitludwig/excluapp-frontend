@@ -1,13 +1,12 @@
-import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
-import { IKeg } from '../../types/IKeg';
-import { IEvent } from '../../types/IEvent';
-import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
 import { capitalizeEachFirstLetter } from '../../../../common/utils/StringUtils';
+import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
 import { IKegUserStatistics } from '../../components/sortiment/types/IKegUserStatistics';
-import { HttpErrorHandler } from '../../../../common/errors/HttpErrorHandler';
+import { IEvent } from '../../types/IEvent';
+import { IKeg } from '../../types/IKeg';
 
 @Injectable({
 	providedIn: 'root',

@@ -1,5 +1,5 @@
-import { Directive, HostListener, inject } from '@angular/core';
 import { Location } from '@angular/common';
+import { Directive, HostListener, inject } from '@angular/core';
 
 @Directive({
 	selector: '[appBackBtn]',

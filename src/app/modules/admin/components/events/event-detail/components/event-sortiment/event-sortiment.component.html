@@ -12,26 +12,25 @@
 	>
 		<ng-template pTemplate="selectedItem">
 			@if (selectedSortiment) {
-				<div class="flex align-items-center gap-2">
-					<div>{{ selectedSortiment.name }} ({{ selectedSortiment.volume }}l)</div>
-				</div>
+			<div class="flex align-items-center gap-2">
+				<div>{{ selectedSortiment.name }} ({{ selectedSortiment.volume }}l)</div>
+			</div>
 			}
 		</ng-template>
 
-		<ng-template let-item
-			pTemplate="item">
+		<ng-template
+			let-item
+			pTemplate="item"
+		>
 			<div class="flex align-items-center gap-2">
-				<div>
-					{{ item.name }} ({{ item.volume }}l)
-					@if (item.event?.event; as start) {
-						({{ start | date: 'dd.MM.yyyy' }})
-					}
-				</div>
+				<div>{{ item.name }} ({{ item.volume }}l) @if (item.event?.event; as start) { ({{ start | date: "dd.MM.yyyy" }}) }</div>
 			</div>
 		</ng-template>
 	</p-dropdown>
 
-	<p-button styleClass="p-button-lg p-button-success"
+	<p-button
+		styleClass="p-button-lg p-button-success"
 		icon="pi pi-fw pi-plus"
-		(click)="addSortiment(selectedSortiment)"></p-button>
+		(click)="addSortiment(selectedSortiment)"
+	></p-button>
 </div>

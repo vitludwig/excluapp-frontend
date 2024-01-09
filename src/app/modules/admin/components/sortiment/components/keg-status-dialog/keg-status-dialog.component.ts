@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SortimentService } from '../../../../services/sortiment/sortiment.service';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
-import { IKegStatus } from '../../types/IKegStatus';
 import { map, Observable } from 'rxjs';
-import { FormsModule } from '@angular/forms';
+import { SortimentService } from '../../../../services/sortiment/sortiment.service';
+import { IKegStatus } from '../../types/IKegStatus';
 
 @Component({
 	selector: 'app-keg-status-dialog',

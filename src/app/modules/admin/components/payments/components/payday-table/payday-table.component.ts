@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
 import { MessageService, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
-import { DialogModule } from 'primeng/dialog';
 
 @Component({
 	selector: 'app-payday-table',

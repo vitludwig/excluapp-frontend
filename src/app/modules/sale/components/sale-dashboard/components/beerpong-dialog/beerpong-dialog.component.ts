@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { IKeg } from '../../../../../admin/types/IKeg';
-import { ListboxModule } from 'primeng/listbox';
-import { IUserRead } from '../../../../../user/types/IUser';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { IBeerpong } from '../../../../types/IBeerpong';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
 import { JsonPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ConfirmationService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ListboxModule } from 'primeng/listbox';
+import { IKeg } from '../../../../../admin/types/IKeg';
+import { IUserRead } from '../../../../../user/types/IUser';
 import { orderUsernames } from '../../../../../user/utils/OrderUsernames';
+import { IBeerpong } from '../../../../types/IBeerpong';
 
 @Component({
 	selector: 'app-beerpong-dialog',

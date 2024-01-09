@@ -1,18 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from '@angular/core';
 
-import { Table, TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
-import { ButtonModule } from 'primeng/button';
-import { ConfirmComponent } from '../../../../../../../common/components/confirm/confirm.component';
-import { IKeg } from '../../../../../types/IKeg';
 import { RouterLink } from '@angular/router';
-import { catchError, switchMap, tap } from 'rxjs';
-import { SortimentService } from '../../../../../services/sortiment/sortiment.service';
-import { KegStatusDialogComponent } from '../../../components/keg-status-dialog/keg-status-dialog.component';
+import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { NotificationService } from '../../../../../../../common/services/notification.service';
-import { UnprocessableEntityError } from '../../../../../../../common/errors/UnprocessableEntityError';
+import { Table, TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { switchMap } from 'rxjs';
+import { ConfirmComponent } from '../../../../../../../common/components/confirm/confirm.component';
+import { SortimentService } from '../../../../../services/sortiment/sortiment.service';
+import { IKeg } from '../../../../../types/IKeg';
+import { KegStatusDialogComponent } from '../../../components/keg-status-dialog/keg-status-dialog.component';
 
 @Component({
 	selector: 'app-sortiment-list-table',

@@ -1,8 +1,8 @@
-import { ErrorHandler, inject, Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UnprocessableEntityError } from './UnprocessableEntityError';
-import { InternalServerError } from './InternalServerError';
+import { ErrorHandler, inject, Injectable } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
+import { InternalServerError } from './InternalServerError';
+import { UnprocessableEntityError } from './UnprocessableEntityError';
 
 @Injectable({
 	providedIn: 'root',

@@ -1,22 +1,28 @@
 <div class="flex align-items-center mb-3">
 	<div class="ml-auto p-inputgroup">
-		<input pInputText
+		<input
+			pInputText
 			type="text"
 			(input)="sortimentsTable.filterGlobal($any($event.target).value, 'startsWith')"
-			placeholder="Vyhledat"/>
-		<button pButton
+			placeholder="Vyhledat"
+		/>
+		<button
+			pButton
 			icon="pi pi-filter-slash"
 			class="p-button-outlined"
-			(click)="clearSearch(sortimentsTable)"></button>
+			(click)="clearSearch(sortimentsTable)"
+		></button>
 	</div>
 </div>
 
-<p-table #sortimentsTable
+<p-table
+	#sortimentsTable
 	[value]="kegs"
-	[rowsPerPageOptions]="[10,20,50, {showAll:'All'}]"
+	[rowsPerPageOptions]="[10, 20, 50, { showAll: 'All' }]"
 	[paginator]="true"
 	[rows]="10"
-	[globalFilterFields]="['name', 'sourceName']">
+	[globalFilterFields]="['name', 'sourceName']"
+>
 	<ng-template pTemplate="header">
 		<tr>
 			<th></th>
@@ -29,60 +35,67 @@
 			<th></th>
 		</tr>
 	</ng-template>
-	<ng-template pTemplate="body"
-		let-sortiment>
+	<ng-template
+		pTemplate="body"
+		let-sortiment
+	>
 		<tr>
 			<td>
 				@if (sortiment.isOriginal) {
-					<i class="pi pi-shield"
-						pTooltip="Pivní předloha">
-					</i>
+				<i
+					class="pi pi-shield"
+					pTooltip="Pivní předloha"
+				>
+				</i>
 				}
 			</td>
 			<td>{{ sortiment.name }} ({{ sortiment.sourceName }})</td>
 			<td>
 				@if (!sortiment.isOriginal) {
-					{{ sortiment.isCashed ? 'Ano' : 'Ne' }}
+				{{ sortiment.isCashed ? "Ano" : "Ne" }}
 				}
 			</td>
 			<td>{{ sortiment.volume }}</td>
 			<td>{{ sortiment.price }} Kč</td>
-			<td>{{ sortiment.isEmpty ? 'Prázdný' : 'Neprázdný' }}</td>
+			<td>{{ sortiment.isEmpty ? "Prázdný" : "Neprázdný" }}</td>
 			<td>
 				@if (sortiment.event?.event; as event) {
-					{{ event.name }}
+				{{ event.name }}
 				}
 			</td>
 			<td class="flex gap-2">
-				<p-button [routerLink]="['detail', sortiment.id]"
+				<p-button
+					[routerLink]="['detail', sortiment.id]"
 					pTooltip="Upravit"
 					styleClass="p-button-info"
 					icon="pi pi-fw pi-pencil"
 				/>
 
-				<p-button (click)="setKegEmptyStatus(sortiment.id, !sortiment.isEmpty)"
+				<p-button
+					(click)="setKegEmptyStatus(sortiment.id, !sortiment.isEmpty)"
 					[pTooltip]="sortiment.isEmpty ? 'Nastavit sud jakov nevypitý' : 'Nastavit sud jako vypitý'"
 					styleClass="p-button-warning"
 					[icon]="'pi pi-fw ' + (sortiment.isEmpty ? 'pi-circle-fill' : 'pi-circle')"
 				/>
 
 				@if (!sortiment.isOriginal) {
-					<p-button
-						(click)="showKegStatusDialog(sortiment.id)"
-						[severity]="'info'"
-						icon="pi pi-fw pi-question-circle"
-					/>
+				<p-button
+					(click)="showKegStatusDialog(sortiment.id)"
+					[severity]="'info'"
+					icon="pi pi-fw pi-question-circle"
+				/>
 				}
 
 				<div class="ml-auto flex gap-2">
-
-					<p-button (click)="setKegDefectiveStatus(sortiment.id, !sortiment.isDefective)"
+					<p-button
+						(click)="setKegDefectiveStatus(sortiment.id, !sortiment.isDefective)"
 						[pTooltip]="sortiment.isDefective ? 'Nastavit sud jako v pohodě' : 'Nastavit sud jako vadný'"
 						[styleClass]="sortiment.isDefective ? 'p-button-success' : 'p-button-danger'"
 						[icon]="'pi pi-fw ' + (sortiment.isDefective ? 'pi-check' : 'pi-times')"
 					/>
 
-					<button pButton
+					<button
+						pButton
 						appConfirm
 						confirmMessage="Smazat?"
 						(confirm)="removeKeg(sortiment.id)"
