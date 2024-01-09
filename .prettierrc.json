@@ -1,5 +1,6 @@
 {
 	"printWidth": 180,
 	"useTabs": true,
+	"singleAttributePerLine": true,
 	"plugins": ["prettier-plugin-organize-imports"]
 }
