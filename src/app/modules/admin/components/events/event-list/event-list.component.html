@@ -25,7 +25,7 @@
 
 <p-table
 	#eventsTable
-	[value]="eventService.$events() | sort: 'start' : 'asc'"
+	[value]="eventService.$events() | sort: 'start'"
 	[paginator]="true"
 	[rows]="10"
 	[globalFilterFields]="['name']"

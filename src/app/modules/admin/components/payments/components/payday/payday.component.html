@@ -1,6 +1,15 @@
+<div class="flex gap-2 mb-4">
+	<label htmlFor="showEmptyEvents">Zobrazit pouze události s nezaúčtovanými sudy</label>
+	<p-inputSwitch
+		[ngModel]="$showOnlyNotPaidEvents()"
+		(ngModelChange)="$showOnlyNotPaidEvents.set($event)"
+		id="showEmptyEvents"
+	></p-inputSwitch>
+</div>
+
 <div class="flex align-items-center gap-5">
 	<p-multiSelect
-		[options]="eventService.$events() | sort: 'start'"
+		[options]="$events() | sort: 'start'"
 		[ngModel]="$selectedEvents()"
 		(ngModelChange)="$selectedEvents.set($event)"
 		placeholder="Vyber události"
@@ -17,5 +26,5 @@
 <br />
 
 @if (($paydayResult() | async); as paydayResult) {
-<app-payday-table [data]="paydayResult" />
+	<app-payday-table [data]="paydayResult" />
 }

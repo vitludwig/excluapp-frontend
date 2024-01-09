@@ -6,7 +6,7 @@
 
 		@if (authService.$isLogged()) {
 		<p-dropdown
-			[options]="eventService.$events() | sort: 'start' : 'asc'"
+			[options]="eventService.$events() | sort: 'start'"
 			[ngModel]="eventService.$activeEvent()"
 			(ngModelChange)="eventService.setActiveEvent($event)"
 			optionLabel="name"

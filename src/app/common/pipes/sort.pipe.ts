@@ -12,9 +12,9 @@ export class SortPipe implements PipeTransform {
 
 		return value.sort((a, b) => {
 			if (a[propertyName] > b[propertyName]) {
-				return direction === 'asc' ? -1 : 1;
-			} else if (a[propertyName] < b[propertyName]) {
 				return direction === 'asc' ? 1 : -1;
+			} else if (a[propertyName] < b[propertyName]) {
+				return direction === 'asc' ? -1 : 1;
 			} else {
 				return 0;
 			}

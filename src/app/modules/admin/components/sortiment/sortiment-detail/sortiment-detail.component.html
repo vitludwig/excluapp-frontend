@@ -43,6 +43,16 @@
 			/>
 		</div>
 
+		<div class="flex gap-2 mb-4">
+			<label htmlFor="kegIsCashed">Zaplacený</label>
+			<p-inputSwitch
+				formControlName="isCashed"
+				id="kegIsCashed"
+				(onChange)="confirmKegIsCashed($event)"
+			></p-inputSwitch>
+		</div>
+
+
 		<p-button
 			label="Save"
 			type="submit"
@@ -51,6 +61,5 @@
 </div>
 
 <p-confirmDialog
-	header="Duplikátní sud"
 	icon="pi pi-exclamation-triangle"
 />

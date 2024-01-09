@@ -5,17 +5,19 @@ import { ConfirmationService } from 'primeng/api';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
 import { firstValueFrom, switchMap, tap } from 'rxjs';
+import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../types/IKeg';
 
 @Component({
 	selector: 'app-sortiment-detail',
 	standalone: true,
-	imports: [ButtonModule, InputTextModule, PaginatorModule, ReactiveFormsModule, ListboxModule, AutoCompleteModule, ConfirmDialogModule],
+	imports: [ButtonModule, InputTextModule, PaginatorModule, ReactiveFormsModule, ListboxModule, AutoCompleteModule, ConfirmDialogModule, InputSwitchModule, ConfirmComponent],
 	templateUrl: './sortiment-detail.component.html',
 	styleUrls: ['./sortiment-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +36,7 @@ export class SortimentDetailComponent {
 		sourceName: new FormControl('', Validators.required),
 		volume: new FormControl<number>(30, Validators.required),
 		price: new FormControl<number | null>(null, Validators.required),
+		isCashed: new FormControl<boolean>(false, Validators.required),
 	});
 
 	protected $sources = signal(this.sortimentService.$sources());
@@ -58,6 +61,7 @@ export class SortimentDetailComponent {
 				if (duplicateKegs.length > 0) {
 					this.confirmationService.confirm({
 						message: duplicateKegs.map((obj) => `${obj.name} (${obj.sourceName}, ${obj.volume}l)`).join(', ') + ' je již v databázi. Chceš ho přidat?',
+						header: 'Duplikátní sud',
 						acceptLabel: 'Ano',
 						rejectLabel: 'Ne',
 						acceptButtonStyleClass: 'p-button-success',
@@ -80,6 +84,20 @@ export class SortimentDetailComponent {
 	protected searchSources(event: AutoCompleteCompleteEvent): void {
 		const result = this.sortimentService.$sources().filter((source) => source.toLowerCase().trim().startsWith(event.query.toLowerCase().trim()));
 		this.$sources.set(result);
+	}
+
+	protected confirmKegIsCashed(event: InputSwitchChangeEvent): void {
+		const message = `Opravdu chceš nastavit sud jako ${event.checked ? '' : 'ne'}zaplacený?`;
+		this.confirmationService.confirm({
+			target: event.originalEvent.target as EventTarget,
+			header: 'Potvrdit',
+			message: message,
+			acceptLabel: 'Ano',
+			rejectLabel: 'Ne',
+			reject: () => {
+				this.form.get('isCashed')?.setValue(!this.form.get('isCashed')?.value);
+			},
+		});
 	}
 
 	private addOriginalKeg(keg: IKeg): Promise<IKeg> {
