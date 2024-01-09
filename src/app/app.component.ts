@@ -15,7 +15,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 	selector: 'app-root',
 	standalone: true,
 	imports: [RouterOutlet, SidebarComponent, TopbarComponent, ToastModule, ConfirmPopupModule],
-	providers: [MessageService, ConfirmationService],
+	providers: [ConfirmationService],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

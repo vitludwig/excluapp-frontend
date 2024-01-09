@@ -1,24 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
 
-import { MenuModule } from 'primeng/menu';
-import { MenuItem, MessageService } from 'primeng/api';
-import { SidebarModule } from 'primeng/sidebar';
-import { LayoutService } from '../../services/layout/layout.service';
-import { ButtonModule } from 'primeng/button';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
-import { AuthService } from '../../../common/services/auth.service';
-import { DropdownModule } from 'primeng/dropdown';
-import { EventService } from '../../../modules/admin/services/event/event.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SortPipe } from '../../../common/pipes/sort.pipe';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { UserService } from '../../../modules/user/services/user/user.service';
+import { MenuItem, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
-import { FaceRecognitionService } from '../../../modules/user/services/face-recognition/face-recognition.service';
+import { MenuModule } from 'primeng/menu';
+import { SidebarModule } from 'primeng/sidebar';
 import { Subject, takeUntil } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SortPipe } from '../../../common/pipes/sort.pipe';
+import { AuthService } from '../../../common/services/auth.service';
+import { EventService } from '../../../modules/admin/services/event/event.service';
+import { FaceRecognitionService } from '../../../modules/user/services/face-recognition/face-recognition.service';
+import { LayoutService } from '../../services/layout/layout.service';
+import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
 
 @Component({
 	selector: 'app-sidebar',
@@ -27,7 +24,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 	templateUrl: './sidebar.component.html',
 	styleUrls: ['./sidebar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [DialogService, MessageService],
+	providers: [DialogService],
 })
 export class SidebarComponent implements OnDestroy {
 	protected readonly layoutService = inject(LayoutService);

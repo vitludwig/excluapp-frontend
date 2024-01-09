@@ -29,7 +29,7 @@ import { MessageService } from 'primeng/api';
 	templateUrl: './user-face-scan-descriptor.component.html',
 	styleUrl: './user-face-scan-descriptor.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [MessageService],
+	providers: [],
 })
 export class UserFaceScanDescriptorComponent implements OnInit {
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);

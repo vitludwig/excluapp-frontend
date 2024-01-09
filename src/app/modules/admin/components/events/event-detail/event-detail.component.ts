@@ -21,7 +21,7 @@ import { JsonPipe } from '@angular/common';
 	selector: 'app-event-detail',
 	standalone: true,
 	imports: [ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent, TooltipModule, ConfirmDialogModule, ConfirmComponent, JsonPipe],
-	providers: [ConfirmationService, MessageService],
+	providers: [ConfirmationService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

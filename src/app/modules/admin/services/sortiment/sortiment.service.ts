@@ -1,12 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { IKeg } from '../../types/IKeg';
 import { IEvent } from '../../types/IEvent';
 import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
 import { capitalizeEachFirstLetter } from '../../../../common/utils/StringUtils';
 import { IKegUserStatistics } from '../../components/sortiment/types/IKegUserStatistics';
+import { HttpErrorHandler } from '../../../../common/errors/HttpErrorHandler';
 
 @Injectable({
 	providedIn: 'root',
@@ -63,7 +64,7 @@ export class SortimentService {
 		return this.http.patch<IKeg>(environment.apiUrl + '/keg/' + id, value);
 	}
 
-	public removeSortiment(id: string): Observable<IKeg> {
+	public removeSortiment(id: string): Observable<any> {
 		return this.http.delete<IKeg>(environment.apiUrl + '/keg/' + id);
 	}
 

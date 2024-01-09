@@ -17,7 +17,7 @@ import { MessageService } from 'primeng/api';
 	templateUrl: './user-face-recognition.component.html',
 	styleUrls: ['./user-face-recognition.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [MessageService],
+	providers: [],
 })
 export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 	protected readonly usersService = inject(UserService);
