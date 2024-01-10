@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -6,6 +6,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
+import { UserService } from '../../services/user/user.service';
 import { IUserRead } from '../../types/IUser';
 import { orderUsernames } from '../../utils/OrderUsernames';
 
@@ -19,6 +20,8 @@ import { orderUsernames } from '../../utils/OrderUsernames';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectUserComponent {
+	private readonly usersService = inject(UserService);
+
 	@Input()
 	public layout: 'list' | 'form' = 'form';
 
@@ -26,7 +29,7 @@ export class SelectUserComponent {
 	public multiple: boolean = true;
 
 	@Input({ transform: orderUsernames })
-	public users: IUserRead[] = [];
+	public users: IUserRead[] = this.usersService.$users();
 
 	@Output()
 	public select: EventEmitter<IUserRead[] | null> = new EventEmitter();

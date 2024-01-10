@@ -1,1 +1,67 @@
-<p>user-statistics works!</p>
+<div class="flex align-items-center gap-5">
+	<app-select-user (select)="selectUser($event)" [multiple]="false"></app-select-user>
+
+	@if($selectedUser()) {
+		<p-multiSelect
+			[options]=" this.eventService.$events() | sort: 'start'"
+			[ngModel]="$selectedEvents()"
+			(ngModelChange)="$selectedEvents.set($event)"
+			placeholder="Vyber události"
+			optionLabel="name"
+			display="comma"
+		/>
+	}
+</div>
+
+<div class="w-full mt-5">
+	@if($userOrders() | async; as userOrders) {
+		@if(userOrders.length) {
+			<p-table
+				[value]="userOrders"
+				[paginator]="true"
+				[sortField]="'createdAt'"
+				[sortOrder]="-1"
+				[rows]="10"
+			>
+				<ng-template pTemplate="header">
+					<tr>
+						<th>Co</th>
+						<th>Kolik</th>
+						<th>
+							Cena
+							<i
+								class="pi pi-exclamation-circle ml-1"
+								pTooltip="Cena je pouze orientační! Nezahrnuje případné dopočítání nedopitého sudu a párty náklady."
+							></i>
+						</th>
+						<th pSortableColumn="createdAt">
+							Kdy
+							<p-sortIcon field="createdAt" />
+						</th>
+						@if($selectedEvents().length > 1) {
+							<th>Událost</th>
+						}
+					</tr>
+				</ng-template>
+				<ng-template
+					pTemplate="body"
+					let-item
+				>
+					<tr>
+						<td>{{ (item.kegId | keg)?.name }}</td>
+						<td>{{ item.volume }} l</td>
+						<td>
+							@if(item.kegId | keg; as keg) {
+								{{ (keg.price / keg.volume) * item.volume }} Kč
+							}
+						</td>
+						<td>{{ item.createdAt | date: 'dd.MM.YY, HH:mm' }}</td>
+						@if($selectedEvents().length > 1) {
+							<td>{{ (item.eventId | event)?.name }}</td>
+						}
+					</tr>
+				</ng-template>
+			</p-table>
+		}
+	}
+</div>

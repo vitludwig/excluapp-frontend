@@ -56,12 +56,16 @@ export class SidebarComponent implements OnDestroy {
 			icon: 'pi pi-fw pi-plus',
 			items: [
 				{
-					label: 'Dashboard',
+					label: 'Zapisování piv',
 					routerLink: ['/party'],
 				},
 				{
 					label: 'Registrace',
 					routerLink: ['/registration'],
+				},
+				{
+					label: 'Infoporno',
+					routerLink: ['/admin/statistics'],
 				},
 			],
 		},
@@ -83,10 +87,6 @@ export class SidebarComponent implements OnDestroy {
 				{
 					label: 'Sudy',
 					routerLink: ['/admin/sortiment'],
-				},
-				{
-					label: 'Infoporno',
-					routerLink: ['/admin/statistics'],
 				},
 				{
 					label: 'Platby',

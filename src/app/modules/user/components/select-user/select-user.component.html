@@ -1,6 +1,6 @@
 <div class="flex flex-column h-full">
 	@if (layout === 'form') {
-	<div class="flex flex-column justify-content-center mb-4">
+	<div class="flex flex-column justify-content-center">
 		<p-dropdown
 			[options]="users"
 			[(ngModel)]="selectedUser"
@@ -9,16 +9,16 @@
 			[filter]="true"
 			filterBy="name"
 			[showClear]="true"
-			placeholder="Najdi pijáka"
+			placeholder="Vyber uživatele"
 			[style]="{ width: '100%' }"
 			scrollHeight="65vh"
 			appendTo="body"
 		>
 			<ng-template pTemplate="selectedItem">
 				@if (selectedUser) {
-				<div class="flex align-items-center gap-2">
-					<div>{{ $any(selectedUser).name }}</div>
-				</div>
+					<div class="flex align-items-center gap-2">
+						<div>{{ selectedUser[0].name }}</div>
+					</div>
 				}
 			</ng-template>
 			<ng-template

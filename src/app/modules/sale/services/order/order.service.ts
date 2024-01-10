@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { forkJoin, Observable, tap } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable, forkJoin, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { EventService } from '../../../admin/services/event/event.service';
 import { IEvent } from '../../../admin/types/IEvent';
@@ -103,6 +103,13 @@ export class OrderService {
 				this.clearOrder();
 			}),
 		);
+	}
+
+	public getUsersTransactions(userId: number, eventIds: number[]): Observable<IOrderRead[]> {
+		const params = new HttpParams({
+			fromObject: { eventIds: eventIds },
+		});
+		return this.http.get<IOrderRead[]>(`${environment.apiUrl}/order/user/${userId}/orders/`, { params: params });
 	}
 
 	public clearOrder() {

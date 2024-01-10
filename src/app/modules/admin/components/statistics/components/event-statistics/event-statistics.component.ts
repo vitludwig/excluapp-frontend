@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Observable, of, switchMap, tap } from 'rxjs';
+import { AuthService } from '../../../../../../common/services/auth.service';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
 import { IEventKegsStatistics } from '../../../../types/IEventKegsStatistics';
@@ -22,7 +23,8 @@ import { PaydayTableComponent } from '../../../payments/components/payday-table/
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventStatisticsComponent {
-	protected eventService = inject(EventService);
+	protected readonly eventService = inject(EventService);
+	protected readonly authService: AuthService = inject(AuthService);
 
 	protected $selectedEvent = signal<IEvent | null>(this.eventService.$activeEvent());
 	protected $paydayResult = signal<Observable<IEventPaydayStatistics[]> | null>(null);

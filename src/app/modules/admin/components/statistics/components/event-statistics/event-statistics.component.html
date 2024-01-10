@@ -2,52 +2,62 @@
 	[options]="eventService.$events()"
 	[(ngModel)]="selectedEvent"
 	(ngModelChange)="$selectedEvent.set($event)"
-	optionLabel="name"
 	[style]="{ width: '100%' }"
+	optionLabel="name"
+	placeholder="Vyber událost"
 />
 
 @if (selectedEvent) {
-<p-chart
-	type="bar"
-	[data]="$kegsStatistics() | async"
-	[options]="chartOptions"
-></p-chart>
-<h3>Pijani</h3>
-@if (($usersStatistics() | async); as usersStatistics) {
-<p-table
-	[value]="$any(usersStatistics)"
-	[paginator]="true"
-	[rows]="10"
-	[globalFilterFields]="['name']"
->
-	<ng-template pTemplate="header">
-		<tr>
-			<th>Pijan</th>
-			<th>Propito (Kč)</th>
-			<th>Propito (l)</th>
-			<th>Propito (ks)</th>
-		</tr>
-	</ng-template>
-	<ng-template
-		pTemplate="body"
-		let-item
-	>
-		<tr>
-			<td>{{ item.userName }}</td>
-			<td>{{ item.price }} Kč</td>
-			<td>{{ item.volume }} l</td>
-			<td>{{ item.volume / 0.5 }} ks</td>
-		</tr>
-	</ng-template>
-</p-table>
-<br />
-<p-button
-	class="mt-3"
-	(click)="payday(this.$selectedEvent()?.id)"
-	styleClass="p-button-lg p-button-info"
-	><i class="pi pi-fw pi-money-bill"></i> Vyrobit pejdej
-</p-button>
-@if (($paydayResult() | async); as paydayResult) {
-<h3>Pejdej</h3>
-<app-payday-table [data]="paydayResult" />
-} } }
+	<p-chart
+		type="bar"
+		[data]="$kegsStatistics() | async"
+		[options]="chartOptions"
+	></p-chart>
+
+	<h3>Pijani</h3>
+	<h4 class="mt-0">Ceny jsou pouze orientační!</h4>
+	@if (($usersStatistics() | async); as usersStatistics) {
+		<p-table
+			[value]="$any(usersStatistics)"
+			[paginator]="true"
+			[rows]="10"
+			[globalFilterFields]="['name']"
+		>
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Pijan</th>
+					<th>Propito (Kč)</th>
+					<th>Propito (l)</th>
+					<th>Propito (ks)</th>
+				</tr>
+			</ng-template>
+			<ng-template
+				pTemplate="body"
+				let-item
+			>
+				<tr>
+					<td>{{ item.userName }}</td>
+					<td>{{ item.price }} Kč</td>
+					<td>{{ item.volume }} l</td>
+					<td>{{ item.volume / 0.5 }} ks</td>
+				</tr>
+			</ng-template>
+		</p-table>
+
+		<br />
+
+		@if(authService.$isLogged()) {
+			<p-button
+				class="mt-3"
+				(click)="payday(this.$selectedEvent()?.id)"
+				styleClass="p-button-lg p-button-info"
+				><i class="pi pi-fw pi-money-bill"></i> Vyrobit pejdej
+			</p-button>
+
+			@if (($paydayResult() | async); as paydayResult) {
+				<h3>Pejdej</h3>
+				<app-payday-table [data]="paydayResult" />
+			}
+		}
+	}
+}
