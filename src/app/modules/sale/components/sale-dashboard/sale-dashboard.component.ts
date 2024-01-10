@@ -10,6 +10,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
 import { firstValueFrom, map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
+import { KegUsersStatisticsDialogComponent } from '../../../admin/components/sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
 import { IKegStatus } from '../../../admin/components/sortiment/types/IKegStatus';
 import { EventService } from '../../../admin/services/event/event.service';
 import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
@@ -25,7 +26,6 @@ import { IBeerpong } from '../../types/IBeerpong';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { DashboardSortimentSelectComponent } from './components/dashboard-sortiment-select/dashboard-sortiment-select.component';
 import { DashboardUserSelectComponent } from './components/dashboard-user-select/dashboard-user-select.component';
-import { KegUsersStatisticsDialogComponent } from './components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
 
 @Component({
 	selector: 'app-sale-dashboard',

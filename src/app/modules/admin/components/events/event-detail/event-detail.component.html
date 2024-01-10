@@ -81,6 +81,20 @@
 								[pTooltip]="item.isActive ? 'Deaktivovat' : 'Aktivovat'"
 							/>
 
+							<p-button
+								(click)="showKegStatusDialog(item.id)"
+								[severity]="'info'"
+								icon="pi pi-fw pi-question-circle"
+								pTooltip="Stav sudu"
+							/>
+
+							<p-button
+								(click)="showKegStatistics(item)"
+								[severity]="'info'"
+								icon="pi pi-fw pi-chart-bar"
+								pTooltip="Kdo pil ze sudu"
+							/>
+
 							<button
 								pButton
 								appConfirm
@@ -88,6 +102,7 @@
 								(confirm)="removeKeg(item.id)"
 								class="p-button-danger"
 								icon="pi pi-fw pi-trash"
+								pTooltip="Odebrat z události"
 							></button>
 						</td>
 					</tr>

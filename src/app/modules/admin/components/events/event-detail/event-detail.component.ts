@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 
 import { JsonPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,31 +6,35 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { Observable, firstValueFrom, map, tap } from 'rxjs';
+import { firstValueFrom, map, Observable, tap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { EventService } from '../../../services/event/event.service';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IEvent } from '../../../types/IEvent';
 import { IKeg } from '../../../types/IKeg';
+import { KegStatusDialogComponent } from '../../sortiment/components/keg-status-dialog/keg-status-dialog.component';
+import { KegUsersStatisticsDialogComponent } from '../../sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
 import { EventSortimentComponent } from './components/event-sortiment/event-sortiment.component';
 
 @Component({
 	selector: 'app-event-detail',
 	standalone: true,
 	imports: [ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent, TooltipModule, ConfirmDialogModule, ConfirmComponent, JsonPipe],
-	providers: [ConfirmationService],
+	providers: [ConfirmationService, DialogService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventDetailComponent {
+export class EventDetailComponent implements OnDestroy {
 	private readonly eventService: EventService = inject(EventService);
 	private readonly router: Router = inject(Router);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly messageService = inject(MessageService);
+	private readonly dialogService: DialogService = inject(DialogService);
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 	protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
 
@@ -55,6 +59,9 @@ export class EventDetailComponent {
 		const eventKegs = this.$eventKegs() ?? [];
 		return this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.id === k.id));
 	});
+
+	private kegStatusDialogRef: DynamicDialogRef | undefined;
+	private kegUserStatisticsDialogRef: DynamicDialogRef | undefined;
 
 	constructor() {
 		this.eventId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -142,6 +149,30 @@ export class EventDetailComponent {
 		}
 	}
 
+	protected showKegStatusDialog(kegId: number) {
+		this.kegStatusDialogRef = this.dialogService.open(KegStatusDialogComponent, {
+			header: 'Vypito ze sudu',
+			width: '400px',
+			data: {
+				kegId,
+			},
+			dismissableMask: true,
+		});
+	}
+
+	protected async showKegStatistics(keg: IKeg): Promise<void> {
+		const result = await firstValueFrom(this.sortimentService.getKegUsersStatistics(keg.id));
+
+		this.kegUserStatisticsDialogRef = this.dialogService.open(KegUsersStatisticsDialogComponent, {
+			header: `Stav ${keg.name}`,
+			width: '90%',
+			data: {
+				statistics: result,
+			},
+			dismissableMask: true,
+		});
+	}
+
 	private setKegActive(keg: IKeg, value: boolean, isEmpty: boolean) {
 		this.$eventKegs.update((kegs) =>
 			kegs.map((k) => {
@@ -180,5 +211,10 @@ export class EventDetailComponent {
 				}),
 			)
 			.subscribe();
+	}
+
+	public ngOnDestroy() {
+		this.kegStatusDialogRef?.close();
+		this.kegUserStatisticsDialogRef?.close();
 	}
 }
