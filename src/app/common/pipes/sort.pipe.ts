@@ -11,6 +11,10 @@ export class SortPipe implements PipeTransform {
 		}
 
 		return value.sort((a, b) => {
+			if (!isNaN(a[propertyName]) && !isNaN(b[propertyName])) {
+				a[propertyName] = Number(a[propertyName]);
+				b[propertyName] = Number(b[propertyName]);
+			}
 			if (a[propertyName] > b[propertyName]) {
 				return direction === 'asc' ? 1 : -1;
 			} else if (a[propertyName] < b[propertyName]) {

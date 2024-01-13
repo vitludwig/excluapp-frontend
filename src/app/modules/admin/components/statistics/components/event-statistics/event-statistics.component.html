@@ -15,18 +15,18 @@
 	></p-chart>
 
 	<h3>Pijani</h3>
-	<h4 class="mt-0">Ceny jsou pouze orientační!</h4>
 	@if (($usersStatistics() | async); as usersStatistics) {
 		<p-table
-			[value]="$any(usersStatistics)"
+			[value]="usersStatistics | sort: 'volume': 'desc'"
 			[paginator]="true"
 			[rows]="10"
-			[globalFilterFields]="['name']"
 		>
 			<ng-template pTemplate="header">
 				<tr>
 					<th>Pijan</th>
-					<th>Propito (Kč)</th>
+					@if(authService.$isLogged()) {
+						<th>Propito (Kč)</th>
+					}
 					<th>Propito (l)</th>
 					<th>Propito (ks)</th>
 				</tr>
@@ -37,7 +37,15 @@
 			>
 				<tr>
 					<td>{{ item.userName }}</td>
-					<td>{{ item.price }} Kč</td>
+					@if(authService.$isLogged()) {
+						<td>
+							{{ item.price }} Kč
+							<i
+								class="pi pi-exclamation-circle ml-1"
+								pTooltip="Cena je pouze orientační! Nezahrnuje případné dopočítání nedopitého sudu a párty náklady."
+							></i>
+						</td>
+					}
 					<td>{{ item.volume }} l</td>
 					<td>{{ item.volume / 0.5 }} ks</td>
 				</tr>

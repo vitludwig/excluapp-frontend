@@ -7,17 +7,18 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Observable, of, switchMap, tap } from 'rxjs';
+import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
 import { AuthService } from '../../../../../../common/services/auth.service';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
-import { IEventKegsStatistics } from '../../../../types/IEventKegsStatistics';
+import { IEventKegsStatistics, IEventUsersStatistics } from '../../../../types/IEventKegsStatistics';
 import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
 import { PaydayTableComponent } from '../../../payments/components/payday-table/payday-table.component';
 
 @Component({
 	selector: 'app-event-statistics',
 	standalone: true,
-	imports: [CommonModule, DropdownModule, FormsModule, ChartModule, ButtonModule, TableModule, TooltipModule, PaydayTableComponent],
+	imports: [CommonModule, DropdownModule, FormsModule, ChartModule, ButtonModule, TableModule, TooltipModule, PaydayTableComponent, SortPipe],
 	templateUrl: './event-statistics.component.html',
 	styleUrls: ['./event-statistics.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,13 +43,13 @@ export class EventStatisticsComponent {
 		return null;
 	});
 
-	protected $usersStatistics: Signal<any> = computed(() => {
+	protected $usersStatistics: Signal<Observable<IEventUsersStatistics[]>> = computed(() => {
 		const event = this.$selectedEvent();
 		if (event) {
 			return this.eventService.getUsersStatistics(event.id);
 		}
 
-		return [];
+		return of([]);
 	});
 
 	protected chartOptions = {};
@@ -73,6 +74,7 @@ export class EventStatisticsComponent {
 
 	private createKegsChartData(value: IEventKegsStatistics[]): any {
 		// TODO: create colors according to keg type and dynamically add them by amount of kegs
+		value.sort((a, b) => (a.volume > b.volume ? -1 : 1));
 		return {
 			labels: value.map((v) => `${v.kegName} (${v.kegVolume}l) [ks]`),
 			datasets: [
