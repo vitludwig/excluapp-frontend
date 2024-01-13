@@ -76,6 +76,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 	});
 
 	protected showSelectUserModal = false;
+	protected selectedUser: IUserRead | null = null;
 
 	private attendDialogRef: DynamicDialogRef;
 
@@ -93,11 +94,9 @@ export class RegistrationDetailComponent implements OnDestroy {
 		this.showSelectUserModal = true;
 	}
 
-	protected selectUser(data: IUserRead[] | null): void {
-		// TODO: refactor user select component to always return array or better type it, THIS IS UGLY
-		// this is single user select, object and not array is passed
-		if (data && !Array.isArray(data)) {
-			this.attendEvent((<IUserRead>data).id, this.eventId);
+	protected selectUser(data: IUserRead | null): void {
+		if (data) {
+			this.attendEvent(data.id, this.eventId);
 		}
 
 		this.showSelectUserModal = false;

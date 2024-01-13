@@ -20,7 +20,7 @@ export class DashboardUserSelectComponent {
 	@Output()
 	public selected: EventEmitter<IUserRead | null> = new EventEmitter<IUserRead | null>();
 
-	protected selectUser(value: IUserRead[] | null): void {
-		this.selected.emit(value?.[0] ?? null);
+	protected selectUser(value: IUserRead | null): void {
+		this.selected.emit(value);
 	}
 }

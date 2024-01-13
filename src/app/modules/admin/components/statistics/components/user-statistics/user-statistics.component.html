@@ -1,5 +1,5 @@
 <div class="flex align-items-center gap-5">
-	<app-select-user (select)="selectUser($event)" [multiple]="false"></app-select-user>
+	<app-select-user (select)="selectUser($event)"></app-select-user>
 
 	@if($selectedUser()) {
 		<p-multiSelect

@@ -43,7 +43,7 @@ export class UserStatisticsComponent {
 		return of([]);
 	});
 
-	protected selectUser(users: IUserRead[] | null) {
-		this.$selectedUser.set(users?.[0] ?? null);
+	protected selectUser(users: IUserRead | null) {
+		this.$selectedUser.set(users);
 	}
 }

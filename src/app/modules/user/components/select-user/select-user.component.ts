@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 
+import { JsonPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -14,7 +15,7 @@ import { orderUsernames } from '../../utils/OrderUsernames';
 @Component({
 	selector: 'app-select-user',
 	standalone: true,
-	imports: [ButtonModule, DropdownModule, InputTextModule, ListboxModule, PaginatorModule, SharedModule],
+	imports: [ButtonModule, DropdownModule, InputTextModule, ListboxModule, PaginatorModule, SharedModule, JsonPipe],
 	templateUrl: './select-user.component.html',
 	styleUrls: ['./select-user.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,23 +26,15 @@ export class SelectUserComponent {
 	@Input()
 	public layout: 'list' | 'form' = 'form';
 
-	@Input()
-	public multiple: boolean = true;
-
 	@Input({ transform: orderUsernames })
 	public users: IUserRead[] = this.usersService.$users();
 
 	@Output()
-	public select: EventEmitter<IUserRead[] | null> = new EventEmitter();
+	public select: EventEmitter<IUserRead | null> = new EventEmitter();
 
-	protected selectedUser: IUserRead[] | null = null;
+	protected selectedUser: IUserRead | null = null;
 
 	protected submit() {
-		if (!this.multiple) {
-			if (this.selectedUser && !Array.isArray(this.selectedUser)) {
-				this.selectedUser = [this.selectedUser];
-			}
-		}
 		console.log('selecting', this.selectedUser);
 		this.select.emit(this.selectedUser);
 	}
