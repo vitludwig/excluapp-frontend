@@ -1,12 +1,12 @@
 <div class="flex flex-column">
-	<div class="flex gap-4">
+	<div class="flex-responsive gap-4">
 		<form
 			[formGroup]="form"
 			(ngSubmit)="onSubmit()"
 			class="flex flex-column flex-1 gap-4"
 		>
 			<div class="flex flex-column gap-2">
-				<label htmlFor="eventName">Name</label>
+				<label htmlFor="eventName">Název</label>
 				<input
 					pInputText
 					id="eventName"
@@ -15,7 +15,7 @@
 			</div>
 
 			<div class="flex flex-column gap-2">
-				<label htmlFor="eventCapacity">Capacity</label>
+				<label htmlFor="eventCapacity">Kapacita</label>
 				<input
 					pInputText
 					id="eventCapacity"
@@ -24,7 +24,7 @@
 			</div>
 
 			<div class="flex flex-column gap-2">
-				<label htmlFor="eventStart">Start</label>
+				<label htmlFor="eventStart">Začátek</label>
 				<p-calendar
 					id="eventStart"
 					[style]="{ width: '100%' }"
@@ -35,7 +35,7 @@
 			</div>
 
 			<div class="flex flex-column gap-2">
-				<label htmlFor="eventEnd">End</label>
+				<label htmlFor="eventEnd">Konec</label>
 				<p-calendar
 					id="eventEnd"
 					[style]="{ width: '100%' }"
@@ -45,6 +45,8 @@
 				/>
 			</div>
 		</form>
+
+		<p-divider class="visible-mobile"/>
 
 		<div class="flex-1">
 			<app-event-sortiment
@@ -67,7 +69,7 @@
 					<tr>
 						<td>
 							@if (item.isActive) {
-							<i class="pi pi-fw pi-check"></i>
+								<i class="pi pi-fw pi-check"></i>
 							}
 						</td>
 						<td>{{ item.name }} ({{ item.sourceName }})</td>
@@ -110,8 +112,9 @@
 			</p-table>
 		</div>
 	</div>
+
 	<p-button
-		label="Save"
+		label="Uložit"
 		(click)="onSubmit()"
 		type="submit"
 		class="mt-4"

@@ -34,7 +34,6 @@
 		<tr>
 			<th>Název</th>
 			<th>Start</th>
-			<th>Konec</th>
 			<th></th>
 		</tr>
 	</ng-template>
@@ -44,11 +43,10 @@
 	>
 		<tr>
 			<td>{{ event.name }}</td>
-			<td>{{ event.start | date: "dd.MM YY, HH:mm" }}</td>
-			<td>{{ event.end | date: "dd.MM YY, HH:mm" }}</td>
+			<td>{{ event.start | date: "dd.MM YY" }}</td>
 			<td class="flex gap-2">
 				<p-button [routerLink]="['detail', event.id]">Upravit</p-button>
-				<p-button (click)="showInviteModal(event.id)">Pozvat</p-button>
+				<p-button (click)="showInviteModal(event.id)" icon="pi pi-fw pi-link" />
 				<button
 					pButton
 					appConfirm
@@ -56,7 +54,6 @@
 					class="p-button-danger"
 					icon="pi pi-fw pi-trash"
 				>
-					Smazat
 				</button>
 			</td>
 		</tr>

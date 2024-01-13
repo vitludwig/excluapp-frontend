@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
-import { CheckboxModule } from 'primeng/checkbox';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { Observable, firstValueFrom } from 'rxjs';
@@ -12,10 +12,11 @@ import { UserFaceScanDescriptorComponent } from '../../../../user/components/use
 import { FaceRecognitionService } from '../../../../user/services/face-recognition/face-recognition.service';
 import { UserService } from '../../../../user/services/user/user.service';
 import { IUserRead } from '../../../../user/types/IUser';
+
 @Component({
 	selector: 'app-user-detail',
 	standalone: true,
-	imports: [ButtonModule, CalendarModule, InputTextModule, PaginatorModule, ReactiveFormsModule, CheckboxModule, UserFaceScanDescriptorComponent],
+	imports: [ButtonModule, CalendarModule, InputTextModule, PaginatorModule, ReactiveFormsModule, UserFaceScanDescriptorComponent, InputSwitchModule],
 	templateUrl: './user-detail.component.html',
 	styleUrls: ['./user-detail.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

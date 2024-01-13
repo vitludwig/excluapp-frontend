@@ -27,13 +27,15 @@
 					<tr>
 						<th>Co</th>
 						<th>Kolik</th>
-						<th>
-							Cena
-							<i
-								class="pi pi-exclamation-circle ml-1"
-								pTooltip="Cena je pouze orientační! Nezahrnuje případné dopočítání nedopitého sudu a párty náklady."
-							></i>
-						</th>
+						@if(authService.$isLogged()) {
+							<th>
+								Cena
+								<i
+									class="pi pi-exclamation-circle ml-1"
+									pTooltip="Cena je pouze orientační! Nezahrnuje případné dopočítání nedopitého sudu a párty náklady."
+								></i>
+							</th>
+						}
 						<th pSortableColumn="createdAt">
 							Kdy
 							<p-sortIcon field="createdAt" />
@@ -50,11 +52,13 @@
 					<tr>
 						<td>{{ (item.kegId | keg)?.name }}</td>
 						<td>{{ item.volume }} l</td>
-						<td>
-							@if(item.kegId | keg; as keg) {
-								{{ (keg.price / keg.volume) * item.volume }} Kč
-							}
-						</td>
+						@if(authService.$isLogged()) {
+							<td>
+								@if(item.kegId | keg; as keg) {
+									{{ ((keg.price / keg.volume) * item.volume) | currency: ' ' }}
+								}
+							</td>
+						}
 						<td>{{ item.createdAt | date: 'dd.MM.YY, HH:mm' }}</td>
 						@if($selectedEvents().length > 1) {
 							<td>{{ (item.eventId | event)?.name }}</td>

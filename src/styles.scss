@@ -25,3 +25,19 @@ p-dropdown {
 		background: var(--yellow-500) !important;
 	}
 }
+
+.flex-responsive {
+	display: flex;
+
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+	}
+}
+
+.visible-mobile {
+	display: none;
+
+	@media screen and (max-width: 768px) {
+		display: block;
+	}
+}

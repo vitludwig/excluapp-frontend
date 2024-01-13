@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { of } from 'rxjs';
 import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
+import { AuthService } from '../../../../../../common/services/auth.service';
 import { OrderService } from '../../../../../sale/services/order/order.service';
 import { SelectUserComponent } from '../../../../../user/components/select-user/select-user.component';
 import { IUserRead } from '../../../../../user/types/IUser';
@@ -18,7 +19,21 @@ import { KegPipe } from '../../../sortiment/pipes/keg.pipe';
 @Component({
 	selector: 'app-user-statistics',
 	standalone: true,
-	imports: [ButtonModule, MultiSelectModule, SortPipe, FormsModule, SelectUserComponent, AsyncPipe, JsonPipe, TableModule, KegPipe, EventPipe, DatePipe, TooltipModule],
+	imports: [
+		ButtonModule,
+		MultiSelectModule,
+		SortPipe,
+		FormsModule,
+		SelectUserComponent,
+		AsyncPipe,
+		JsonPipe,
+		TableModule,
+		KegPipe,
+		EventPipe,
+		DatePipe,
+		TooltipModule,
+		CurrencyPipe,
+	],
 	templateUrl: './user-statistics.component.html',
 	styleUrls: ['./user-statistics.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +41,7 @@ import { KegPipe } from '../../../sortiment/pipes/keg.pipe';
 export class UserStatisticsComponent {
 	protected readonly eventService = inject(EventService);
 	protected readonly orderService = inject(OrderService);
+	protected readonly authService: AuthService = inject(AuthService);
 
 	protected $selectedEvents = signal<IEvent[]>([]);
 	protected $selectedUser = signal<IUserRead | null>(null);

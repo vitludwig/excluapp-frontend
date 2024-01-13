@@ -35,7 +35,6 @@ export class SelectUserComponent {
 	protected selectedUser: IUserRead | null = null;
 
 	protected submit() {
-		console.log('selecting', this.selectedUser);
 		this.select.emit(this.selectedUser);
 	}
 }

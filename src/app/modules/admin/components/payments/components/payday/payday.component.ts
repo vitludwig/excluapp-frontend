@@ -34,7 +34,6 @@ export class PaydayComponent {
 		if (this.$showOnlyNotPaidEvents()) {
 			return events.filter((event) => {
 				const eventKegs = this.sortimentService.$copySortiment().filter((keg) => event.kegs.includes(keg.id));
-				console.log(event.name, eventKegs);
 				return eventKegs.some((keg) => !keg.isCashed);
 			});
 		}

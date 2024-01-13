@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
@@ -23,7 +24,19 @@ import { EventSortimentComponent } from './components/event-sortiment/event-sort
 @Component({
 	selector: 'app-event-detail',
 	standalone: true,
-	imports: [ReactiveFormsModule, InputTextModule, CalendarModule, TableModule, RouterLink, EventSortimentComponent, TooltipModule, ConfirmDialogModule, ConfirmComponent, JsonPipe],
+	imports: [
+		ReactiveFormsModule,
+		InputTextModule,
+		CalendarModule,
+		TableModule,
+		RouterLink,
+		EventSortimentComponent,
+		TooltipModule,
+		ConfirmDialogModule,
+		ConfirmComponent,
+		JsonPipe,
+		DividerModule,
+	],
 	providers: [ConfirmationService, DialogService],
 	templateUrl: './event-detail.component.html',
 	styleUrls: ['./event-detail.component.scss'],
