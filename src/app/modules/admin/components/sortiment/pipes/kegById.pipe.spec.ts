@@ -1,4 +1,4 @@
-import { KegByIdPipe } from './keg.pipe';
+import { KegByIdPipe } from './kegById.pipe';
 
 describe('KegPipe', () => {
 	it('create an instance', () => {
