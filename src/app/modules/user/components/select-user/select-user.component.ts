@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, input, Output } from '@angular/core';
 
 import { JsonPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
@@ -23,11 +23,8 @@ import { orderUsernames } from '../../utils/OrderUsernames';
 export class SelectUserComponent {
 	private readonly usersService = inject(UserService);
 
-	@Input()
-	public layout: 'list' | 'form' = 'form';
-
-	@Input({ transform: orderUsernames })
-	public users: IUserRead[] = this.usersService.$users();
+	public $layout = input<'list' | 'form'>('form', { alias: 'layout' });
+	public $users = input<IUserRead[], IUserRead[]>(this.usersService.$users(), { transform: orderUsernames, alias: 'users' });
 
 	@Output()
 	public select: EventEmitter<IUserRead | null> = new EventEmitter();

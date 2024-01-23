@@ -9,6 +9,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
 import { AuthService } from '../../../../../../common/services/auth.service';
+import { IPChartData } from '../../../../../../common/types/IPChartData';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
 import { IEventKegsStatistics, IEventUsersStatistics } from '../../../../types/IEventKegsStatistics';
@@ -72,7 +73,7 @@ export class EventStatisticsComponent {
 		this.$paydayResult.set(result$);
 	}
 
-	private createKegsChartData(value: IEventKegsStatistics[]): any {
+	private createKegsChartData(value: IEventKegsStatistics[]): IPChartData {
 		// TODO: create colors according to keg type and dynamically add them by amount of kegs
 		value.sort((a, b) => (a.volume > b.volume ? -1 : 1));
 		return {

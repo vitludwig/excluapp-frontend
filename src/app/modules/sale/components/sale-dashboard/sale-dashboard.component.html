@@ -17,11 +17,13 @@
 
 	<h3>Vyber pijáka</h3>
 	<div>
-		<app-dashboard-user-select
-			[users]="$usersInEvent() | async"
-			(selected)="selectUser($event)"
-		/>
-		<br />
+		@if($usersInEvent() | async; as users) {
+			<app-dashboard-user-select
+				[users]="users"
+				(selected)="selectUser($event)"
+			/>
+			<br />
+		}
 		<p-accordion>
 			<p-accordionTab header="Ostatní">
 				<app-dashboard-user-select

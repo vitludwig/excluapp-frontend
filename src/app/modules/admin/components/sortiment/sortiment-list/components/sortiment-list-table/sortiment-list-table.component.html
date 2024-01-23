@@ -17,7 +17,7 @@
 
 <p-table
 	#sortimentsTable
-	[value]="kegs"
+	[value]="$kegs()"
 	[rowsPerPageOptions]="[10, 20, 50, { showAll: 'All' }]"
 	[paginator]="true"
 	[rows]="10"

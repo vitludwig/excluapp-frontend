@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, Input, OnDestroy, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, input, OnDestroy, Output, signal } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -36,11 +36,8 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 
 	protected readonly EBeerVolume = EBeerVolume;
 
-	@Input({ required: true })
-	public selectedUser!: IUserRead;
-
-	@Input({ required: true })
-	public sortiment!: IKeg[];
+	public $selectedUser = input.required<IUserRead>({ alias: 'selectedUser' });
+	public $sortiment = input.required<IKeg[]>({ alias: 'sortiment' });
 
 	@Output()
 	public confirm: EventEmitter<void> = new EventEmitter<void>();
@@ -49,11 +46,11 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 	public cancel: EventEmitter<void> = new EventEmitter<void>();
 
 	protected $summary = computed(() => {
-		if (!this.selectedUser || !this.eventService.$activeEvent()) {
+		if (!this.$selectedUser || !this.eventService.$activeEvent()) {
 			return;
 		}
 
-		return this.orderService.getOrderByEventUserId(this.eventService.$activeEvent()?.id!, this.selectedUser.id).pipe(
+		return this.orderService.getOrderByEventUserId(this.eventService.$activeEvent()?.id!, this.$selectedUser().id).pipe(
 			map((obj) => {
 				for (const item of obj) {
 					item.kegName = this.sortimentService.$allSortiment().find((s) => s.id === item.kegId)?.name ?? '';

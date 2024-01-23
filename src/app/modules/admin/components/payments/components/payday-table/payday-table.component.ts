@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { MessageService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -17,32 +16,28 @@ import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics
 export class PaydayTableComponent {
 	private readonly messageService: MessageService = inject(MessageService);
 
-	private _data: IEventPaydayStatistics[] = [];
-
 	protected showPaydayDialog: boolean = false;
 	protected paydayResult: string = '';
 
-	@Input({ required: true })
-	public set data(value: IEventPaydayStatistics[]) {
-		value.sort((a, b) => {
-			if (a.name < b.name) {
-				return -1;
-			}
-			if (a.name > b.name) {
-				return 1;
-			}
-			return 0;
-		});
+	public $data = input.required<IEventPaydayStatistics[], IEventPaydayStatistics[]>({
+		alias: 'data',
+		transform: (value) => {
+			value.sort((a, b) => {
+				if (a.name < b.name) {
+					return -1;
+				}
+				if (a.name > b.name) {
+					return 1;
+				}
+				return 0;
+			});
 
-		this._data = value;
-	}
-
-	public get data(): IEventPaydayStatistics[] {
-		return this._data;
-	}
+			return value;
+		},
+	});
 
 	protected async copyPaydayResult(): Promise<void> {
-		const result = this._data
+		const result = this.$data()
 			.map((value) => {
 				return `${value.name}: ${value.price}Kč`;
 			})

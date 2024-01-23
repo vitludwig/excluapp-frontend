@@ -35,7 +35,7 @@
 							pButton
 							appConfirm
 							(confirm)="unattend(user.id)"
-							confirmMessage="Odzúčastnit?"
+							[confirmMessage]="'Odzúčastnit?'"
 							pTooltip="Odzúčastnit se"
 							class="p-button-danger"
 							icon="pi pi-fw pi-trash"

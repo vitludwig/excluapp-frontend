@@ -1,14 +1,14 @@
 <div class="flex gap-3 flex-wrap">
-	@for (item of sortiment; track item) {
-	<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.BIG, item: item }"></ng-container>
+	@for (item of $sortiment(); track item) {
+		<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.BIG, item: item }"></ng-container>
 	}
 </div>
 
 <p-divider />
 
 <div class="flex gap-3 flex-wrap">
-	@for (item of sortiment; track item) {
-	<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.SMALL, item: item, subheader: 'malé' }"></ng-container>
+	@for (item of $sortiment(); track item) {
+		<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.SMALL, item: item, subheader: 'malé' }"></ng-container>
 	}
 </div>
 
@@ -75,7 +75,7 @@
 	let-subheader="subheader"
 >
 	<p-card
-		(click)="addToCart(item.id, selectedUser.id, category)"
+		(click)="addToCart(item.id, $selectedUser().id, category)"
 		[header]="item.name"
 		[subheader]="subheader"
 		[class.active]="orderService.$cartCount()[category | asSortimentCategory][item.id]"
@@ -83,28 +83,28 @@
 		class="card"
 	>
 		@if (orderService.$cartCount()[category | asSortimentCategory][item.id]) {
-		<div class="card-controls w-full flex justify-content-between align-items-center">
-			<p-button
-				type="button"
-				icon="pi pi-minus"
-				class="p-button-rounded"
-				styleClass="p-button-lg"
-				(click)="orderService.removeOneFromCart(item, $event, category)"
-			/>
+			<div class="card-controls w-full flex justify-content-between align-items-center">
+				<p-button
+					type="button"
+					icon="pi pi-minus"
+					class="p-button-rounded"
+					styleClass="p-button-lg"
+					(click)="orderService.removeOneFromCart(item, $event, category)"
+				/>
 
-			@if (orderService.$cartCount()[category | asSortimentCategory][item.id]; as count) {
-			<span>+ {{ count }}ks</span>
+				@if (orderService.$cartCount()[category | asSortimentCategory][item.id]; as count) {
+				<span>+ {{ count }}ks</span>
+				}
+
+				<p-button
+					type="button"
+					icon="pi pi-plus"
+					class="p-button-rounded"
+					styleClass="p-button-lg"
+					(click)="orderService.addOneToCart(item.id, $selectedUser().id, category, false, $event)"
+				/>
+			</div>
 			}
-
-			<p-button
-				type="button"
-				icon="pi pi-plus"
-				class="p-button-rounded"
-				styleClass="p-button-lg"
-				(click)="orderService.addOneToCart(item.id, selectedUser.id, category, false, $event)"
-			/>
-		</div>
-		}
 
 		<ng-template pTemplate="footer">
 			<div class="w-full text-right">{{ item.sourceName }}</div>

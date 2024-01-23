@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnDestroy } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -24,8 +24,7 @@ export class SortimentListTableComponent implements OnDestroy {
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 	private readonly dialogService: DialogService = inject(DialogService);
 
-	@Input({ required: true })
-	public kegs!: IKeg[];
+	public $kegs = input.required<IKeg[]>({ alias: 'kegs' });
 
 	private kegStatusDialogRef: DynamicDialogRef | undefined;
 

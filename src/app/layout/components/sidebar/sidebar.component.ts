@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -116,7 +115,11 @@ export class SidebarComponent implements OnDestroy {
 		});
 	}
 
-	ngOnDestroy() {
+	protected reloadPage() {
+		window.location.reload();
+	}
+
+	public ngOnDestroy() {
 		if (this.loginDialogRef) {
 			this.loginDialogRef.close();
 		}

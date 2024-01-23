@@ -1,6 +1,6 @@
-@if (users) {
+@if ($users()) {
 	<app-select-user
-		[users]="users"
+		[users]="$users()"
 		layout="list"
 		(select)="selectUser($event)"
 	/>

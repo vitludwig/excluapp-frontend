@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
@@ -17,11 +17,8 @@ import { IKeg } from '../../../../../types/IKeg';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventSortimentComponent {
-	@Input()
-	public options: IKeg[] = [];
-
-	@Input()
-	public label: string = '';
+	public $options = input<IKeg[]>([], { alias: 'options' });
+	public $label = input<string>('', { alias: 'label' });
 
 	@Output()
 	public select: EventEmitter<IKeg> = new EventEmitter<IKeg>();

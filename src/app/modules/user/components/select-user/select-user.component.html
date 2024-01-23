@@ -1,8 +1,8 @@
 <div class="flex flex-column h-full">
-	@if (layout === 'form') {
+	@if ($layout() === 'form') {
 		<div class="flex flex-column justify-content-center">
 			<p-dropdown
-				[options]="users"
+				[options]="$users()"
 				[(ngModel)]="selectedUser"
 				(ngModelChange)="submit()"
 				optionLabel="name"
@@ -32,16 +32,16 @@
 				</ng-template>
 			</p-dropdown>
 		</div>
-	} @if (layout === 'list') {
+	} @if ($layout() === 'list') {
 		<div class="overflow-auto">
 			<p-listbox
-				[options]="users"
+				[options]="$users()"
 				[(ngModel)]="selectedUser"
 				(ngModelChange)="submit()"
 				[metaKeySelection]="false"
 				optionLabel="name"
 				[style]="{ width: '100%' }"
-				[class.big-list-items]="users.length < 6"
+				[class.big-list-items]="$users.length < 6"
 				emptyMessage="Žádní uživatelé"
 			/>
 		</div>

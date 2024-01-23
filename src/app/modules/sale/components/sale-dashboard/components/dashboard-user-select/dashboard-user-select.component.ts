@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, input, Output } from '@angular/core';
 
 import { CardModule } from 'primeng/card';
 import { SelectUserComponent } from '../../../../../user/components/select-user/select-user.component';
@@ -14,8 +14,7 @@ import { IUserRead } from '../../../../../user/types/IUser';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardUserSelectComponent {
-	@Input({ required: true })
-	public users: IUserRead[] | null = [];
+	public $users = input.required<IUserRead[]>({ alias: 'users' });
 
 	@Output()
 	public selected: EventEmitter<IUserRead | null> = new EventEmitter<IUserRead | null>();

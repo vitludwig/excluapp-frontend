@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, signal, ViewChild } from '@angular/core';
 import {
 	detectSingleFace,
 	FaceDetection,
@@ -36,8 +36,7 @@ export class UserFaceScanDescriptorComponent implements OnInit {
 	protected readonly usersService = inject(UserService);
 	private readonly messageService: MessageService = inject(MessageService);
 
-	@Input()
-	public user: IUserRead | null = null;
+	public $user = input<IUserRead | null>(null, { alias: 'user' });
 
 	@ViewChild('videoElement')
 	public videoElement: ElementRef<HTMLVideoElement>;
@@ -52,7 +51,8 @@ export class UserFaceScanDescriptorComponent implements OnInit {
 	}
 
 	protected async startScanningDescriptor(): Promise<void> {
-		if (!this.user) {
+		const user = this.$user();
+		if (!user) {
 			// TODO: add alert
 			return;
 		}
@@ -64,10 +64,9 @@ export class UserFaceScanDescriptorComponent implements OnInit {
 		try {
 			const face = await this.detectFace();
 
-			console.log('result', face);
 			if (face) {
-				const descriptor = new LabeledFaceDescriptors(this.user.id.toString(), [face.descriptor]);
-				await firstValueFrom(this.usersService.updateUser(this.user.id, { faceDescriptor: JSON.stringify(descriptor) }));
+				const descriptor = new LabeledFaceDescriptors(user.id.toString(), [face.descriptor]);
+				await firstValueFrom(this.usersService.updateUser(user.id, { faceDescriptor: JSON.stringify(descriptor) }));
 				console.log('descriptor saved!');
 				this.$scanning.set(false);
 				this.$faceScanned.set(true);
@@ -80,8 +79,9 @@ export class UserFaceScanDescriptorComponent implements OnInit {
 	}
 
 	protected async removeUserDescriptor(): Promise<void> {
-		if (this.user) {
-			await firstValueFrom(this.usersService.updateUser(this.user.id, { faceDescriptor: null }));
+		const user = this.$user();
+		if (user) {
+			await firstValueFrom(this.usersService.updateUser(user.id, { faceDescriptor: null }));
 			this.messageService.add({ severity: 'success', summary: 'Obličej odstraněn!', detail: '' });
 		}
 	}

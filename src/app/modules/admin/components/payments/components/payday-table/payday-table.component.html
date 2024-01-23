@@ -1,4 +1,4 @@
-<p-table [value]="data">
+<p-table [value]="$data()">
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Pijan</th>
@@ -34,7 +34,7 @@
 	<textarea
 		readonly="readonly"
 		[value]="paydayResult"
-		[rows]="data.length"
+		[rows]="$data().length"
 		class="w-full"
 	></textarea>
 

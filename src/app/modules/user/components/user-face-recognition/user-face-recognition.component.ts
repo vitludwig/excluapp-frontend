@@ -24,12 +24,20 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 
 	@Input()
 	public set users(value: IUserRead[] | null) {
-		if (!value) {
-			return;
+		if (value) {
+			this.detectUser(value);
 		}
-
-		this.detectUser(value);
 	}
+
+	// nebo
+
+	// public users2 = input<IUserRead[] | null, IUserRead[] | null>(null, {transform: (value) => {
+	// 	if(value) {
+	// 		this.detectUser(value)
+	// 	}
+	//
+	// 	return value;
+	// }});
 
 	private _enabled = true;
 
@@ -58,10 +66,8 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 	@Output()
 	public detected: EventEmitter<IUserRead> = new EventEmitter<IUserRead>();
 
-	private async detectUser(users: IUserRead[]): Promise<void> {
-		await this.initMatcher(users);
-		// const userId = await this.detectFace();
-		// console.log('userId', userId);
+	private detectUser(users: IUserRead[]): void {
+		this.initMatcher(users);
 	}
 
 	@ViewChild('videoElement')
@@ -160,7 +166,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 					console.log('data', data);
 					return new LabeledFaceDescriptors(
 						user.id.toString(),
-						data.descriptors.map((obj: any) => Float32Array.from(obj)),
+						data.descriptors.map((obj: Float32Array) => Float32Array.from(obj)),
 					);
 				});
 

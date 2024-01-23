@@ -1,13 +1,13 @@
 <div class="p-inputgroup mb-2">
 	<p-dropdown
-		[options]="options"
+		[options]="$options()"
 		[(ngModel)]="selectedSortiment"
 		optionLabel="name"
 		[filter]="true"
 		filterBy="name"
 		[showClear]="true"
 		ariaFilterLabel=""
-		[placeholder]="label"
+		[placeholder]="$label()"
 		[style]="{ width: '100%' }"
 	>
 		<ng-template pTemplate="selectedItem">
