@@ -59,7 +59,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly layoutService = inject(LayoutService);
 	private readonly messageService = inject(MessageService);
 
-	private beerpongDialogRef: DynamicDialogRef | null = null;
+	protected beerpongDialogRef: DynamicDialogRef | null = null;
 	private kegUserStatisticsDialogRef: DynamicDialogRef | null = null;
 
 	protected $sortiment = computed(() => {
@@ -100,6 +100,8 @@ export class SaleDashboardComponent implements OnDestroy {
 	});
 
 	protected $usersOther = signal<IUserRead[]>([]);
+	protected beerpongOpened = false;
+
 	private unsubscribe$: Subject<void> = new Subject<void>();
 
 	protected clearOrder() {
@@ -127,13 +129,17 @@ export class SaleDashboardComponent implements OnDestroy {
 			header: 'Býrponk!',
 			width: '90%',
 			contentStyle: { overflow: 'auto', paddingBottom: 0 },
+			dismissableMask: true,
 			data: {
 				kegs: this.$sortiment(),
 				users: users,
 			},
 		});
 
+		this.beerpongOpened = true;
+
 		this.beerpongDialogRef.onClose.pipe(takeUntil(this.unsubscribe$)).subscribe((data: IBeerpong[]) => {
+			this.beerpongOpened = false;
 			if (data) {
 				for (const obj of data) {
 					this.orderService.addOneToCart(obj.kegId, obj.userId, EBeerVolume.BIG, true);

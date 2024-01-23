@@ -3,10 +3,10 @@ import { SortimentService } from '../../../services/sortiment/sortiment.service'
 import { IKeg } from '../../../types/IKeg';
 
 @Pipe({
-	name: 'keg',
+	name: 'kegById',
 	standalone: true,
 })
-export class KegPipe implements PipeTransform {
+export class KegByIdPipe implements PipeTransform {
 	private readonly sortimentService = inject(SortimentService);
 
 	transform(value: number): IKeg | null {

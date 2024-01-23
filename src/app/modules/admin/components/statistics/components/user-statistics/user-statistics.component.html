@@ -1,16 +1,14 @@
 <div class="flex align-items-center gap-5">
 	<app-select-user (select)="selectUser($event)"></app-select-user>
 
-	@if($selectedUser()) {
-		<p-multiSelect
-			[options]=" this.eventService.$events() | sort: 'start'"
-			[ngModel]="$selectedEvents()"
-			(ngModelChange)="$selectedEvents.set($event)"
-			placeholder="Vyber události"
-			optionLabel="name"
-			display="comma"
-		/>
-	}
+	<p-multiSelect
+		[options]=" this.eventService.$events() | sort: 'start'"
+		[ngModel]="$selectedEvents()"
+		(ngModelChange)="$selectedEvents.set($event)"
+		placeholder="Vyber události"
+		optionLabel="name"
+		display="comma"
+	/>
 </div>
 
 <div class="w-full mt-5">
@@ -26,6 +24,9 @@
 				<ng-template pTemplate="header">
 					<tr>
 						<th>Co</th>
+						@if(!$selectedUser() && $selectedEvents().length > 0) {
+							<th>Kdo</th>
+						}
 						<th>Kolik</th>
 						@if(authService.$isLogged()) {
 							<th>
@@ -40,7 +41,7 @@
 							Kdy
 							<p-sortIcon field="createdAt" />
 						</th>
-						@if($selectedEvents().length > 1) {
+						@if($selectedEvents().length > 1 || ($selectedUser() && $selectedEvents().length === 0)) {
 							<th>Událost</th>
 						}
 					</tr>
@@ -50,17 +51,20 @@
 					let-item
 				>
 					<tr>
-						<td>{{ (item.kegId | keg)?.name }}</td>
+						<td>{{ (item.kegId | kegById)?.name }}</td>
+						@if(!$selectedUser() && $selectedEvents().length > 0) {
+							<td>{{ (item.userId | userById)?.name }}</td>
+						}
 						<td>{{ item.volume }} l</td>
 						@if(authService.$isLogged()) {
 							<td>
-								@if(item.kegId | keg; as keg) {
+								@if(item.kegId | kegById; as keg) {
 									{{ ((keg.price / keg.volume) * item.volume) | currency: ' ' }}
 								}
 							</td>
 						}
 						<td>{{ item.createdAt | date: 'dd.MM.YY, HH:mm' }}</td>
-						@if($selectedEvents().length > 1) {
+						@if($selectedEvents().length > 1  || ($selectedUser() && $selectedEvents().length === 0)) {
 							<td>{{ (item.eventId | event)?.name }}</td>
 						}
 					</tr>

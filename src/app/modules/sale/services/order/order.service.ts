@@ -105,11 +105,14 @@ export class OrderService {
 		);
 	}
 
-	public getUsersTransactions(userId: number, eventIds: number[]): Observable<IOrderRead[]> {
+	public getTransactions(userIds?: number[], eventIds?: number[]): Observable<IOrderRead[]> {
 		const params = new HttpParams({
-			fromObject: { eventIds: eventIds },
+			fromObject: {
+				eventIds: eventIds ?? [],
+				userIds: userIds ?? [],
+			},
 		});
-		return this.http.get<IOrderRead[]>(`${environment.apiUrl}/order/user/${userId}/orders/`, { params: params });
+		return this.http.get<IOrderRead[]>(`${environment.apiUrl}/order/`, { params: params });
 	}
 
 	public clearOrder() {

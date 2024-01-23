@@ -10,11 +10,12 @@ import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
 import { AuthService } from '../../../../../../common/services/auth.service';
 import { OrderService } from '../../../../../sale/services/order/order.service';
 import { SelectUserComponent } from '../../../../../user/components/select-user/select-user.component';
+import { UserByIdPipe } from '../../../../../user/pipes/user-by-id.pipe';
 import { IUserRead } from '../../../../../user/types/IUser';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
 import { EventPipe } from '../../../events/pipes/event.pipe';
-import { KegPipe } from '../../../sortiment/pipes/keg.pipe';
+import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
 
 @Component({
 	selector: 'app-user-statistics',
@@ -28,11 +29,13 @@ import { KegPipe } from '../../../sortiment/pipes/keg.pipe';
 		AsyncPipe,
 		JsonPipe,
 		TableModule,
-		KegPipe,
+		KegByIdPipe,
 		EventPipe,
 		DatePipe,
 		TooltipModule,
 		CurrencyPipe,
+		KegByIdPipe,
+		UserByIdPipe,
 	],
 	templateUrl: './user-statistics.component.html',
 	styleUrls: ['./user-statistics.component.scss'],
@@ -49,17 +52,17 @@ export class UserStatisticsComponent {
 	protected $userOrders = computed(() => {
 		const user = this.$selectedUser();
 		const events = this.$selectedEvents();
-		if (user && events.length) {
-			return this.orderService.getUsersTransactions(
-				user.id,
-				events.map((e) => e.id),
-			);
+		const userIds = user ? [user.id] : undefined;
+		const eventIds = events.map((e) => e.id) ?? undefined;
+
+		if (userIds || eventIds.length > 0) {
+			return this.orderService.getTransactions(userIds, eventIds);
 		}
 
 		return of([]);
 	});
 
-	protected selectUser(users: IUserRead | null) {
-		this.$selectedUser.set(users);
+	protected selectUser(user: IUserRead | null) {
+		this.$selectedUser.set(user);
 	}
 }
