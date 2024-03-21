@@ -70,9 +70,10 @@ export class SaleDashboardComponent implements OnDestroy {
 	});
 
 	protected $kegStats = computed(() => {
-		const stats: Record<number, { keg: IKeg; status: Observable<IKegStatus> }> = {};
-		for (const keg of this.$kegs()) {
-			stats[keg.id] = {
+		const stats: { keg: IKeg; status: Observable<IKegStatus> }[] = [];
+		const kegs = this.$kegs().sort((a, b) => a.position - b.position);
+		for (const keg of kegs) {
+			stats.push({
 				keg,
 				status: this.sortimentService.getKegStatus(keg.id).pipe(
 					map((status) => {
@@ -82,7 +83,7 @@ export class SaleDashboardComponent implements OnDestroy {
 						return status;
 					}),
 				),
-			};
+			});
 		}
 
 		return stats;
@@ -93,7 +94,7 @@ export class SaleDashboardComponent implements OnDestroy {
 		const event = this.eventService.$activeEvent();
 		if (event) {
 			return this.eventService.getUsersForEvent(event.id).pipe(
-				tap((users) => {
+				tap((users: IUserRead[]) => {
 					const usersInEventIds = users.map((u) => u.id);
 					this.$usersOther.set(this.userService.$users().filter((u) => !usersInEventIds.includes(u.id)));
 				}),

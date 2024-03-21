@@ -40,13 +40,12 @@
 
 	<h2 class="text-center">Už se vypilo</h2>
 	<div class="flex pb-6">
-		@for (stat of ($kegStats() | keyvalue); track $index) {
-			<div
-				class="flex-1"
-				(click)="showKegStatistics(stat.value.keg)"
+		@for (stat of $kegStats(); track $index) {
+			<div class="flex-1 cursor-pointer"
+				(click)="showKegStatistics(stat.keg)"
 			>
-				@if (stat.value.status | async; as kegStat) {
-					<h3 class="text-center">{{ stat.value.keg.name }}</h3>
+				@if (stat.status | async; as kegStat) {
+					<h3 class="text-center">{{ stat.keg.name }}</h3>
 					<p-knob
 						class="text-center"
 						[(ngModel)]="kegStat.consumedVolume"
