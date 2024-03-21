@@ -12,4 +12,5 @@ export interface IKeg {
 	isDefective: boolean;
 	isOriginal: boolean;
 	event?: IEvent;
+	position: number;
 }

@@ -1,18 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 
-import { JsonPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { OrderListModule } from 'primeng/orderlist';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { firstValueFrom, map, Observable, tap } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
+import { NotificationService } from '../../../../../common/services/notification.service';
 import { EventService } from '../../../services/event/event.service';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IEvent } from '../../../types/IEvent';
@@ -36,6 +38,8 @@ import { EventSortimentComponent } from './components/event-sortiment/event-sort
 		ConfirmComponent,
 		JsonPipe,
 		DividerModule,
+		OrderListModule,
+		AsyncPipe,
 	],
 	providers: [ConfirmationService, DialogService],
 	templateUrl: './event-detail.component.html',
@@ -46,7 +50,7 @@ export class EventDetailComponent implements OnDestroy {
 	private readonly eventService: EventService = inject(EventService);
 	private readonly router: Router = inject(Router);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly messageService = inject(MessageService);
+	private readonly notificationService = inject(NotificationService);
 	private readonly dialogService: DialogService = inject(DialogService);
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 	protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -186,7 +190,18 @@ export class EventDetailComponent implements OnDestroy {
 		});
 	}
 
-	private setKegActive(keg: IKeg, value: boolean, isEmpty: boolean) {
+	protected async orderKegs() {
+		const eventId = this.eventId;
+		if (eventId === null) {
+			this.notificationService.error('Nejdřív ulož událost, pak můžeš měnit pořadí sudů');
+			return;
+		}
+
+		const kegs = this.$eventKegs().map((k, i) => ({ id: k.id, position: i })) ?? [];
+		await firstValueFrom(this.sortimentService.updateSortimentBulk(kegs));
+	}
+
+	private async setKegActive(keg: IKeg, value: boolean, isEmpty: boolean) {
 		this.$eventKegs.update((kegs) =>
 			kegs.map((k) => {
 				if (k.id === keg.id) {
@@ -200,10 +215,8 @@ export class EventDetailComponent implements OnDestroy {
 
 		if (this.eventId) {
 			const message = `${keg.name} ${value ? 'aktivován' : 'deaktivován'}`;
-			this.sortimentService
-				.updateSortiment(keg.id, { isActive: value, isEmpty })
-				.pipe(tap(() => this.messageService.add({ severity: 'success', summary: 'Olé!', detail: message })))
-				.subscribe();
+			await firstValueFrom(this.sortimentService.updateSortiment(keg.id, { isActive: value, isEmpty }));
+			this.notificationService.success(message);
 		}
 	}
 
@@ -211,12 +224,15 @@ export class EventDetailComponent implements OnDestroy {
 		this.eventService
 			.getEvent(id)
 			.pipe(
-				map((event) => {
+				map((event: IEvent) => {
 					event.start = new Date(event.start);
 					event.end = new Date(event.end);
 					event.kegs = event.kegs.map((k) => +k);
 
-					const eventKegs = this.sortimentService.$allSortiment().filter((s) => event.kegs.includes(s.id));
+					const eventKegs = this.sortimentService
+						.$allSortiment()
+						.filter((s) => event.kegs.includes(s.id))
+						.sort((a, b) => a.position - b.position);
 
 					this.originalKegs = eventKegs;
 					this.form.patchValue(event);

@@ -62,13 +62,16 @@ export class SaleDashboardComponent implements OnDestroy {
 	protected beerpongDialogRef: DynamicDialogRef | null = null;
 	private kegUserStatisticsDialogRef: DynamicDialogRef | null = null;
 
-	protected $sortiment = computed(() => {
-		return this.sortimentService.$allSortiment().filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive);
+	protected $kegs = computed(() => {
+		return this.sortimentService
+			.$allSortiment()
+			.filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive)
+			.sort((a, b) => a.position - b.position);
 	});
 
 	protected $kegStats = computed(() => {
 		const stats: Record<number, { keg: IKeg; status: Observable<IKegStatus> }> = {};
-		for (const keg of this.$sortiment()) {
+		for (const keg of this.$kegs()) {
 			stats[keg.id] = {
 				keg,
 				status: this.sortimentService.getKegStatus(keg.id).pipe(
@@ -131,7 +134,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			contentStyle: { overflow: 'auto', paddingBottom: 0 },
 			dismissableMask: true,
 			data: {
-				kegs: this.$sortiment(),
+				kegs: this.$kegs(),
 				users: users,
 			},
 		});

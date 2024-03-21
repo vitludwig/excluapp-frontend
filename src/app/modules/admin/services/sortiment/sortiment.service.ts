@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { capitalizeEachFirstLetter } from '../../../../common/utils/StringUtils';
 import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
@@ -18,12 +18,16 @@ export class SortimentService {
 	/**
 	 * Keg templates, that are copied to events as new kegs
 	 */
-	public $originalSortiment = signal<IKeg[]>([]);
+	public $originalSortiment = computed(() => {
+		return this.$allSortiment().filter((obj) => obj.isOriginal);
+	});
 	/**
 	 * Copied kegs from original kegs
 	 * When adding new keg to event, original keg is copied and inserted as new (copied) keg
 	 */
-	public $copySortiment = signal<IKeg[]>([]);
+	public $copySortiment = computed(() => {
+		return this.$allSortiment().filter((obj) => !obj.isOriginal);
+	});
 
 	/**
 	 * Capitalized and trimmed unique keg's source names
@@ -31,7 +35,7 @@ export class SortimentService {
 	public $sources = signal<string[]>([]);
 
 	public loadSortiment(): Observable<IKeg[]> {
-		return this.http.get<IKeg[]>(environment.apiUrl + '/keg').pipe(
+		return this.http.get<IKeg[]>(`${environment.apiUrl}/keg`).pipe(
 			switchMap((kegs) => {
 				// if kegs are empty, return empty array - otherwise it will throw empty observable error
 				if (kegs.length === 0) {
@@ -42,8 +46,6 @@ export class SortimentService {
 			}),
 			map((value) => {
 				this.$allSortiment.set(value);
-				this.$originalSortiment.set(value.filter((obj) => obj.isOriginal));
-				this.$copySortiment.set(value.filter((obj) => !obj.isOriginal));
 				this.$sources.set([...new Set(value.map((obj) => capitalizeEachFirstLetter(obj.sourceName.toLowerCase().trim())))]);
 
 				return value;
@@ -52,30 +54,42 @@ export class SortimentService {
 	}
 
 	public addSortiment(value: IKeg): Observable<IKeg> {
-		return this.http.post<IKeg>(environment.apiUrl + '/keg', value);
+		return this.http.post<IKeg>(`${environment.apiUrl}/keg`, value);
 	}
 
 	public getSortiment(id: number): Observable<IKeg> {
-		return this.http.get<IKeg>(environment.apiUrl + '/keg/' + id);
+		return this.http.get<IKeg>(`${environment.apiUrl}/keg/${id}`);
 	}
 
 	public updateSortiment(id: number, value: Partial<IKeg>): Observable<IKeg> {
-		return this.http.patch<IKeg>(environment.apiUrl + '/keg/' + id, value);
+		return this.http.patch<IKeg>(`${environment.apiUrl}/keg/${id}`, value).pipe(
+			tap((updatedKeg: IKeg) => {
+				this.$allSortiment.update((kegs) => kegs.map((k) => (k.id === updatedKeg.id ? updatedKeg : k)));
+			}),
+		);
+	}
+
+	public updateSortimentBulk(value: Partial<IKeg>[]): Observable<IKeg[]> {
+		return this.http.patch<IKeg[]>(`${environment.apiUrl}/keg/`, value).pipe(
+			tap((updatedKeg: IKeg[]) => {
+				this.$allSortiment.update((kegs) => kegs.map((k) => updatedKeg.find((uk) => uk.id === k.id) ?? k));
+			}),
+		);
 	}
 
 	public removeSortiment(id: string): Observable<any> {
-		return this.http.delete<IKeg>(environment.apiUrl + '/keg/' + id);
+		return this.http.delete<IKeg>(`${environment.apiUrl}/keg/${id}`);
 	}
 
 	public addKegToEvent(eventId: number, kegId: number): Observable<void> {
-		return this.http.post<void>(environment.apiUrl + '/keg/kegToEvent', {
+		return this.http.post<void>(`${environment.apiUrl}/keg/kegToEvent`, {
 			eventId: eventId,
 			kegId: kegId,
 		});
 	}
 
 	public getKegEvent(kegId: number): Observable<IEvent> {
-		return this.http.get<IEvent>(environment.apiUrl + '/keg/' + kegId + '/event');
+		return this.http.get<IEvent>(`${environment.apiUrl}'/keg/${kegId}/event`);
 	}
 
 	public removeKegFromEvent(eventId: number, kegId: number): Observable<void> {
