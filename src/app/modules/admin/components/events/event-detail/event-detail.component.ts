@@ -61,7 +61,7 @@ export class EventDetailComponent implements OnDestroy {
 		name: new FormControl('', Validators.required),
 		start: new FormControl<Date | null>(null, Validators.required),
 		end: new FormControl<Date | null>(null, Validators.required),
-		capacity: new FormControl<number>(10, Validators.required),
+		capacity: new FormControl<number>(20, Validators.required),
 	});
 
 	/**
@@ -125,9 +125,11 @@ export class EventDetailComponent implements OnDestroy {
 	}
 
 	private async processEventKegs(event: IEvent, newKegsToAdd: IKeg[], existingKegsToAdd: IKeg[]): Promise<void> {
+		const newEvent = event;
 		for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
 			await firstValueFrom(this.sortimentService.addKegToEvent(event.id, keg.id));
 			this.sortimentService.$allSortiment.update((kegs) => [...kegs, keg]);
+			newEvent.kegs.push(keg.id);
 		}
 
 		const existingKegIds = this.$eventKegs().map((k) => k.id);
@@ -135,7 +137,14 @@ export class EventDetailComponent implements OnDestroy {
 
 		for (const keg of kegsToRemove) {
 			await firstValueFrom(this.sortimentService.removeKegFromEvent(event.id, keg.id));
+			newEvent.kegs = newEvent.kegs.filter((k) => k !== keg.id);
 		}
+
+		/**
+		 * Locally update events, so newly added/removed kegs would be there
+		 * Normally this update is done on Event update/create, but this method have to be called after event update/create, because we might not have event id before (on create)
+		 */
+		this.eventService.$events.update((events) => events.map((e) => (e.id === event.id ? newEvent : e)));
 	}
 
 	protected addKeg(keg: IKeg) {

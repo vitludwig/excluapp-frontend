@@ -1,5 +1,3 @@
-import { IEvent } from './IEvent';
-
 export interface IKeg {
 	id: number;
 	name: string;
@@ -11,6 +9,5 @@ export interface IKeg {
 	isCashed: boolean;
 	isDefective: boolean;
 	isOriginal: boolean;
-	event?: IEvent;
 	position: number;
 }

@@ -31,7 +31,6 @@
 			<th>Objem</th>
 			<th>Cena</th>
 			<th>Stav</th>
-			<th>Událost</th>
 			<th></th>
 		</tr>
 	</ng-template>
@@ -58,11 +57,6 @@
 			<td>{{ sortiment.volume }}</td>
 			<td>{{ sortiment.price }} Kč</td>
 			<td>{{ sortiment.isEmpty ? "Prázdný" : "Neprázdný" }}</td>
-			<td>
-				@if (sortiment.event?.event; as event) {
-				{{ event.name }}
-				}
-			</td>
 			<td class="flex gap-2">
 				<p-button
 					[routerLink]="['detail', sortiment.id]"

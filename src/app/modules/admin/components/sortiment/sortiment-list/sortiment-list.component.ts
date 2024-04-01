@@ -70,9 +70,6 @@ export class SortimentListComponent {
 	private applyFilter(filter: string[], data: IKeg[]): IKeg[] {
 		let result;
 
-		if (filter.includes('inEvent')) {
-			result = data.filter((k) => k.event);
-		}
 		if (filter.includes('empty')) {
 			result = data.filter((k) => k.isEmpty);
 		} else {

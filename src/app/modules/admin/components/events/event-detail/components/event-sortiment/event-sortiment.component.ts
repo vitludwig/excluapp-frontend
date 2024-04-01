@@ -5,13 +5,14 @@ import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputGroupModule } from 'primeng/inputgroup';
 import { TableModule } from 'primeng/table';
 import { IKeg } from '../../../../../types/IKeg';
 
 @Component({
 	selector: 'app-event-sortiment',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, SharedModule, TableModule, DropdownModule, FormsModule, RouterLink],
+	imports: [CommonModule, ButtonModule, SharedModule, TableModule, DropdownModule, FormsModule, RouterLink, InputGroupModule],
 	templateUrl: './event-sortiment.component.html',
 	styleUrls: ['./event-sortiment.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -34,7 +34,7 @@ export class EventListComponent implements OnDestroy {
 		const inviteAddress = window.location.origin + '/registration/' + eventId;
 
 		this.inviteDialogRef = this.dialogService.open(InviteDialogComponent, {
-			header: 'Invite address',
+			header: 'Adresa události',
 			width: '50%',
 			contentStyle: { overflow: 'auto' },
 			data: {

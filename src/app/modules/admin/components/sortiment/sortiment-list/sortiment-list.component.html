@@ -9,16 +9,6 @@
 				<i class="pi pi-fw pi-check mr-2"></i>
 			} Prázdné
 		</p-button>
-
-		<p-button
-			severity="info"
-			[outlined]="!('inEvent' | isIncluded: $filter())"
-			(click)="toggleFilter('inEvent')"
-		>
-			@if('inEvent' | isIncluded: $filter()) {
-				<i class="pi pi-fw pi-check mr-2"></i>
-			} Na párty
-		</p-button>
 	</div>
 
 	<p-button
@@ -32,12 +22,12 @@
 <p-tabView>
 	<p-tabPanel header="Sudy na akcích">
 		@if($copyKegs(); as kegs) {
-		<app-sortiment-list-table [kegs]="kegs" />
+			<app-sortiment-list-table [kegs]="kegs" />
 		}
 	</p-tabPanel>
 	<p-tabPanel header="Předlohy">
 		@if($originalKegs(); as kegs) {
-		<app-sortiment-list-table [kegs]="kegs" />
+			<app-sortiment-list-table [kegs]="kegs" />
 		}
 	</p-tabPanel>
 </p-tabView>

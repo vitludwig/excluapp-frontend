@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IUserRead } from '../../../user/types/IUser';
@@ -14,18 +14,27 @@ export class EventService {
 	private readonly http = inject(HttpClient);
 
 	public $events = signal<IEvent[]>([]);
-	public $activeEvent = signal<IEvent | null>(null);
+	public $activeEventId = signal<number | null>(null);
+	public $activeEvent = computed(() => {
+		const activeEventId = this.$activeEventId();
+		if (activeEventId === null) {
+			return null;
+		}
+
+		const e = this.$events().find((e) => e.id === activeEventId) ?? null;
+		console.log(e);
+		return e;
+	});
 
 	public loadEvents(): Observable<IEvent[]> {
 		return this.http.get<IEvent[]>(environment.apiUrl + '/events').pipe(
 			map((events) => {
-				events.forEach((e) => (e.kegs = (e.kegs ?? []).map((k) => +k))); // TODO: do this on higher level, so everywhere kegs are numbers
 				this.$events.set(events);
 
 				const activeEventId = this.getActiveEventId();
 				if (activeEventId) {
 					const event = events.find((e) => e.id === activeEventId) ?? null;
-					this.$activeEvent.set(event);
+					this.$activeEventId.set(event?.id ?? null);
 				}
 
 				return events;
@@ -34,7 +43,7 @@ export class EventService {
 	}
 
 	public setActiveEvent(event: IEvent | null): void {
-		this.$activeEvent.set(event);
+		this.$activeEventId.set(event?.id ?? null);
 
 		if (event) {
 			localStorage.setItem('activeEvent', JSON.stringify(event.id));

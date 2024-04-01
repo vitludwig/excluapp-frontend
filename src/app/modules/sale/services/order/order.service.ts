@@ -3,7 +3,6 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, forkJoin, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { EventService } from '../../../admin/services/event/event.service';
-import { IEvent } from '../../../admin/types/IEvent';
 import { IKeg } from '../../../admin/types/IKeg';
 import { EBeerVolume } from '../../types/EBeerVolume';
 import { ICartItem } from '../../types/ICartItem';
@@ -16,7 +15,6 @@ export class OrderService {
 	private readonly eventService = inject(EventService);
 	private readonly http = inject(HttpClient);
 
-	public $activeEvent = signal<IEvent | null>(null);
 	public $cart = signal<ICartItem[]>([]);
 	public $orderProcessing = signal<boolean>(false);
 
@@ -38,13 +36,6 @@ export class OrderService {
 		}
 		return result;
 	});
-
-	constructor() {
-		const activeEventId = localStorage.getItem('activeEvent');
-		if (activeEventId) {
-			this.$activeEvent.set(this.eventService.$events().find((e) => e.id === +activeEventId) ?? null);
-		}
-	}
 
 	public addOrder(value: IOrderCreate): Observable<IOrderRead> {
 		return this.http.post<IOrderRead>(environment.apiUrl + '/order', value);
