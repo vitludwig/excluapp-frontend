@@ -145,6 +145,11 @@ export class EventDetailComponent implements OnDestroy {
 		 * Normally this update is done on Event update/create, but this method have to be called after event update/create, because we might not have event id before (on create)
 		 */
 		this.eventService.$events.update((events) => events.map((e) => (e.id === event.id ? newEvent : e)));
+
+		// load active event data if it was updated
+		if (event.id === this.eventService.$activeEventId()) {
+			this.eventService.$activeEventId.set(event.id);
+		}
 	}
 
 	protected addKeg(keg: IKeg) {

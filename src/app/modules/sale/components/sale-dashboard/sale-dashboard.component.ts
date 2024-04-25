@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
@@ -62,11 +63,13 @@ export class SaleDashboardComponent implements OnDestroy {
 	protected beerpongDialogRef: DynamicDialogRef | null = null;
 	private kegUserStatisticsDialogRef: DynamicDialogRef | null = null;
 
+	private $activeEventKegsToShow = toSignal(this.eventService.activeEventKegsToShow$);
 	protected $kegs = computed(() => {
-		return this.sortimentService
-			.$allSortiment()
-			.filter((s) => this.eventService.$activeEvent()?.kegs.includes(s.id) && !s.isEmpty && s.isActive)
-			.sort((a, b) => a.position - b.position);
+		const kegIds = this.$activeEventKegsToShow();
+		if (kegIds) {
+			return this.sortimentService.getKegsById(kegIds, false, true);
+		}
+		return [];
 	});
 
 	protected $kegStats = computed(() => {

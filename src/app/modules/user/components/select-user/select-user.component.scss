@@ -3,18 +3,37 @@
 	height: 100%;
 
 	::ng-deep {
-		p-listbox {
+		p-listbox.user-list {
 			.p-listbox-list-wrapper {
 				max-height: 100% !important;
 
 				.p-listbox-item {
-					padding: 25px 16px !important;
-					border-bottom: 1px solid #333 !important;
+					padding: 30px 16px !important;
+					border-bottom: 2px solid #333 !important;
 				}
 
 				&.big-list-items {
 					.p-listbox-item {
 						padding: 35px 16px !important;
+					}
+				}
+
+				.p-listbox-list {
+					display: flex;
+					flex-wrap: wrap;
+
+					.p-listbox-item {
+						flex: 100%;
+					}
+
+					@media screen and (min-width: 481px) and (max-width: 1024px) {
+						.p-listbox-item {
+							flex: 50%;
+
+							&:nth-child(odd) {
+								border-right: 2px solid #333 !important;
+							}
+						}
 					}
 				}
 			}

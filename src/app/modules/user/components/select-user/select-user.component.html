@@ -35,15 +35,25 @@
 	} @if ($layout() === 'list') {
 		<div class="overflow-auto">
 			<p-listbox
+				class="user-list"
 				[options]="$users()"
 				[(ngModel)]="selectedUser"
 				(ngModelChange)="submit()"
 				[metaKeySelection]="false"
 				optionLabel="name"
 				[style]="{ width: '100%' }"
-				[class.big-list-items]="$users.length < 6"
+				[class.big-list-items]="$users().length < 6"
 				emptyMessage="Žádní uživatelé"
-			/>
+			>
+				<ng-template let-user pTemplate="item">
+					<div class="flex align-items-center w-full justify-content-between">
+						{{ user.name }}
+						@if(user.isRegular) {
+							<i class="pi pi-fw pi-crown"></i>
+						}
+					</div>
+				</ng-template>
+			</p-listbox>
 		</div>
 	}
 </div>

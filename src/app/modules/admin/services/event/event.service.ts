@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IUserRead } from '../../../user/types/IUser';
 import { IEvent } from '../../types/IEvent';
@@ -18,13 +18,26 @@ export class EventService {
 	public $activeEvent = computed(() => {
 		const activeEventId = this.$activeEventId();
 		if (activeEventId === null) {
+			this.setActiveEventKegsToShow([]);
 			return null;
 		}
 
-		const e = this.$events().find((e) => e.id === activeEventId) ?? null;
-		console.log(e);
-		return e;
+		const event = this.$events().find((e) => e.id === activeEventId) ?? null;
+
+		return event;
 	});
+
+	private activeEventKegsToShowSubject: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
+	public activeEventKegsToShow$: Observable<number[]> = this.activeEventKegsToShowSubject.asObservable();
+
+	public setActiveEventKegsToShow(value: number[]) {
+		this.activeEventKegsToShowSubject.next(value);
+		localStorage.setItem('activeEventKegsToShow', JSON.stringify(value));
+	}
+
+	constructor() {
+		this.activeEventKegsToShowSubject.next(JSON.parse(localStorage.getItem('activeEventKegsToShow') ?? '[]'));
+	}
 
 	public loadEvents(): Observable<IEvent[]> {
 		return this.http.get<IEvent[]>(environment.apiUrl + '/events').pipe(
@@ -34,7 +47,7 @@ export class EventService {
 				const activeEventId = this.getActiveEventId();
 				if (activeEventId) {
 					const event = events.find((e) => e.id === activeEventId) ?? null;
-					this.$activeEventId.set(event?.id ?? null);
+					this.setActiveEvent(event ?? null);
 				}
 
 				return events;
@@ -43,6 +56,12 @@ export class EventService {
 	}
 
 	public setActiveEvent(event: IEvent | null): void {
+		const eventActiveKegs = JSON.parse(localStorage.getItem('activeEventKegsToShow') ?? '[]');
+
+		if ((event && event.id !== this.getActiveEventId()) || eventActiveKegs.length === 0) {
+			this.setActiveEventKegsToShow(event?.kegs ?? []);
+		}
+
 		this.$activeEventId.set(event?.id ?? null);
 
 		if (event) {

@@ -24,7 +24,7 @@
     "face-api.js": "^0.22.2",
     "ngx-webcam": "^0.4.1",
     "primeflex": "^3.3.1",
-    "primeicons": "^6.0.1",
+    "primeicons": "^7.0.0",
     "primeng": "^17.2.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.3.0",

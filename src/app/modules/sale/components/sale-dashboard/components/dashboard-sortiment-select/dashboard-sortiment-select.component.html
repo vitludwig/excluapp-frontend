@@ -44,22 +44,26 @@
 		[class.visible]="$showSummary()"
 	>
 		<h4>Už jsi vypil/a</h4>
-		@if ($summary() | async; as summary) { @if (summary.length === 0) {
-		<h5>Nic jsi nevypil/a, křupko!</h5>
-		} @for (item of summary; track item) {
-		<div class="summary-item">
-			<span>{{ item.kegName ?? "Pivečko nebo kyseláček" }}</span>
-			<div class="flex align-items-center">
-				<span>{{ item.count }}ks</span>
-				<p-button
-					icon="pi pi-pencil"
-					class="ml-4"
-					styleClass="p-button-raised p-button-info p-button-sm"
-					(click)="showSummaryDetail(item)"
-				/>
-			</div>
-		</div>
-		} }
+		@if ($summary() | async; as summary) {
+			@if (summary.length === 0) {
+				<h5>Nic jsi nevypil/a, křupko!</h5>
+			}
+
+			@for (item of summary; track item) {
+				<div class="summary-item">
+					<span>{{ item.kegName ?? "Pivečko nebo kyseláček" }}</span>
+					<div class="flex align-items-center">
+						<span>{{ item.count }}ks</span>
+						<p-button
+							icon="pi pi-pencil"
+							class="ml-4"
+							styleClass="p-button-raised p-button-info p-button-sm"
+							(click)="showSummaryDetail(item)"
+						/>
+					</div>
+				</div>
+			}
+		}
 	</div>
 </div>
 

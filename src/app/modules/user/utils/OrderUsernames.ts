@@ -5,5 +5,15 @@ import { IUserRead } from '../types/IUser';
  * @param value
  */
 export function orderUsernames(value: IUserRead[]): IUserRead[] {
-	return value.sort((a, b) => a.name.localeCompare(b.name)).sort((a, b) => (a.isRegular ? -1 : 1));
+	const regularUsers = value.filter((user) => user.isRegular).sort((a, b) => a.name.localeCompare(b.name));
+	const vitecek = regularUsers.splice(
+		regularUsers.findIndex((user) => user.name === 'Víteček'),
+		1,
+	);
+	if (vitecek.length > 0) {
+		regularUsers.unshift(vitecek[0]);
+	}
+
+	const otherUsers = value.filter((user) => !user.isRegular).sort((a, b) => a.name.localeCompare(b.name));
+	return [...regularUsers, ...otherUsers];
 }

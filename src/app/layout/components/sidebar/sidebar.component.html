@@ -1,22 +1,21 @@
 <p-sidebar [(visible)]="visible">
 	<div class="flex flex-column h-full">
 		<div class="card flex justify-content-center">
-			<p-menu [model]="$items()"></p-menu>
+			<p-menu [model]="$menuItems()"></p-menu>
 		</div>
 
 		@if (authService.$isLogged()) {
+			<h4 class="mb-1 ml-1">Událost</h4>
 			<p-dropdown
 				[options]="eventService.$events() | sort: 'start'"
 				[ngModel]="eventService.$activeEvent()"
-				(ngModelChange)="eventService.setActiveEvent($event)"
+				(ngModelChange)="setActiveEvent($event)"
 				optionLabel="name"
 				[filter]="true"
 				[autofocusFilter]="false"
 				filterBy="name"
-				[showClear]="true"
 				placeholder="Select event"
 				[style]="{ width: '100%' }"
-				class="mt-5"
 			>
 				<ng-template pTemplate="selectedItem">
 					@if (eventService.$activeEvent(); as event) {
@@ -35,18 +34,19 @@
 					</div>
 				</ng-template>
 			</p-dropdown>
+
+			<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
+			<p-multiSelect
+				[options]="$activeEventKegsAll()"
+				[ngModel]="activeEventKegsSelected$ | async"
+				(ngModelChange)="setActiveEventKegs($event)"
+				optionLabel="name"
+				optionValue="id"
+				[style]="{ width: '100%' }"
+			/>
 		}
 		<div class="mt-auto">
-			@if (!authService.$isLogged()) {
-				<p-button
-					class="mt-auto"
-					[style]="{ width: '100%' }"
-					(click)="showLoginDialog()"
-				>
-					<i class="pi pi-fw pi-user mr-2"></i>
-					Admin
-				</p-button>
-			} @if (authService.$isLogged()) {
+			@if (authService.$isLogged()) {
 				<div class="flex gap-2 mb-4">
 					<label htmlFor="faceRecognition">Face recognition</label>
 					<p-inputSwitch
@@ -72,6 +72,15 @@
 				>
 					<i class="pi pi-fw pi-sign-out mr-2"></i>
 					Odhlásit
+				</p-button>
+			} @else {
+				<p-button
+					class="mt-auto"
+					[style]="{ width: '100%' }"
+					(click)="showLoginDialog()"
+				>
+					<i class="pi pi-fw pi-user mr-2"></i>
+					Admin
 				</p-button>
 			}
 		</div>

@@ -109,4 +109,10 @@ export class SortimentService {
 			(k) => k.sourceName.toLowerCase().trim() === keg.sourceName.toLowerCase().trim() && k.name.toLowerCase().trim() === keg.name.toLowerCase().trim() && k.volume === keg.volume,
 		);
 	}
+
+	public getKegsById(id: number[], empty: boolean, active: boolean): IKeg[] {
+		return this.$allSortiment()
+			.filter((keg) => id.includes(keg.id) && keg.isEmpty === empty && keg.isActive === active)
+			.sort((a, b) => a.position - b.position);
+	}
 }
