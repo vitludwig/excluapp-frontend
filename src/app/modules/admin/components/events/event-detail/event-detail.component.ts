@@ -129,7 +129,7 @@ export class EventDetailComponent implements OnDestroy {
 		for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
 			await firstValueFrom(this.sortimentService.addKegToEvent(event.id, keg.id));
 			this.sortimentService.$allSortiment.update((kegs) => [...kegs, keg]);
-			newEvent.kegs.push(keg.id);
+			newEvent.kegs.push(keg.id); //newEvent to nevidi ve workeru, protoze to projde dal nez se dokonci request v parent metode!!!!!!!!
 		}
 
 		const existingKegIds = this.$eventKegs().map((k) => k.id);
