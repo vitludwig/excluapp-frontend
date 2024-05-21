@@ -48,7 +48,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 
 		if (value && value !== this._enabled) {
 			this.enabledTimeout = window.setTimeout(() => {
-				if (this.faceRecognitionService.overlayEnabled) {
+				if (this.faceRecognitionService.$faceRecognitionOverlayEnabled()) {
 					this.$showOverlay.set(true);
 				} else {
 					this.initRecognition();
@@ -85,7 +85,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 		// this.$detectFaceEnabled.set(false);
 		// await this.faceRecognitionService.loadModels();
 		// await this.faceRecognitionService.initWebcam(this.videoElement.nativeElement);
-		if (!this.faceRecognitionService.overlayEnabled) {
+		if (!this.faceRecognitionService.$faceRecognitionOverlayEnabled()) {
 			this.initRecognition();
 		}
 	}

@@ -1,11 +1,12 @@
 <div class="flex flex-column">
-	@for(stat of statistics; track $index) {
-	<div class="stats-item flex justify-content-between pl-2 pr-2">
-		<span>{{ (stat.userId | userById)?.name }}</span>
-		<span>{{ stat.volume / 0.5 }} ks</span>
-	</div>
+	@for (stat of statistics; track $index) {
+		<div class="stats-item flex justify-content-between pl-2 pr-2">
+			<span>{{ (stat.userId | userById)?.name }}</span>
+			<span>{{ stat.volume / 0.5 }} ks</span>
+		</div>
 
-	@if(!$last) {
-	<p-divider />
-	} }
+		@if (!$last) {
+			<p-divider/>
+		}
+	}
 </div>

@@ -13,6 +13,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { SortPipe } from '../../../common/pipes/sort.pipe';
 import { AuthService } from '../../../common/services/auth.service';
+import { SettingsService } from '../../../common/services/settings.service';
 import { EventService } from '../../../modules/admin/services/event/event.service';
 import { SortimentService } from '../../../modules/admin/services/sortiment/sortiment.service';
 import { IEvent } from '../../../modules/admin/types/IEvent';
@@ -47,6 +48,7 @@ export class SidebarComponent implements OnDestroy {
 	protected readonly authService = inject(AuthService);
 	protected readonly eventService = inject(EventService);
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);
+	protected readonly settingsService = inject(SettingsService);
 	private readonly dialogService = inject(DialogService);
 	private readonly messageService = inject(MessageService);
 	private readonly sortimentService = inject(SortimentService);

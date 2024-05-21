@@ -9,10 +9,10 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
-import { firstValueFrom, map, Observable, of, Subject, takeUntil, tap } from 'rxjs';
+import { firstValueFrom, of, Subject, takeUntil, tap } from 'rxjs';
+import { SettingsService } from '../../../../common/services/settings.service';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { KegUsersStatisticsDialogComponent } from '../../../admin/components/sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
-import { IKegStatus } from '../../../admin/components/sortiment/types/IKegStatus';
 import { EventService } from '../../../admin/services/event/event.service';
 import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
 import { IKeg } from '../../../admin/types/IKeg';
@@ -21,6 +21,7 @@ import { FaceRecognitionService } from '../../../user/services/face-recognition/
 import { UserService } from '../../../user/services/user/user.service';
 import { IUserRead } from '../../../user/types/IUser';
 import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe';
+import { KegStatusPipe } from '../../pipes/keg-status.pipe';
 import { OrderService } from '../../services/order/order.service';
 import { EBeerVolume } from '../../types/EBeerVolume';
 import { IBeerpong } from '../../types/IBeerpong';
@@ -43,6 +44,7 @@ import { DashboardUserSelectComponent } from './components/dashboard-user-select
 		KnobModule,
 		FormsModule,
 		UserFaceRecognitionComponent,
+		KegStatusPipe,
 	],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
@@ -59,37 +61,23 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly layoutService = inject(LayoutService);
 	private readonly messageService = inject(MessageService);
+	private readonly settingsService = inject(SettingsService);
 
 	protected beerpongDialogRef: DynamicDialogRef | null = null;
 	private kegUserStatisticsDialogRef: DynamicDialogRef | null = null;
 
 	private $activeEventKegsToShow = toSignal(this.eventService.activeEventKegsToShow$);
 	protected $kegs = computed(() => {
-		const kegIds = this.$activeEventKegsToShow();
-		if (kegIds) {
-			return this.sortimentService.getKegsById(kegIds, false, true);
-		}
-		return [];
-	});
-
-	protected $kegStats = computed(() => {
-		const stats: { keg: IKeg; status: Observable<IKegStatus> }[] = [];
-		const kegs = this.$kegs().sort((a, b) => a.position - b.position);
-		for (const keg of kegs) {
-			stats.push({
-				keg,
-				status: this.sortimentService.getKegStatus(keg.id).pipe(
-					map((status) => {
-						status.consumedVolume *= 2;
-						status.totalVolume *= 2;
-
-						return status;
-					}),
-				),
-			});
+		let kegIds = this.eventService.$activeEvent()?.kegs ?? [];
+		if (this.settingsService.$enableMultipleDevices()) {
+			kegIds = this.$activeEventKegsToShow() ?? [];
 		}
 
-		return stats;
+		if (kegIds.length === 0) {
+			return of([]);
+		}
+
+		return this.sortimentService.getSortiment(kegIds);
 	});
 
 	protected $selectedUser = signal<IUserRead | null>(null);

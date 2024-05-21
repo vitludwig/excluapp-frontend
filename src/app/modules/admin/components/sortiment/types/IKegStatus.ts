@@ -1,4 +1,4 @@
 export interface IKegStatus {
-	consumedVolume: number;
-	totalVolume: number;
+	consumedVolume: number; // ks
+	totalVolume: number; // ks
 }

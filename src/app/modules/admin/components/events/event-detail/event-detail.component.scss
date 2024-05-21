@@ -9,7 +9,9 @@
 ::ng-deep {
 	.keg-sortlist {
 		.p-orderlist-controls {
-			display: none;
+			[data-pc-section='moveTopButton'], [data-pc-section='moveBottomButton'] {
+				display: none;
+			}
 		}
 	}
 }

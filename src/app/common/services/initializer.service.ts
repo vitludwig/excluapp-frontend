@@ -29,7 +29,7 @@ export class InitializerService {
 		await firstValueFrom(this.sortimentService.loadSortiment());
 		await firstValueFrom(this.eventService.loadEvents());
 		await this.userService.loadUsers();
-		if (this.faceRecognitionService.faceRecognitionEnabled) {
+		if (this.faceRecognitionService.$faceRecognitionEnabled()) {
 			await this.faceRecognitionService.loadModels();
 		}
 	}

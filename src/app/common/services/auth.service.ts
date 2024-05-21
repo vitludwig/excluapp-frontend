@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 
 @Injectable({
 	providedIn: 'root',
@@ -11,12 +11,17 @@ export class AuthService {
 		if (isCorrect) {
 			this.$isLogged.set(true);
 		}
-		localStorage.setItem('isLogged', isCorrect.toString());
+
 		return isCorrect;
 	}
 
 	public logout(): void {
 		this.$isLogged.set(false);
-		localStorage.setItem('isLogged', 'false');
+	}
+
+	constructor() {
+		effect(() => {
+			localStorage.setItem('isLogged', JSON.stringify(this.$isLogged()));
+		});
 	}
 }

@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { map, Observable, of, switchMap, tap } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable, map, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { capitalizeEachFirstLetter } from '../../../../common/utils/StringUtils';
 import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
@@ -57,8 +57,19 @@ export class SortimentService {
 		return this.http.post<IKeg>(`${environment.apiUrl}/keg`, value);
 	}
 
-	public getSortiment(id: number): Observable<IKeg> {
-		return this.http.get<IKeg>(`${environment.apiUrl}/keg/${id}`);
+	public getSortiment(id: number): Observable<IKeg>;
+	public getSortiment(id: number[]): Observable<IKeg[]>;
+	public getSortiment(id: number | number[]): Observable<IKeg | IKeg[]> {
+		if (Array.isArray(id)) {
+			const params = new HttpParams({
+				fromObject: {
+					ids: id ?? [],
+				},
+			});
+			return this.http.get<IKeg[]>(`${environment.apiUrl}/keg/`, { params: params }).pipe(map((kegs) => kegs.sort((a, b) => a.position - b.position)));
+		} else {
+			return this.http.get<IKeg>(`${environment.apiUrl}/keg/${id}`);
+		}
 	}
 
 	public updateSortiment(id: number, value: Partial<IKeg>): Observable<IKeg> {

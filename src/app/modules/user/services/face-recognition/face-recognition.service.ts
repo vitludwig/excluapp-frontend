@@ -1,24 +1,18 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { loadFaceExpressionModel, loadFaceLandmarkModel, loadFaceRecognitionModel, loadTinyFaceDetectorModel } from 'face-api.js';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class FaceRecognitionService {
-	public get faceRecognitionEnabled(): boolean {
-		return localStorage.getItem('faceRecognitionEnabled') === 'true';
-	}
+	public $faceRecognitionEnabled = signal(localStorage.getItem('faceRecognitionEnabled') === 'true');
+	public $faceRecognitionOverlayEnabled = signal(localStorage.getItem('faceRecognitionOverlay') === 'true');
 
-	public set faceRecognitionEnabled(value: boolean) {
-		localStorage.setItem('faceRecognitionEnabled', value.toString());
-	}
-
-	public get overlayEnabled(): boolean {
-		return localStorage.getItem('faceRecognitionOverlay') === 'true';
-	}
-
-	public set overlayEnabled(value: boolean) {
-		localStorage.setItem('faceRecognitionOverlay', value.toString());
+	constructor() {
+		effect(() => {
+			localStorage.setItem('faceRecognitionEnabled', JSON.stringify(this.$faceRecognitionEnabled()));
+			localStorage.setItem('faceRecognitionOverlay', JSON.stringify(this.$faceRecognitionOverlayEnabled()));
+		});
 	}
 
 	public async loadModels(): Promise<void> {

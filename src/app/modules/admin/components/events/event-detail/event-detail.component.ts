@@ -12,7 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { OrderListModule } from 'primeng/orderlist';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable, switchMap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { NotificationService } from '../../../../../common/services/notification.service';
 import { EventService } from '../../../services/event/event.service';
@@ -128,7 +128,6 @@ export class EventDetailComponent implements OnDestroy {
 		const newEvent = event;
 		for (const keg of [...newKegsToAdd, ...existingKegsToAdd]) {
 			await firstValueFrom(this.sortimentService.addKegToEvent(event.id, keg.id));
-			this.sortimentService.$allSortiment.update((kegs) => [...kegs, keg]);
 			newEvent.kegs.push(keg.id); //newEvent to nevidi ve workeru, protoze to projde dal nez se dokonci request v parent metode!!!!!!!!
 		}
 
@@ -243,14 +242,14 @@ export class EventDetailComponent implements OnDestroy {
 					event.end = new Date(event.end);
 					event.kegs = event.kegs.map((k) => +k);
 
-					const eventKegs = this.sortimentService
-						.$allSortiment()
-						.filter((s) => event.kegs.includes(s.id))
-						.sort((a, b) => a.position - b.position);
-
-					this.originalKegs = eventKegs;
 					this.form.patchValue(event);
-					this.$eventKegs.set(eventKegs);
+
+					return event;
+				}),
+				switchMap((event) => this.sortimentService.getSortiment(event.kegs)),
+				map((kegs) => {
+					this.originalKegs = kegs;
+					this.$eventKegs.set(kegs);
 				}),
 			)
 			.subscribe();

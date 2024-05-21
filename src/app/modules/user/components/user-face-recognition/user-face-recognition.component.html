@@ -1,4 +1,4 @@
-@if ($showOverlay() && faceRecognitionService.overlayEnabled) {
+@if ($showOverlay() && faceRecognitionService.$faceRecognitionOverlayEnabled()) {
 <div
 	class="recognition-overlay"
 	(click)="initRecognition()"

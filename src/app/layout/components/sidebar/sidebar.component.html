@@ -35,23 +35,35 @@
 				</ng-template>
 			</p-dropdown>
 
-			<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
-			<p-multiSelect
-				[options]="$activeEventKegsAll()"
-				[ngModel]="activeEventKegsSelected$ | async"
-				(ngModelChange)="setActiveEventKegs($event)"
-				optionLabel="name"
-				optionValue="id"
-				[style]="{ width: '100%' }"
-			/>
+			<div class="flex gap-2 mt-2">
+				<label htmlFor="enableMultipleDevices">Více zařízení na události</label>
+				<p-inputSwitch
+					[ngModel]="settingsService.$enableMultipleDevices()"
+					(ngModelChange)="settingsService.$enableMultipleDevices.set($event)"
+					id="enableMultipleDevices"
+				></p-inputSwitch>
+			</div>
+
+			@if(settingsService.$enableMultipleDevices()) {
+				<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
+				<p-multiSelect
+					[options]="$activeEventKegsAll()"
+					[ngModel]="activeEventKegsSelected$ | async"
+					(ngModelChange)="setActiveEventKegs($event)"
+					optionLabel="name"
+					optionValue="id"
+					[style]="{ width: '100%' }"
+				/>
+			}
 		}
 		<div class="mt-auto">
 			@if (authService.$isLogged()) {
 				<div class="flex gap-2 mb-4">
 					<label htmlFor="faceRecognition">Face recognition</label>
+					<!-- TODO: use face recognition signals reactively without page reload -->
 					<p-inputSwitch
-						[(ngModel)]="faceRecognitionService.faceRecognitionEnabled"
-						(ngModelChange)="reloadPage()"
+						[ngModel]="faceRecognitionService.$faceRecognitionEnabled()"
+						(ngModelChange)="faceRecognitionService.$faceRecognitionEnabled.set($event); reloadPage()"
 						id="faceRecognition"
 					></p-inputSwitch>
 				</div>
@@ -59,8 +71,8 @@
 				<div class="flex gap-2 mb-4">
 					<label htmlFor="faceRecognitionOverlay">Face recognition overlay</label>
 					<p-inputSwitch
-						[(ngModel)]="faceRecognitionService.overlayEnabled"
-						(ngModelChange)="reloadPage()"
+						[ngModel]="faceRecognitionService.$faceRecognitionOverlayEnabled()"
+						(ngModelChange)="faceRecognitionService.$faceRecognitionOverlayEnabled.set($event); reloadPage()"
 						id="faceRecognitionOverlay"
 					></p-inputSwitch>
 				</div>
