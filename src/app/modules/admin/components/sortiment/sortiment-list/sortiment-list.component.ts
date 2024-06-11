@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { SharedModule } from 'primeng/api';
@@ -14,6 +15,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { IsIncludedPipe } from '../../../../../common/pipes/is-included.pipe';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
+import { ISortimentFilters } from '../../../services/sortiment/types/ISortimentFilters';
 import { IKeg } from '../../../types/IKeg';
 import { SortimentListTableComponent } from './components/sortiment-list-table/sortiment-list-table.component';
 
@@ -34,6 +36,8 @@ import { SortimentListTableComponent } from './components/sortiment-list-table/s
 		IsIncludedPipe,
 		SortimentListTableComponent,
 		TabViewModule,
+		AsyncPipe,
+		JsonPipe,
 	],
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
@@ -43,39 +47,56 @@ import { SortimentListTableComponent } from './components/sortiment-list-table/s
 export class SortimentListComponent {
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 
-	protected $originalKegs = computed(() => {
-		let result = this.sortimentService.$originalSortiment();
+	protected $originalKegs = signal<IKeg[]>([]);
+	protected $copyKegs = signal<IKeg[]>([]);
 
-		return this.applyFilter(this.$filter(), result);
-	});
+	// protected $sortiment = signal<IKeg[]>([]);
 
-	protected $copyKegs = computed(() => {
-		let result = this.sortimentService.$copySortiment();
+	protected $filter = signal<ISortimentFilters>({});
 
-		return this.applyFilter(this.$filter(), result);
-	});
+	constructor() {
+		this.loadSortiment();
+	}
 
-	protected $filter = signal<string[]>([]);
-
-	protected toggleFilter(filter: string) {
+	protected toggleFilter(filter: keyof ISortimentFilters) {
 		this.$filter.update((filters) => {
-			if (filters.includes(filter)) {
-				return filters.filter((f) => f !== filter);
-			} else {
-				return [...filters, filter];
-			}
+			filters[filter] = !filters[filter];
+			return filters;
+		});
+		this.loadSortiment();
+	}
+
+	protected loadSortiment() {
+		// TODO: load new data and filters declaratively
+		this.sortimentService.getSortimentList(undefined, this.$filter()).subscribe((kegs) => {
+			this.$originalKegs.set(kegs.filter((k) => k.isOriginal));
+			this.$copyKegs.set(kegs.filter((k) => !k.isOriginal));
 		});
 	}
 
-	private applyFilter(filter: string[], data: IKeg[]): IKeg[] {
-		let result;
-
-		if (filter.includes('empty')) {
-			result = data.filter((k) => k.isEmpty);
-		} else {
-			result = data.filter((k) => !k.isEmpty);
-		}
-
-		return result;
-	}
+	// public onKegDelete(kegId: number) {
+	// 	this.$sortiment.update((kegs) => kegs.filter((k) => k.id !== kegId));
+	// }
+	//
+	// public onKegEmptyStatusChange(newValue: { id: number; isEmpty: boolean }) {
+	// 	this.$sortiment.update((kegs) => {
+	// 		const keg = kegs.find((k) => k.id === newValue.id);
+	// 		if (keg) {
+	// 			keg.isEmpty = newValue.isEmpty;
+	// 		}
+	//
+	// 		return kegs;
+	// 	});
+	// }
+	//
+	// public onKegDefectiveStatusChanged(newValue: { id: number; isDefective: boolean }) {
+	// 	this.$sortiment.update((kegs) => {
+	// 		const keg = kegs.find((k) => k.id === newValue.id);
+	// 		if (keg) {
+	// 			keg.isDefective = newValue.isDefective;
+	// 		}
+	//
+	// 		return kegs;
+	// 	});
+	// }
 }

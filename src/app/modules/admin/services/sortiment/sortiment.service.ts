@@ -7,6 +7,7 @@ import { IKegStatus } from '../../components/sortiment/types/IKegStatus';
 import { IKegUserStatistics } from '../../components/sortiment/types/IKegUserStatistics';
 import { IEvent } from '../../types/IEvent';
 import { IKeg } from '../../types/IKeg';
+import { ISortimentFilters } from './types/ISortimentFilters';
 
 @Injectable({
 	providedIn: 'root',
@@ -57,25 +58,30 @@ export class SortimentService {
 		return this.http.post<IKeg>(`${environment.apiUrl}/keg`, value);
 	}
 
-	public getSortiment(id: number): Observable<IKeg>;
-	public getSortiment(id: number[]): Observable<IKeg[]>;
-	public getSortiment(id: number | number[]): Observable<IKeg | IKeg[]> {
-		if (Array.isArray(id)) {
-			const params = new HttpParams({
-				fromObject: {
-					ids: id ?? [],
-				},
-			});
-			return this.http.get<IKeg[]>(`${environment.apiUrl}/keg/`, { params: params }).pipe(map((kegs) => kegs.sort((a, b) => a.position - b.position)));
-		} else {
-			return this.http.get<IKeg>(`${environment.apiUrl}/keg/${id}`);
+	public getSortimentById(id: number): Observable<IKeg> {
+		return this.http.get<IKeg>(`${environment.apiUrl}/keg/${id}`);
+	}
+
+	public getSortimentList(id?: number[], filters?: ISortimentFilters): Observable<IKeg[]> {
+		let params = new HttpParams({
+			fromObject: {
+				ids: id ?? [],
+			},
+		});
+		for (const [paramKey, paramValue] of Object.entries(filters ?? {})) {
+			if (paramValue !== undefined) {
+				params = params.append(paramKey, paramValue);
+			}
 		}
+
+		// TODO: sort it on places where its needed, this should only retrieve data
+		return this.http.get<IKeg[]>(`${environment.apiUrl}/keg`, { params: params }).pipe(map((kegs) => kegs.sort((a, b) => a.position - b.position)));
 	}
 
 	public updateSortiment(id: number, value: Partial<IKeg>): Observable<IKeg> {
 		return this.http.patch<IKeg>(`${environment.apiUrl}/keg/${id}`, value).pipe(
 			tap((updatedKeg: IKeg) => {
-				this.$allSortiment.update((kegs) => kegs.map((k) => (k.id === updatedKeg.id ? updatedKeg : k)));
+				// this.$allSortiment.update((kegs) => kegs.map((k) => (k.id === updatedKeg.id ? updatedKeg : k)));
 			}),
 		);
 	}
@@ -83,12 +89,12 @@ export class SortimentService {
 	public updateSortimentBulk(value: Partial<IKeg>[]): Observable<IKeg[]> {
 		return this.http.patch<IKeg[]>(`${environment.apiUrl}/keg/`, value).pipe(
 			tap((updatedKeg: IKeg[]) => {
-				this.$allSortiment.update((kegs) => kegs.map((k) => updatedKeg.find((uk) => uk.id === k.id) ?? k));
+				// this.$allSortiment.update((kegs) => kegs.map((k) => updatedKeg.find((uk) => uk.id === k.id) ?? k));
 			}),
 		);
 	}
 
-	public removeSortiment(id: string): Observable<any> {
+	public removeSortiment(id: number): Observable<any> {
 		return this.http.delete<IKeg>(`${environment.apiUrl}/keg/${id}`);
 	}
 
@@ -116,14 +122,10 @@ export class SortimentService {
 	}
 
 	public getDuplicateKegs(keg: IKeg): IKeg[] {
-		return this.$originalSortiment().filter(
-			(k) => k.sourceName.toLowerCase().trim() === keg.sourceName.toLowerCase().trim() && k.name.toLowerCase().trim() === keg.name.toLowerCase().trim() && k.volume === keg.volume,
-		);
-	}
-
-	public getKegsById(id: number[], empty: boolean, active: boolean): IKeg[] {
-		return this.$allSortiment()
-			.filter((keg) => id.includes(keg.id) && keg.isEmpty === empty && keg.isActive === active)
-			.sort((a, b) => a.position - b.position);
+		// TODO: implement
+		return [];
+		// return this.$originalSortiment().filter(
+		// 	(k) => k.sourceName.toLowerCase().trim() === keg.sourceName.toLowerCase().trim() && k.name.toLowerCase().trim() === keg.name.toLowerCase().trim() && k.volume === keg.volume,
+		// );
 	}
 }

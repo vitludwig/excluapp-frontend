@@ -10,7 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SidebarModule } from 'primeng/sidebar';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { SortPipe } from '../../../common/pipes/sort.pipe';
 import { AuthService } from '../../../common/services/auth.service';
 import { SettingsService } from '../../../common/services/settings.service';
@@ -60,8 +60,7 @@ export class SidebarComponent implements OnDestroy {
 		return this.defaultMenuItems;
 	});
 
-	protected $activeEventKegsAll = computed(() => this.sortimentService.getKegsById(this.eventService.$activeEvent()?.kegs ?? [], false, true));
-	protected activeEventKegsSelected$: Observable<number[]>;
+	protected $activeEventKegsAll = computed(() => this.sortimentService.getSortimentList(this.eventService.$activeEvent()?.kegs ?? [], { isEmpty: false, isActive: true }));
 
 	protected setActiveEventKegs(kegs: number[]) {
 		this.eventService.setActiveEventKegsToShow(kegs);
@@ -127,10 +126,6 @@ export class SidebarComponent implements OnDestroy {
 	];
 
 	private unsubscribe$: Subject<void> = new Subject<void>();
-
-	constructor() {
-		this.activeEventKegsSelected$ = this.eventService.activeEventKegsToShow$.pipe(map((kegs) => this.sortimentService.getKegsById(kegs, false, true).map((k) => k.id)));
-	}
 
 	protected showLoginDialog() {
 		this.loginDialogRef = this.dialogService.open(LoginDialogComponent, {

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
@@ -12,7 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { OrderListModule } from 'primeng/orderlist';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { firstValueFrom, map, Observable, switchMap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { NotificationService } from '../../../../../common/services/notification.service';
 import { EventService } from '../../../services/event/event.service';
@@ -71,11 +72,20 @@ export class EventDetailComponent implements OnDestroy {
 	protected originalKegs: IKeg[] = [];
 
 	protected $eventKegs = signal<IKeg[]>([]);
+
 	// get existing kegs, that are not "original" kegs and are not connected to this event
 	protected $existingKegs = computed(() => {
 		const eventKegs = this.$eventKegs() ?? [];
-		return this.sortimentService.$copySortiment().filter((k) => !k.isOriginal && !k.isEmpty && !eventKegs.some((e) => e.id === k.id));
+
+		//TODO: find out why this compututed fn is calling twice on load
+		return this.sortimentService.getSortimentList(undefined, { isEmpty: false, isOriginal: false }).pipe(
+			map((kegs) => {
+				return kegs.filter((k) => !eventKegs.some((e) => e.id === k.id));
+			}),
+		);
 	});
+
+	protected $originalKegs = toSignal(this.sortimentService.getSortimentList(undefined, { isOriginal: true }));
 
 	private kegStatusDialogRef: DynamicDialogRef | undefined;
 	private kegUserStatisticsDialogRef: DynamicDialogRef | undefined;
@@ -246,7 +256,12 @@ export class EventDetailComponent implements OnDestroy {
 
 					return event;
 				}),
-				switchMap((event) => this.sortimentService.getSortiment(event.kegs)),
+				switchMap((event) => {
+					if (event.kegs.length === 0) {
+						return of([]);
+					}
+					return this.sortimentService.getSortimentList(event.kegs);
+				}),
 				map((kegs) => {
 					this.originalKegs = kegs;
 					this.$eventKegs.set(kegs);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnDestroy, output } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -6,7 +6,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { switchMap } from 'rxjs';
+import { tap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../../../common/components/confirm/confirm.component';
 import { SortimentService } from '../../../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../../../types/IKeg';
@@ -26,26 +26,30 @@ export class SortimentListTableComponent implements OnDestroy {
 
 	public $kegs = input.required<IKeg[]>({ alias: 'kegs' });
 
+	public kegDeleted = output<number>();
+	public kegEmptyStatusChanged = output<{ id: number; isEmpty: boolean }>();
+	public kegDefectiveStatusChanged = output<{ id: number; isDefective: boolean }>();
+
 	private kegStatusDialogRef: DynamicDialogRef | undefined;
 
-	protected removeKeg(id: string) {
+	protected removeKeg(id: number) {
 		this.sortimentService
 			.removeSortiment(id)
-			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
+			.pipe(tap(() => this.kegDeleted.emit(id)))
 			.subscribe();
 	}
 
 	protected setKegEmptyStatus(id: number, isEmpty: boolean) {
 		this.sortimentService
 			.updateSortiment(id, { isEmpty })
-			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
+			.pipe(tap(() => this.kegEmptyStatusChanged.emit({ id, isEmpty })))
 			.subscribe();
 	}
 
 	protected setKegDefectiveStatus(id: number, isDefective: boolean) {
 		this.sortimentService
 			.updateSortiment(id, { isDefective })
-			.pipe(switchMap(() => this.sortimentService.loadSortiment()))
+			.pipe(tap(() => this.kegDefectiveStatusChanged.emit({ id, isDefective })))
 			.subscribe();
 	}
 

@@ -44,11 +44,11 @@
 				></p-inputSwitch>
 			</div>
 
-			@if(settingsService.$enableMultipleDevices()) {
+			@if(settingsService.$enableMultipleDevices() && ($activeEventKegsAll() | async); as kegs) {
 				<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
 				<p-multiSelect
-					[options]="$activeEventKegsAll()"
-					[ngModel]="activeEventKegsSelected$ | async"
+					[options]="kegs"
+					[ngModel]="eventService.activeEventKegsToShow$ | async"
 					(ngModelChange)="setActiveEventKegs($event)"
 					optionLabel="name"
 					optionValue="id"

@@ -2,10 +2,10 @@
 	<div class="flex">
 		<p-button
 			severity="info"
-			[outlined]="!('empty' | isIncluded: $filter())"
-			(click)="toggleFilter('empty')"
+			[outlined]="!$filter()['isEmpty']"
+			(click)="toggleFilter('isEmpty')"
 		>
-			@if('empty' | isIncluded: $filter()) {
+			@if($filter()['isEmpty']) {
 				<i class="pi pi-fw pi-check mr-2"></i>
 			} Prázdné
 		</p-button>
@@ -21,13 +21,13 @@
 
 <p-tabView>
 	<p-tabPanel header="Sudy na akcích">
-		@if($copyKegs(); as kegs) {
-			<app-sortiment-list-table [kegs]="kegs" />
-		}
+		<app-sortiment-list-table [kegs]="$copyKegs()"
+			(kegDeleted)="loadSortiment()"
+			(kegEmptyStatusChanged)="loadSortiment()"
+			(kegDefectiveStatusChanged)="loadSortiment()"
+		/>
 	</p-tabPanel>
 	<p-tabPanel header="Předlohy">
-		@if($originalKegs(); as kegs) {
-			<app-sortiment-list-table [kegs]="kegs" />
-		}
+		<app-sortiment-list-table [kegs]="$originalKegs()" />
 	</p-tabPanel>
 </p-tabView>

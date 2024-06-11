@@ -77,7 +77,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			return of([]);
 		}
 
-		return this.sortimentService.getSortiment(kegIds);
+		return this.sortimentService.getSortimentList(kegIds, { isEmpty: false, isActive: true });
 	});
 
 	protected $selectedUser = signal<IUserRead | null>(null);

@@ -26,7 +26,7 @@ export class InitializerService {
 	private readonly userService = inject(UserService);
 
 	public async initialize(): Promise<void> {
-		await firstValueFrom(this.sortimentService.loadSortiment());
+		// await firstValueFrom(this.sortimentService.loadSortiment());
 		await firstValueFrom(this.eventService.loadEvents());
 		await this.userService.loadUsers();
 		if (this.faceRecognitionService.$faceRecognitionEnabled()) {

@@ -9,7 +9,7 @@ import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
-import { firstValueFrom, switchMap, tap } from 'rxjs';
+import { firstValueFrom, tap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../types/IKeg';
@@ -52,7 +52,7 @@ export class SortimentDetailComponent {
 	protected async onSubmit() {
 		try {
 			if (this.sortimentId) {
-				await firstValueFrom(this.sortimentService.updateSortiment(Number(this.sortimentId), this.form.value as IKeg).pipe(switchMap(() => this.sortimentService.loadSortiment())));
+				await firstValueFrom(this.sortimentService.updateSortiment(Number(this.sortimentId), this.form.value as IKeg));
 				this.router.navigate(['/admin/sortiment']);
 			} else {
 				const keg = this.form.value as IKeg; // TODO: add typeguard?
@@ -107,7 +107,7 @@ export class SortimentDetailComponent {
 
 	private loadSortiment(id: number) {
 		this.sortimentService
-			.getSortiment(id)
+			.getSortimentById(id)
 			.pipe(
 				tap((value) => {
 					this.form.patchValue(value);

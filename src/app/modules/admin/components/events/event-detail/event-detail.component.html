@@ -49,15 +49,16 @@
 		<p-divider class="visible-mobile"/>
 
 		<div class="flex-1">
+
 			<app-event-sortiment
 				label="Sud z minula"
-				[options]="$existingKegs()"
+				[options]="($existingKegs() | async) ?? []"
 				(select)="addKeg($event)"
 			></app-event-sortiment>
 
 			<app-event-sortiment
 				label="Nový sud"
-				[options]="sortimentService.$originalSortiment()"
+				[options]="($originalKegs()) ?? []"
 				(select)="addKeg($event)"
 			></app-event-sortiment>
 
