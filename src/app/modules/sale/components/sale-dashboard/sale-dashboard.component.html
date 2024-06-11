@@ -7,40 +7,39 @@
 				(cancel)="clearOrder()"
 			/>
 	} @else {
-		<p-card
-			(click)="showBeerpongDialog()"
-			[header]="'Zapsat býrponk'"
-			[class.active]="(orderService.$cartCount()['beerpong'] | json) !== '{}'"
-			class="card card-beerpong"
-		/>
+		@if($usersInEvent() | async; as users) {
+			<p-card
+				(click)="showBeerpongDialog(kegs, users)"
+				[header]="'Zapsat býrponk'"
+				[class.active]="(orderService.$cartCount()['beerpong'] | json) !== '{}'"
+				class="card card-beerpong"
+			/>
 
-		<p-divider align="center">nebo</p-divider>
+			<p-divider align="center">nebo</p-divider>
 
-		<h3>Vyber pijáka</h3>
-		<div>
-			@if($usersInEvent() | async; as users) {
+			<h3>Vyber pijáka</h3>
+			<div>
 				<app-dashboard-user-select
 					[users]="users"
 					(selected)="selectUser($event)"
 				/>
 				<br />
-			}
-			<p-accordion>
-				<p-accordionTab header="Ostatní">
-					<ng-template pTemplate="content">
-						<app-dashboard-user-select
-							[users]="$usersOther()"
-							(selected)="selectUser($event)"
-						/>
-					</ng-template>
-				</p-accordionTab>
-			</p-accordion>
-		</div>
+				<p-accordion>
+					<p-accordionTab header="Ostatní">
+						<ng-template pTemplate="content">
+							<app-dashboard-user-select
+								[users]="$usersOther()"
+								(selected)="selectUser($event)"
+							/>
+						</ng-template>
+					</p-accordionTab>
+				</p-accordion>
+			</div>
 
-		<p-divider />
-
+			<p-divider />
+		}
 		<h2 class="text-center">Už se vypilo</h2>
-		<div class="flex pb-6">
+		<div class="flex-responsive pb-6">
 			@for (keg of kegs; track $index) {
 				<div class="flex-1 cursor-pointer"
 					(click)="showKegStatistics(keg)"
@@ -61,9 +60,12 @@
 			}
 		</div>
 
-		<div class="kegs-pointer">
+		<div class="kegs-pointer-container">
 			@for (keg of kegs; track keg.id) {
-				<div class="keg-pointer-item">{{ keg.name }}({{ keg.sourceName }})</div>
+				<div class="keg-pointer-item">
+					<i class="pi pi-fw pi-arrow-down mr-2"></i>
+					{{ keg.name }} ({{ keg.sourceName }})
+				</div>
 			}
 		</div>
 	}

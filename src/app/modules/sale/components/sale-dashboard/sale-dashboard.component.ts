@@ -118,15 +118,14 @@ export class SaleDashboardComponent implements OnDestroy {
 			.subscribe();
 	}
 
-	protected async showBeerpongDialog(): Promise<void> {
-		const users = await firstValueFrom(this.$usersInEvent());
+	protected async showBeerpongDialog(kegs: IKeg[], users: IUserRead[]): Promise<void> {
 		this.beerpongDialogRef = this.dialogService.open(BeerpongDialogComponent, {
 			header: 'Býrponk!',
 			width: '90%',
 			contentStyle: { overflow: 'auto', paddingBottom: 0 },
 			dismissableMask: true,
 			data: {
-				kegs: this.$kegs(),
+				kegs: kegs,
 				users: users,
 			},
 		});
