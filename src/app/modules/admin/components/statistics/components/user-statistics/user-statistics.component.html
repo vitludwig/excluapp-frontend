@@ -65,7 +65,7 @@
 						}
 						<td>{{ item.createdAt | date: 'dd.MM.YY, HH:mm' }}</td>
 						@if($selectedEvents().length > 1  || ($selectedUser() && $selectedEvents().length === 0)) {
-							<td>{{ (item.eventId | event)?.name }}</td>
+							<td>{{ (item.eventId | eventById)?.name }}</td>
 						}
 					</tr>
 				</ng-template>

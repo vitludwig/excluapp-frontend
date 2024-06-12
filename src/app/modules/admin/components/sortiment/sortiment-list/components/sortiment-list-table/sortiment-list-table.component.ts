@@ -8,14 +8,16 @@ import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { tap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../../../common/components/confirm/confirm.component';
+import { TruncatePipe } from '../../../../../../../common/pipes/truncate.pipe';
 import { SortimentService } from '../../../../../services/sortiment/sortiment.service';
 import { IKeg } from '../../../../../types/IKeg';
+import { EventByIdPipe } from '../../../../events/pipes/eventById.pipe';
 import { KegStatusDialogComponent } from '../../../components/keg-status-dialog/keg-status-dialog.component';
 
 @Component({
 	selector: 'app-sortiment-list-table',
 	standalone: true,
-	imports: [TableModule, TooltipModule, ButtonModule, ConfirmComponent, RouterLink, InputTextModule],
+	imports: [TableModule, TooltipModule, ButtonModule, ConfirmComponent, RouterLink, InputTextModule, EventByIdPipe, TruncatePipe],
 	templateUrl: './sortiment-list-table.component.html',
 	styleUrls: ['./sortiment-list-table.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

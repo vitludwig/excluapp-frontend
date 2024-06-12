@@ -5,9 +5,7 @@
 			[outlined]="!$filter()['isEmpty']"
 			(click)="toggleFilter('isEmpty')"
 		>
-			@if($filter()['isEmpty']) {
-				<i class="pi pi-fw pi-check mr-2"></i>
-			} Prázdné
+			Ukázat {{$filter()['isEmpty'] ? 'plné' : 'prázdné' }}
 		</p-button>
 	</div>
 

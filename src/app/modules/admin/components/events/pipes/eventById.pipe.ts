@@ -3,10 +3,10 @@ import { EventService } from '../../../services/event/event.service';
 import { IEvent } from '../../../types/IEvent';
 
 @Pipe({
-	name: 'event',
+	name: 'eventById',
 	standalone: true,
 })
-export class EventPipe implements PipeTransform {
+export class EventByIdPipe implements PipeTransform {
 	private readonly eventService = inject(EventService);
 
 	transform(value: number): IEvent | null {

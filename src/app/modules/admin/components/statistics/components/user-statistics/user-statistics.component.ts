@@ -14,7 +14,7 @@ import { UserByIdPipe } from '../../../../../user/pipes/user-by-id.pipe';
 import { IUserRead } from '../../../../../user/types/IUser';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
-import { EventPipe } from '../../../events/pipes/event.pipe';
+import { EventByIdPipe } from '../../../events/pipes/eventById.pipe';
 import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
 
 @Component({
@@ -30,7 +30,7 @@ import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
 		JsonPipe,
 		TableModule,
 		KegByIdPipe,
-		EventPipe,
+		EventByIdPipe,
 		DatePipe,
 		TooltipModule,
 		CurrencyPipe,
