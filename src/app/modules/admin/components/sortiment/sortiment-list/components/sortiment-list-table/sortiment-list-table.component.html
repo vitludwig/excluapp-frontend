@@ -21,6 +21,8 @@
 	[rowsPerPageOptions]="[10, 20, 50, { showAll: 'All' }]"
 	[paginator]="true"
 	[rows]="10"
+	[sortField]="'id'"
+	[sortOrder]="-1"
 	[globalFilterFields]="['name', 'sourceName']"
 >
 	<ng-template pTemplate="header">

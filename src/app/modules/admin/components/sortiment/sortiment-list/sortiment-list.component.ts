@@ -52,7 +52,7 @@ export class SortimentListComponent {
 
 	// protected $sortiment = signal<IKeg[]>([]);
 
-	protected $filter = signal<ISortimentFilters>({});
+	protected $filter = signal<ISortimentFilters>({ isEmpty: false });
 
 	constructor() {
 		this.loadSortiment();
