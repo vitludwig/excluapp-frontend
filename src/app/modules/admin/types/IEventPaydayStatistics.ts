@@ -1,6 +1,11 @@
 export interface IEventPaydayStatistics {
 	userId: number;
 	name: string;
-	price: number;
+	finalPrice: number;
 	amount: number;
+}
+
+export interface IEventPayday {
+	payday: IEventPaydayStatistics[];
+	allAddedCosts: number;
 }

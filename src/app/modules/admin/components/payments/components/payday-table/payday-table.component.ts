@@ -3,7 +3,7 @@ import { MessageService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
-import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
+import { IEventPayday } from '../../../../types/IEventPaydayStatistics';
 
 @Component({
 	selector: 'app-payday-table',
@@ -19,10 +19,10 @@ export class PaydayTableComponent {
 	protected showPaydayDialog: boolean = false;
 	protected paydayResult: string = '';
 
-	public $data = input.required<IEventPaydayStatistics[], IEventPaydayStatistics[]>({
+	public $data = input.required<IEventPayday, IEventPayday>({
 		alias: 'data',
 		transform: (value) => {
-			value.sort((a, b) => {
+			value.payday.sort((a, b) => {
 				if (a.name < b.name) {
 					return -1;
 				}
@@ -38,8 +38,8 @@ export class PaydayTableComponent {
 
 	protected async copyPaydayResult(): Promise<void> {
 		const result = this.$data()
-			.map((value) => {
-				return `${value.name}: ${value.price}Kč`;
+			.payday.map((value) => {
+				return `${value.name}: ${value.finalPrice}Kč`;
 			})
 			.join('\n');
 		if (window.isSecureContext) {

@@ -5,7 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { IUserRead } from '../../../user/types/IUser';
 import { IEvent } from '../../types/IEvent';
 import { IEventKegsStatistics, IEventUsersStatistics } from '../../types/IEventKegsStatistics';
-import { IEventPaydayStatistics } from '../../types/IEventPaydayStatistics';
+import { IEventPayday } from '../../types/IEventPaydayStatistics';
 
 @Injectable({
 	providedIn: 'root',
@@ -128,7 +128,7 @@ export class EventService {
 		return this.http.get<IEventUsersStatistics[]>(`${environment.apiUrl}/events/${eventId}/user-statistics/`);
 	}
 
-	public getEventPayday(eventId: number): Observable<IEventPaydayStatistics[]> {
-		return this.http.get<IEventPaydayStatistics[]>(`${environment.apiUrl}/events/${eventId}/payday/`);
+	public getEventPayday(eventId: number): Observable<IEventPayday> {
+		return this.http.get<IEventPayday>(`${environment.apiUrl}/events/${eventId}/payday/`);
 	}
 }

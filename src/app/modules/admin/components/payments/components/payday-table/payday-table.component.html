@@ -1,4 +1,4 @@
-<p-table [value]="$data()">
+<p-table [value]="$data().payday">
 	<ng-template pTemplate="header">
 		<tr>
 			<th>Pijan</th>
@@ -12,11 +12,15 @@
 	>
 		<tr>
 			<td>{{ item.name }}</td>
-			<td>{{ item.price }} Kč</td>
+			<td>{{ item.finalPrice }} Kč</td>
 			<td>{{ item.amount }} ks</td>
 		</tr>
 	</ng-template>
 </p-table>
+
+<br />
+
+<h4>Z toho klubovní příspěvek: {{$data().allAddedCosts}}Kč</h4>
 
 <br />
 
@@ -34,7 +38,7 @@
 	<textarea
 		readonly="readonly"
 		[value]="paydayResult"
-		[rows]="$data().length"
+		[rows]="$data().payday.length"
 		class="w-full"
 	></textarea>
 

@@ -13,7 +13,7 @@ import { IPChartData } from '../../../../../../common/types/IPChartData';
 import { EventService } from '../../../../services/event/event.service';
 import { IEvent } from '../../../../types/IEvent';
 import { IEventKegsStatistics, IEventUsersStatistics } from '../../../../types/IEventKegsStatistics';
-import { IEventPaydayStatistics } from '../../../../types/IEventPaydayStatistics';
+import { IEventPayday } from '../../../../types/IEventPaydayStatistics';
 import { PaydayTableComponent } from '../../../payments/components/payday-table/payday-table.component';
 
 @Component({
@@ -29,7 +29,7 @@ export class EventStatisticsComponent {
 	protected readonly authService: AuthService = inject(AuthService);
 
 	protected $selectedEvent = signal<IEvent | null>(this.eventService.$activeEvent());
-	protected $paydayResult = signal<Observable<IEventPaydayStatistics[]> | null>(null);
+	protected $paydayResult = signal<Observable<IEventPayday> | null>(null);
 
 	protected $kegsStatistics = computed(() => {
 		const event = this.$selectedEvent();
