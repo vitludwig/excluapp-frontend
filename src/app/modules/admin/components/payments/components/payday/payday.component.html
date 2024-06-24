@@ -7,6 +7,15 @@
 	></p-inputSwitch>
 </div>
 
+<div class="flex gap-2 mb-4">
+	<label htmlFor="onlyUncashedKegs">Vyúčtovat pouze nevyúčtované sudy</label>
+	<p-inputSwitch
+		[ngModel]="$onlyUncashedKegs()"
+		(ngModelChange)="$onlyUncashedKegs.set($event)"
+		id="onlyUncashedKegs"
+	></p-inputSwitch>
+</div>
+
 <div class="flex align-items-center gap-5">
 	<p-multiSelect
 		[options]="$events() | sort: 'start'"

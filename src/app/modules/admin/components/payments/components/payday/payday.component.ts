@@ -68,6 +68,7 @@ export class PaydayComponent {
 	});
 
 	protected $showOnlyNotPaidEvents = signal<boolean>(true);
+	protected $onlyUncashedKegs = signal<boolean>(false);
 	private $copySortiment = signal<IKeg[]>([]);
 
 	constructor() {
@@ -88,7 +89,7 @@ export class PaydayComponent {
 	}
 
 	protected createPayday(): void {
-		const result = forkJoin(this.$selectedEvents().map((event) => this.eventService.getEventPayday(event.id))).pipe(
+		const result = forkJoin(this.$selectedEvents().map((event) => this.eventService.getEventPayday(event.id, this.$onlyUncashedKegs()))).pipe(
 			map((statistics) => {
 				return statistics.reduce((accumulator, current) => {
 					// merge more events into one payday

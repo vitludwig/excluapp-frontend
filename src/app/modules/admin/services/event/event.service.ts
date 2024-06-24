@@ -128,7 +128,7 @@ export class EventService {
 		return this.http.get<IEventUsersStatistics[]>(`${environment.apiUrl}/events/${eventId}/user-statistics/`);
 	}
 
-	public getEventPayday(eventId: number): Observable<IEventPayday> {
-		return this.http.get<IEventPayday>(`${environment.apiUrl}/events/${eventId}/payday/`);
+	public getEventPayday(eventId: number, onlyUncashed?: boolean): Observable<IEventPayday> {
+		return this.http.post<IEventPayday>(`${environment.apiUrl}/events/${eventId}/payday/`, { onlyUncashed });
 	}
 }
