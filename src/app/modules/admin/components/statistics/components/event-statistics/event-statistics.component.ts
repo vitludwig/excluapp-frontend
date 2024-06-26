@@ -6,7 +6,7 @@ import { ChartModule } from 'primeng/chart';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
 import { AuthService } from '../../../../../../common/services/auth.service';
 import { IPChartData } from '../../../../../../common/types/IPChartData';
@@ -68,9 +68,9 @@ export class EventStatisticsComponent {
 			console.warn('No event selected');
 			return;
 		}
-		const result$ = this.eventService.getEventPayday(eventId).pipe(tap(() => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 0)));
-
-		this.$paydayResult.set(result$);
+		// const result$ = this.eventService.getEventPayday(eventId).pipe(tap(() => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 0)));
+		//
+		// this.$paydayResult.set(result$);
 	}
 
 	private createKegsChartData(value: IEventKegsStatistics[]): IPChartData {

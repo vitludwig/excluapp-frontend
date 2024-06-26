@@ -11,7 +11,7 @@ import { MessageModule } from 'primeng/message';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { SortPipe } from '../../../../../../common/pipes/sort.pipe';
 import { EventService } from '../../../../services/event/event.service';
 import { SortimentService } from '../../../../services/sortiment/sortiment.service';
@@ -89,25 +89,30 @@ export class PaydayComponent {
 	}
 
 	protected createPayday(): void {
-		const result = forkJoin(this.$selectedEvents().map((event) => this.eventService.getEventPayday(event.id, this.$onlyUncashedKegs()))).pipe(
-			map((statistics) => {
-				return statistics.reduce((accumulator, current) => {
-					// merge more events into one payday
-					current.payday.map((c) => {
-						let found = accumulator.payday.find((element) => element.userId === c.userId);
-						if (found) {
-							found.finalPrice = Number(found.finalPrice) + Number(c.finalPrice);
-							found.amount = Number(found.amount) + Number(c.amount);
-						} else {
-							accumulator.payday.push(c);
-						}
-					});
-					accumulator.allAddedCosts += current.allAddedCosts;
+		const result = this.eventService
+			.getEventPayday(
+				this.$selectedEvents().map((e) => e.id),
+				this.$onlyUncashedKegs(),
+			)
+			.pipe(
+				map((statistics) => {
+					return statistics.reduce((accumulator, current) => {
+						// merge more events into one payday
+						current.payday.map((c) => {
+							let found = accumulator.payday.find((element) => element.userId === c.userId);
+							if (found) {
+								found.finalPrice = Number(found.finalPrice) + Number(c.finalPrice);
+								found.amount = Number(found.amount) + Number(c.amount);
+							} else {
+								accumulator.payday.push(c);
+							}
+						});
+						accumulator.allAddedCosts += current.allAddedCosts;
 
-					return accumulator;
-				});
-			}),
-		);
+						return accumulator;
+					});
+				}),
+			);
 
 		this.$paydayResult.set(result);
 	}
