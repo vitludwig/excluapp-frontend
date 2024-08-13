@@ -288,7 +288,7 @@ export class EventDetailComponent implements OnDestroy {
 		end.setHours(0, 0, 0, 0);
 
 		this.form.patchValue({
-			name: `Klubovna ${start.getDate()}.${start.getMonth()} - ${end.getDate()}.${end.getMonth()}`,
+			name: `Klubovna ${start.getDate()}.${start.getMonth() + 1} - ${end.getDate()}.${end.getMonth() + 1}`,
 			start: start,
 			end: end,
 		});
