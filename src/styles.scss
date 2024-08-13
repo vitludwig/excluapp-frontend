@@ -29,7 +29,7 @@ p-dropdown {
 .flex-responsive {
 	display: flex;
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 767px) {
 		flex-direction: column;
 	}
 }
@@ -37,7 +37,21 @@ p-dropdown {
 .visible-mobile {
 	display: none;
 
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 767px) {
 		display: block;
 	}
+}
+
+.page-overlay-text {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	backdrop-filter: blur(20px);
+	top: 0;
+	left: 0;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
 }
