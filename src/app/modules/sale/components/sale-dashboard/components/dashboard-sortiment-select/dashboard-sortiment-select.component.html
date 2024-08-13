@@ -23,11 +23,12 @@
 		/>
 
 		<p-button
-			icon="pi pi-fw pi-{{ $showSummary() ? 'chevron-down' : 'chevron-up' }}"
 			class="slide-open-btn"
 			styleClass="p-button-raised p-button-lg p-button-info"
 			(click)="toggleSummary()"
 		>
+			Storno
+			<i class="pi pi-fw pi-{{ $showSummary() ? 'chevron-down' : 'chevron-up' }}"></i>
 		</p-button>
 
 		<p-button

@@ -1,7 +1,6 @@
 export class UnprocessableEntityError extends Error {
-	constructor(message?: string) {
+	constructor(message: string = 'Položka nemohla být zpracována') {
 		super(message);
-		this.message = 'Položka nemohla být zpracována';
 		this.name = 'UnprocessableEntityError';
 	}
 }

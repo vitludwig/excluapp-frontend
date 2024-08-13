@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, inject, Injectable } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
+import { ConflictError } from './ConflictError';
 import { InternalServerError } from './InternalServerError';
 import { UnprocessableEntityError } from './UnprocessableEntityError';
 
@@ -22,8 +23,12 @@ export class HttpErrorHandler implements ErrorHandler {
 
 				case 500:
 					errorInstance = new InternalServerError();
-					this.notificationService.error(error.message);
-					throw error;
+					this.notificationService.error(errorInstance.message);
+					throw errorInstance;
+				case 409:
+					errorInstance = new ConflictError();
+					this.notificationService.error(errorInstance.message);
+					throw errorInstance;
 
 				default:
 					this.notificationService.error('Vyskytla se neznámá chyba');

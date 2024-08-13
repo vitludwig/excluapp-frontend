@@ -53,7 +53,7 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 		return this.orderService.getOrderByEventUserId(this.eventService.$activeEvent()?.id!, this.$selectedUser().id).pipe(
 			map((obj) => {
 				for (const item of obj) {
-					item.kegName = this.sortimentService.$allSortiment().find((s) => s.id === item.kegId)?.name ?? '';
+					item.kegName = this.$sortiment().find((s) => s.id === item.kegId)?.name ?? '';
 				}
 				return this.groupOrderBySortiment(obj);
 			}),

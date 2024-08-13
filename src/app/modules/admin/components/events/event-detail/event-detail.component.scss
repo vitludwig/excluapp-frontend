@@ -1,11 +1,3 @@
-.keg-sortlist {
-	.keg-row {
-		display: flex;
-		gap: 1em;
-		align-items: center;
-	}
-}
-
 ::ng-deep {
 	.keg-sortlist {
 		.p-orderlist-controls {
@@ -15,3 +7,19 @@
 		}
 	}
 }
+
+.keg-sortlist {
+	.keg-row {
+		display: flex;
+		gap: 1em;
+		align-items: center;
+	}
+}
+
+.save-btn-container {
+	position: sticky;
+	bottom: 0;
+	padding: 15px 0;
+	background: #121212;
+}
+

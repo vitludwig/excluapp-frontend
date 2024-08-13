@@ -1,7 +1,6 @@
 export class InternalServerError extends Error {
-	constructor(message?: string) {
+	constructor(message: string = 'Neznámá chyba serveru') {
 		super(message);
-		this.message = 'Neznámá chyba serveru';
 		this.name = 'InternalServerError';
 	}
 }
