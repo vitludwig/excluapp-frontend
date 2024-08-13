@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { IUserCreate, IUserRead } from '../../types/IUser';
+import { IUser } from '../../types/IUser';
 
 @Injectable({
 	providedIn: 'root',
@@ -10,26 +10,25 @@ import { IUserCreate, IUserRead } from '../../types/IUser';
 export class UserService {
 	private readonly http = inject(HttpClient);
 
-	public $users = signal<IUserRead[]>([]);
+	public $users = signal<IUser[]>([]);
 
-	public async loadUsers(): Promise<void> {
-		const result = await firstValueFrom(this.http.get<IUserRead[]>(environment.apiUrl + '/user'));
-		this.$users.set(result);
+	public getUsers(): Observable<IUser[]> {
+		return this.http.get<IUser[]>(environment.apiUrl + '/user');
 	}
 
-	public addUser(value: IUserCreate): Observable<IUserRead> {
-		return this.http.post<IUserRead>(environment.apiUrl + '/user', value);
+	public getUserById(id: number): Observable<IUser> {
+		return this.http.get<IUser>(environment.apiUrl + '/user/' + id);
+	}
+
+	public addUser(name: string): Observable<IUser> {
+		return this.http.post<IUser>(environment.apiUrl + '/user', { name });
 	}
 
 	public removeUser(id: number): Observable<void> {
 		return this.http.delete<void>(environment.apiUrl + '/user/' + id);
 	}
 
-	public getUser(id: number): Observable<IUserRead> {
-		return this.http.get<IUserRead>(environment.apiUrl + '/user/' + id);
-	}
-
-	public updateUser(id: number, value: Partial<IUserRead>): Observable<IUserRead> {
-		return this.http.put<IUserRead>(environment.apiUrl + '/user/' + id, value);
+	public updateUser(id: number, value: Partial<IUser>): Observable<IUser> {
+		return this.http.put<IUser>(environment.apiUrl + '/user/' + id, value);
 	}
 }

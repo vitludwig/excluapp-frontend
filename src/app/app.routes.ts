@@ -3,11 +3,11 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
 	{
 		path: 'home',
-		loadComponent: () => import('./modules/home/home.component').then((m) => m.HomeComponent),
+		loadComponent: () => import('@modules/home/home.component').then((m) => m.HomeComponent),
 	},
 	{
 		path: 'party',
-		loadComponent: () => import('./modules/sale/sale.component').then((m) => m.SaleComponent),
+		loadComponent: () => import('@modules/sale/sale.component').then((m) => m.SaleComponent),
 		data: {
 			title: 'Párty!',
 		},
@@ -20,11 +20,11 @@ export const routes: Routes = [
 		children: [
 			{
 				path: '',
-				loadComponent: () => import('./modules/registration/components/registration-list/registration-list.component').then((m) => m.RegistrationListComponent),
+				loadComponent: () => import('@modules/registration/components/registration-list/registration-list.component').then((m) => m.RegistrationListComponent),
 			},
 			{
 				path: ':eventId',
-				loadComponent: () => import('./modules/registration/components/registration-detail/registration-detail.component').then((m) => m.RegistrationDetailComponent),
+				loadComponent: () => import('@modules/registration/components/registration-detail/registration-detail.component').then((m) => m.RegistrationDetailComponent),
 			},
 		],
 	},
@@ -36,21 +36,21 @@ export const routes: Routes = [
 				children: [
 					{
 						path: '',
-						loadComponent: () => import('./modules/admin/components/events/event-list/event-list.component').then((m) => m.EventListComponent),
+						loadComponent: () => import('@modules/event/components/event-list/event-list.component').then((m) => m.EventListComponent),
 						data: {
 							title: 'Události',
 						},
 					},
 					{
 						path: 'new',
-						loadComponent: () => import('./modules/admin/components/events/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
+						loadComponent: () => import('@modules/event/components/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
 						data: {
 							title: 'Nová událost',
 						},
 					},
 					{
 						path: 'detail/:id',
-						loadComponent: () => import('./modules/admin/components/events/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
+						loadComponent: () => import('@modules/event/components/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
 					},
 				],
 			},
@@ -59,18 +59,18 @@ export const routes: Routes = [
 				children: [
 					{
 						path: '',
-						loadComponent: () => import('./modules/admin/components/users/user-list/user-list.component').then((m) => m.UserListComponent),
+						loadComponent: () => import('@modules/user/components/user-list/user-list.component').then((m) => m.UserListComponent),
 						data: {
 							title: 'Uživatelé',
 						},
 					},
 					{
 						path: 'detail/:id',
-						loadComponent: () => import('./modules/admin/components/users/user-detail/user-detail.component').then((m) => m.UserDetailComponent),
+						loadComponent: () => import('@modules/user/components/user-detail/user-detail.component').then((m) => m.UserDetailComponent),
 					},
 					{
 						path: 'new',
-						loadComponent: () => import('./modules/admin/components/users/user-detail/user-detail.component').then((m) => m.UserDetailComponent),
+						loadComponent: () => import('@modules/user/components/user-detail/user-detail.component').then((m) => m.UserDetailComponent),
 						data: {
 							title: 'Nový uživatel',
 						},
@@ -85,15 +85,15 @@ export const routes: Routes = [
 				children: [
 					{
 						path: '',
-						loadComponent: () => import('./modules/admin/components/sortiment/sortiment-list/sortiment-list.component').then((m) => m.SortimentListComponent),
+						loadComponent: () => import('@modules/sortiment/components/sortiment-list/sortiment-list.component').then((m) => m.SortimentListComponent),
 					},
 					{
 						path: 'detail/:id',
-						loadComponent: () => import('./modules/admin/components/sortiment/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
+						loadComponent: () => import('@modules/sortiment/components/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
 					},
 					{
 						path: 'new',
-						loadComponent: () => import('./modules/admin/components/sortiment/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
+						loadComponent: () => import('@modules/sortiment/components/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
 					},
 				],
 			},
@@ -102,14 +102,14 @@ export const routes: Routes = [
 				data: {
 					title: 'Infoporno',
 				},
-				loadComponent: () => import('./modules/admin/components/statistics/statistics.component').then((m) => m.StatisticsComponent),
+				loadComponent: () => import('@modules/statistics/statistics.component').then((m) => m.StatisticsComponent),
 			},
 			{
 				path: 'payments',
 				data: {
 					title: 'Platby',
 				},
-				loadComponent: () => import('./modules/admin/components/payments/payments.component').then((m) => m.PaymentsComponent),
+				loadComponent: () => import('@modules/payment/payments.component').then((m) => m.PaymentsComponent),
 			},
 		],
 	},

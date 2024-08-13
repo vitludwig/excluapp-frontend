@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, input, OnDestroy, Output, signal } from '@angular/core';
+import { EventService } from '@modules/event/services/event/event.service';
+import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { IKeg } from '@modules/sortiment/types/IKeg';
+import { IUser } from '@modules/user/types/IUser';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -7,10 +11,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { map, Subject, takeUntil, tap } from 'rxjs';
-import { EventService } from '../../../../../admin/services/event/event.service';
-import { SortimentService } from '../../../../../admin/services/sortiment/sortiment.service';
-import { IKeg } from '../../../../../admin/types/IKeg';
-import { IUserRead } from '../../../../../user/types/IUser';
 import { AsSortimentCategoryPipe } from '../../../../pipes/as-sortiment-category.pipe';
 import { OrderService } from '../../../../services/order/order.service';
 import { EBeerVolume } from '../../../../types/EBeerVolume';
@@ -36,7 +36,7 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 
 	protected readonly EBeerVolume = EBeerVolume;
 
-	public $selectedUser = input.required<IUserRead>({ alias: 'selectedUser' });
+	public $selectedUser = input.required<IUser>({ alias: 'selectedUser' });
 	public $sortiment = input.required<IKeg[]>({ alias: 'sortiment' });
 
 	@Output()

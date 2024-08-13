@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, input, Output } from 
 import { CardModule } from 'primeng/card';
 import { SelectUserComponent } from '../../../../../user/components/select-user/select-user.component';
 import { UserFaceRecognitionComponent } from '../../../../../user/components/user-face-recognition/user-face-recognition.component';
-import { IUserRead } from '../../../../../user/types/IUser';
+import { IUser } from '../../../../../user/types/IUser';
 
 @Component({
 	selector: 'app-dashboard-user-select',
@@ -14,12 +14,12 @@ import { IUserRead } from '../../../../../user/types/IUser';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardUserSelectComponent {
-	public $users = input.required<IUserRead[]>({ alias: 'users' });
+	public $users = input.required<IUser[]>({ alias: 'users' });
 
 	@Output()
-	public selected: EventEmitter<IUserRead | null> = new EventEmitter<IUserRead | null>();
+	public selected: EventEmitter<IUser | null> = new EventEmitter<IUser | null>();
 
-	protected selectUser(value: IUserRead | null): void {
+	protected selectUser(value: IUser | null): void {
 		this.selected.emit(value);
 	}
 }

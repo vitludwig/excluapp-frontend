@@ -1,7 +1,7 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
+import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { IKegStatus } from '@modules/sortiment/types/IKegStatus';
 import { map, Observable } from 'rxjs';
-import { IKegStatus } from '../../admin/components/sortiment/types/IKegStatus';
-import { SortimentService } from '../../admin/services/sortiment/sortiment.service';
 
 @Pipe({
 	name: 'kegStatus',

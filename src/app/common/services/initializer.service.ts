@@ -1,9 +1,10 @@
 import { APP_INITIALIZER, inject, Injectable, Provider } from '@angular/core';
+import { EventService } from '@modules/event/services/event/event.service';
+import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
+import { UserService } from '@modules/user/services/user/user.service';
+import { UserStore } from '@modules/user/user.store';
 import { firstValueFrom } from 'rxjs';
-import { EventService } from '../../modules/admin/services/event/event.service';
-import { SortimentService } from '../../modules/admin/services/sortiment/sortiment.service';
-import { FaceRecognitionService } from '../../modules/user/services/face-recognition/face-recognition.service';
-import { UserService } from '../../modules/user/services/user/user.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -24,11 +25,12 @@ export class InitializerService {
 	private readonly eventService = inject(EventService);
 	private readonly faceRecognitionService = inject(FaceRecognitionService);
 	private readonly userService = inject(UserService);
+	private readonly userStore = inject(UserStore);
 
 	public async initialize(): Promise<void> {
 		// await firstValueFrom(this.sortimentService.loadSortiment());
 		await firstValueFrom(this.eventService.loadEvents());
-		await this.userService.loadUsers();
+		await this.userService.getUsers();
 		if (this.faceRecognitionService.$faceRecognitionEnabled()) {
 			await this.faceRecognitionService.loadModels();
 		}

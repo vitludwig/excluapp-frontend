@@ -1,6 +1,13 @@
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SortPipe } from '@common/pipes/sort.pipe';
+import { AuthService } from '@common/services/auth.service';
+import { SettingsService } from '@common/services/settings.service';
+import { EventService } from '@modules/event/services/event/event.service';
+import { IEvent } from '@modules/event/types/IEvent';
+import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -11,13 +18,6 @@ import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SidebarModule } from 'primeng/sidebar';
 import { Subject, takeUntil } from 'rxjs';
-import { SortPipe } from '../../../common/pipes/sort.pipe';
-import { AuthService } from '../../../common/services/auth.service';
-import { SettingsService } from '../../../common/services/settings.service';
-import { EventService } from '../../../modules/admin/services/event/event.service';
-import { SortimentService } from '../../../modules/admin/services/sortiment/sortiment.service';
-import { IEvent } from '../../../modules/admin/types/IEvent';
-import { FaceRecognitionService } from '../../../modules/user/services/face-recognition/face-recognition.service';
 import { LayoutService } from '../../services/layout/layout.service';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
 

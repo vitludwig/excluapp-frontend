@@ -35,6 +35,12 @@ dependencies:
   '@angular/service-worker':
     specifier: ^18.1.4
     version: 18.1.4(@angular/common@18.1.4)(@angular/core@18.1.4)
+  '@ngrx/operators':
+    specifier: ^18.0.2
+    version: 18.0.2(rxjs@7.8.1)
+  '@ngrx/signals':
+    specifier: ^18.0.2
+    version: 18.0.2(@angular/core@18.1.4)(rxjs@7.8.1)
   chart.js:
     specifier: ^4.4.0
     version: 4.4.0
@@ -51,8 +57,8 @@ dependencies:
     specifier: ^7.0.0
     version: 7.0.0
   primeng:
-    specifier: ^17.2.0
-    version: 17.2.0(@angular/common@18.1.4)(@angular/core@18.1.4)(@angular/forms@18.1.4)(rxjs@7.8.1)(zone.js@0.14.2)
+    specifier: ^17.18.8
+    version: 17.18.8(@angular/common@18.1.4)(@angular/core@18.1.4)(@angular/forms@18.1.4)(rxjs@7.8.1)(zone.js@0.14.2)
   rxjs:
     specifier: ~7.8.1
     version: 7.8.1
@@ -2603,6 +2609,29 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@ngrx/operators@18.0.2(rxjs@7.8.1):
+    resolution: {integrity: sha512-4dyNkVKBw9ZqECMJu6bT2t21p3ANaMC+ZkcfiBfv5OUEFtB9HhN5uCem9tcgYeNBK8XQFA7/1tzd1T3KaiBY8A==}
+    peerDependencies:
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      rxjs: 7.8.1
+      tslib: 2.6.3
+    dev: false
+
+  /@ngrx/signals@18.0.2(@angular/core@18.1.4)(rxjs@7.8.1):
+    resolution: {integrity: sha512-FXmcY2cmkbhZtg9k8Ntq69SyelGmmb6fWtdButH4T8GGFH0o3f1FZTR829j4ynphy8SzuDhD/pzrnpWcV481oQ==}
+    peerDependencies:
+      '@angular/core': ^18.0.0
+      rxjs: ^6.5.3 || ^7.4.0
+    peerDependenciesMeta:
+      rxjs:
+        optional: true
+    dependencies:
+      '@angular/core': 18.1.4(rxjs@7.8.1)(zone.js@0.14.2)
+      rxjs: 7.8.1
+      tslib: 2.6.3
+    dev: false
 
   /@ngtools/webpack@18.1.4(@angular/compiler-cli@18.1.4)(typescript@5.5.4)(webpack@5.92.1):
     resolution: {integrity: sha512-suoeZjd+7qd3ivzbNGGSzHtY/WMxTKU6ZD1gIIya0Un8Ve1eVxfq6Si6ReKqhygO8zN3paJMATn8sMmAV7qVrw==}
@@ -6668,12 +6697,12 @@ packages:
     resolution: {integrity: sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==}
     dev: false
 
-  /primeng@17.2.0(@angular/common@18.1.4)(@angular/core@18.1.4)(@angular/forms@18.1.4)(rxjs@7.8.1)(zone.js@0.14.2):
-    resolution: {integrity: sha512-pajexYLeJWE6+pmDy0gHrMiQ/zLq4il54EcRNWC0jTNgJvWhoz/K/7NL9kXf2H4eWexNcrEieLnO9ko5uj3cVg==}
+  /primeng@17.18.8(@angular/common@18.1.4)(@angular/core@18.1.4)(@angular/forms@18.1.4)(rxjs@7.8.1)(zone.js@0.14.2):
+    resolution: {integrity: sha512-5ehktDTkEtr9wvTFZf3ySAqaV2LMS1JWhYfMCxphsbP4XWthoYvY+MLt1k9sU0V0YZUH242vVlHIvOC23o7hFg==}
     peerDependencies:
-      '@angular/common': ^17.0.0
-      '@angular/core': ^17.0.0
-      '@angular/forms': ^17.0.0
+      '@angular/common': ^17.0.0 || ^18.0.0
+      '@angular/core': ^17.0.0 || ^18.0.0
+      '@angular/forms': ^17.0.0 || ^18.0.0
       rxjs: ^6.0.0 || ^7.8.1
       zone.js: ~0.14.0
     dependencies:
@@ -6681,7 +6710,7 @@ packages:
       '@angular/core': 18.1.4(rxjs@7.8.1)(zone.js@0.14.2)
       '@angular/forms': 18.1.4(@angular/common@18.1.4)(@angular/core@18.1.4)(@angular/platform-browser@18.1.4)(rxjs@7.8.1)
       rxjs: 7.8.1
-      tslib: 2.6.1
+      tslib: 2.6.3
       zone.js: 0.14.2
     dev: false
 
@@ -7686,7 +7715,6 @@ packages:
 
   /tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
-    dev: true
 
   /tuf-js@2.2.0:
     resolution: {integrity: sha512-ZSDngmP1z6zw+FIkIBjvOp/II/mIub/O7Pp12j1WNsiCpg5R5wAc//i555bBQsE44O94btLt0xM/Zr2LQjwdCg==}

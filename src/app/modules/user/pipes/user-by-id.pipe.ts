@@ -1,6 +1,6 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { UserService } from '../services/user/user.service';
-import { IUserRead } from '../types/IUser';
+import { IUser } from '../types/IUser';
 
 @Pipe({
 	name: 'userById',
@@ -9,7 +9,7 @@ import { IUserRead } from '../types/IUser';
 export class UserByIdPipe implements PipeTransform {
 	private usersService = inject(UserService);
 
-	transform(value?: number): IUserRead | null {
+	transform(value?: number): IUser | null {
 		if (!value) {
 			return null;
 		}

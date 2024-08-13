@@ -1,0 +1,145 @@
+<div class="flex flex-column">
+	<div class="flex-responsive gap-4">
+		<form
+			[formGroup]="form"
+			(ngSubmit)="onSubmit()"
+			class="flex flex-column flex-1 gap-4"
+		>
+			<div class="flex flex-column gap-2">
+				<label htmlFor="eventName">Název</label>
+				<input
+					pInputText
+					id="eventName"
+					formControlName="name"
+				/>
+			</div>
+
+			<div class="flex flex-column gap-2">
+				<label htmlFor="eventCapacity">Kapacita</label>
+				<input
+					pInputText
+					id="eventCapacity"
+					formControlName="capacity"
+				/>
+			</div>
+
+			<div class="flex flex-column gap-2">
+				<label htmlFor="eventStart">Začátek</label>
+				<p-calendar
+					id="eventStart"
+					[style]="{ width: '100%' }"
+					formControlName="start"
+					[showTime]="true"
+					[showIcon]="true"
+				/>
+			</div>
+
+			<div class="flex flex-column gap-2">
+				<label htmlFor="eventEnd">Konec</label>
+				<p-calendar
+					id="eventEnd"
+					[style]="{ width: '100%' }"
+					formControlName="end"
+					[showTime]="true"
+					[showIcon]="true"
+				/>
+			</div>
+		</form>
+
+		<p-divider class="visible-mobile" />
+
+		<div class="flex-1">
+			<h4 style="margin: 0; margin-bottom: 0.5rem">Přidat sud</h4>
+			<app-event-sortiment
+				label="Sud z minula"
+				[options]="($existingKegs() | async) ?? []"
+				(select)="addKeg($event)"
+			></app-event-sortiment>
+
+			<app-event-sortiment
+				label="Nový plný sud"
+				[options]="$originalKegs() ?? []"
+				(select)="addKeg($event)"
+			></app-event-sortiment>
+
+			<br />
+
+			<p-orderList
+				class="keg-sortlist"
+				header="Sudy na akci"
+				controlsPosition="right"
+				[value]="$eventKegs()"
+				[responsive]="true"
+				(onReorder)="orderKegs()"
+			>
+				<ng-template
+					let-keg
+					pTemplate="item"
+				>
+					<div class="keg-row">
+						<div
+							class="keg-item"
+							style="width: 20px"
+						>
+							@if (keg.isActive) {
+							<i class="pi pi-fw pi-check"></i>
+							}
+						</div>
+						<div
+							class="keg-item"
+							style="width: 200px"
+						>
+							{{ keg.name }} ({{ keg.sourceName }})
+						</div>
+						<div class="keg-item">{{ keg.isEmpty ? "Prázdný" : "Plný" }}</div>
+						<div class="keg-item">{{ keg.volume }} l</div>
+						<div class="keg-item flex flex-1 gap-2 justify-content-end">
+							<p-button
+								(click)="openToggleConfirm(keg)"
+								[styleClass]="keg.isActive ? 'p-button-warning' : 'p-button-success'"
+								icon="pi pi-fw {{ keg.isActive ? 'pi-circle' : 'pi-circle-fill' }}"
+								[pTooltip]="keg.isActive ? 'Deaktivovat' : 'Aktivovat'"
+							/>
+
+							<p-button
+								(click)="showKegStatusDialog(keg.id)"
+								[severity]="'info'"
+								icon="pi pi-fw pi-question-circle"
+								pTooltip="Stav sudu"
+							/>
+
+							<p-button
+								(click)="showKegStatistics(keg)"
+								[severity]="'info'"
+								icon="pi pi-fw pi-chart-bar"
+								pTooltip="Kdo pil ze sudu"
+							/>
+
+							<button
+								pButton
+								appConfirm
+								confirmMessage="Smazat?"
+								(confirm)="removeKeg(keg.id)"
+								class="p-button-danger"
+								icon="pi pi-fw pi-trash"
+								pTooltip="Odebrat z události"
+							></button>
+						</div>
+					</div>
+				</ng-template>
+			</p-orderList>
+		</div>
+	</div>
+
+	<div class="save-btn-container">
+		<p-button
+			label="Uložit"
+			(click)="onSubmit()"
+			type="submit"
+			class="mt-4 mb-4"
+			[style]="{ width: '100%' }"
+		/>
+	</div>
+</div>
+
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
 import { UserService } from '../../services/user/user.service';
-import { IUserRead } from '../../types/IUser';
+import { IUser } from '../../types/IUser';
 import { SelectUserComponent } from '../select-user/select-user.component';
 import { FaceScanningError } from './types/FaceScanningError';
 
@@ -23,7 +23,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);
 
 	@Input()
-	public set users(value: IUserRead[] | null) {
+	public set users(value: IUser[] | null) {
 		if (value) {
 			this.detectUser(value);
 		}
@@ -64,9 +64,9 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 	}
 
 	@Output()
-	public detected: EventEmitter<IUserRead> = new EventEmitter<IUserRead>();
+	public detected: EventEmitter<IUser> = new EventEmitter<IUser>();
 
-	private detectUser(users: IUserRead[]): void {
+	private detectUser(users: IUser[]): void {
 		this.initMatcher(users);
 	}
 
@@ -154,7 +154,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 		}
 	}
 
-	private initMatcher(users: IUserRead[]): Promise<void> {
+	private initMatcher(users: IUser[]): Promise<void> {
 		return new Promise((resolve) => {
 			const descriptors = users
 				.filter((user) => user.faceDescriptor)

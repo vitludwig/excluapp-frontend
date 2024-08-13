@@ -6,7 +6,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
-import { IUserRead } from '../../types/IUser';
+import { IUser } from '../../types/IUser';
 import { SelectUserComponent } from '../select-user/select-user.component';
 
 @Component({
@@ -22,14 +22,14 @@ export class SelectUserDialogComponent implements OnInit {
 	public readonly dialogConfig = inject(DynamicDialogConfig);
 
 	protected layout: 'list' | 'form' = 'form';
-	protected users: IUserRead[] = [];
+	protected users: IUser[] = [];
 
 	public ngOnInit() {
 		this.users = this.dialogConfig.data.users;
 		this.layout = this.dialogConfig.data.layout ?? 'form';
 	}
 
-	protected submit(value: IUserRead | null) {
+	protected submit(value: IUser | null) {
 		this.dialogRef.close(value);
 	}
 }

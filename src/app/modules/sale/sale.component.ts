@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { EventService } from '../admin/services/event/event.service';
+import { EventService } from '@modules/event/services/event/event.service';
 import { SaleDashboardComponent } from './components/sale-dashboard/sale-dashboard.component';
 
 @Component({

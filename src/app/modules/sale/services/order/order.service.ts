@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { EventService } from '@modules/event/services/event/event.service';
+import { IKeg } from '@modules/sortiment/types/IKeg';
 import { Observable, forkJoin, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { EventService } from '../../../admin/services/event/event.service';
-import { IKeg } from '../../../admin/types/IKeg';
 import { EBeerVolume } from '../../types/EBeerVolume';
 import { ICartItem } from '../../types/ICartItem';
 import { IOrderCreate, IOrderRead } from '../../types/IOrder';

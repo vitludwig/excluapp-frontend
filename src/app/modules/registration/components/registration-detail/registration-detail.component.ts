@@ -2,6 +2,13 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { ConfirmComponent } from '@common/components/confirm/confirm.component';
+import { BackBtnDirective } from '@common/directives/back-btn/back-btn.directive';
+import { AuthService } from '@common/services/auth.service';
+import { EventService } from '@modules/event/services/event/event.service';
+import { IEvent } from '@modules/event/types/IEvent';
+import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { IKeg } from '@modules/sortiment/types/IKeg';
 import { MessageService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -10,17 +17,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { firstValueFrom, tap } from 'rxjs';
-import { ConfirmComponent } from '../../../../common/components/confirm/confirm.component';
-import { BackBtnDirective } from '../../../../common/directives/back-btn/back-btn.directive';
-import { AuthService } from '../../../../common/services/auth.service';
-import { EventService } from '../../../admin/services/event/event.service';
-import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
-import { IEvent } from '../../../admin/types/IEvent';
-import { IKeg } from '../../../admin/types/IKeg';
 import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
 import { UserService } from '../../../user/services/user/user.service';
-import { IUserRead } from '../../../user/types/IUser';
+import { IUser } from '../../../user/types/IUser';
 
 @Component({
 	selector: 'app-registration-detail',
@@ -52,7 +52,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 
 	protected eventId: number;
 	protected $event: Signal<IEvent | undefined> = signal(undefined);
-	protected $eventUsers = signal<IUserRead[]>([]);
+	protected $eventUsers = signal<IUser[]>([]);
 	protected $usersToPick = computed(() => this.usersService.$users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)));
 	protected $enableRegistration = computed(() => {
 		if (this.authService.$isLogged()) {
@@ -76,7 +76,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 	});
 
 	protected showSelectUserModal = false;
-	protected selectedUser: IUserRead | null = null;
+	protected selectedUser: IUser | null = null;
 
 	private attendDialogRef: DynamicDialogRef;
 
@@ -94,7 +94,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 		this.showSelectUserModal = true;
 	}
 
-	protected selectUser(data: IUserRead | null): void {
+	protected selectUser(data: IUser | null): void {
 		if (data) {
 			this.attendEvent(data.id, this.eventId);
 		}

@@ -2,6 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { SettingsService } from '@common/services/settings.service';
+import { EventService } from '@modules/event/services/event/event.service';
+import { KegUsersStatisticsDialogComponent } from '@modules/sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
+import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { IKeg } from '@modules/sortiment/types/IKeg';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -10,16 +15,11 @@ import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
 import { firstValueFrom, of, Subject, takeUntil, tap } from 'rxjs';
-import { SettingsService } from '../../../../common/services/settings.service';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
-import { KegUsersStatisticsDialogComponent } from '../../../admin/components/sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
-import { EventService } from '../../../admin/services/event/event.service';
-import { SortimentService } from '../../../admin/services/sortiment/sortiment.service';
-import { IKeg } from '../../../admin/types/IKeg';
 import { UserFaceRecognitionComponent } from '../../../user/components/user-face-recognition/user-face-recognition.component';
 import { FaceRecognitionService } from '../../../user/services/face-recognition/face-recognition.service';
 import { UserService } from '../../../user/services/user/user.service';
-import { IUserRead } from '../../../user/types/IUser';
+import { IUser } from '../../../user/types/IUser';
 import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe';
 import { KegStatusPipe } from '../../pipes/keg-status.pipe';
 import { OrderService } from '../../services/order/order.service';
@@ -80,12 +80,12 @@ export class SaleDashboardComponent implements OnDestroy {
 		return this.sortimentService.getSortimentList(kegIds, { isEmpty: false, isActive: true });
 	});
 
-	protected $selectedUser = signal<IUserRead | null>(null);
+	protected $selectedUser = signal<IUser | null>(null);
 	protected $usersInEvent = computed(() => {
 		const event = this.eventService.$activeEvent();
 		if (event) {
 			return this.eventService.getUsersForEvent(event.id).pipe(
-				tap((users: IUserRead[]) => {
+				tap((users: IUser[]) => {
 					const usersInEventIds = users.map((u) => u.id);
 					this.$usersOther.set(this.userService.$users().filter((u) => !usersInEventIds.includes(u.id)));
 				}),
@@ -94,7 +94,7 @@ export class SaleDashboardComponent implements OnDestroy {
 		return of([]);
 	});
 
-	protected $usersOther = signal<IUserRead[]>([]);
+	protected $usersOther = signal<IUser[]>([]);
 	protected beerpongOpened = false;
 
 	private unsubscribe$: Subject<void> = new Subject<void>();
@@ -118,7 +118,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			.subscribe();
 	}
 
-	protected async showBeerpongDialog(kegs: IKeg[], users: IUserRead[]): Promise<void> {
+	protected async showBeerpongDialog(kegs: IKeg[], users: IUser[]): Promise<void> {
 		this.beerpongDialogRef = this.dialogService.open(BeerpongDialogComponent, {
 			header: 'Býrponk!',
 			width: '90%',
@@ -143,7 +143,7 @@ export class SaleDashboardComponent implements OnDestroy {
 		});
 	}
 
-	protected selectUser(value: IUserRead | null): void {
+	protected selectUser(value: IUser | null): void {
 		this.$selectedUser.set(value);
 		this.layoutService.$topBarTitle.set(value?.name ?? '');
 	}

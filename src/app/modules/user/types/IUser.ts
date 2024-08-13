@@ -1,11 +1,7 @@
-export interface IUserRead {
+export interface IUser {
 	id: number;
 	name: string;
 	isRegular: boolean;
 	masterUsedId: number | null;
 	faceDescriptor: string | null;
-}
-
-export interface IUserCreate {
-	name: string;
 }

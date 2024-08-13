@@ -16,7 +16,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { firstValueFrom } from 'rxjs';
 import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
 import { UserService } from '../../services/user/user.service';
-import { IUserRead } from '../../types/IUser';
+import { IUser } from '../../types/IUser';
 import { FaceScanningError, MoodScanningError } from '../user-face-recognition/types/FaceScanningError';
 
 /**
@@ -36,7 +36,7 @@ export class UserFaceScanDescriptorComponent implements OnInit {
 	protected readonly usersService = inject(UserService);
 	private readonly messageService: MessageService = inject(MessageService);
 
-	public $user = input<IUserRead | null>(null, { alias: 'user' });
+	public $user = input<IUser | null>(null, { alias: 'user' });
 
 	@ViewChild('videoElement')
 	public videoElement: ElementRef<HTMLVideoElement>;

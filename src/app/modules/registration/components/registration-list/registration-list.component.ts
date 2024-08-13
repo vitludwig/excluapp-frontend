@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
+import { EventService } from '@modules/event/services/event/event.service';
+import { IEvent } from '@modules/event/types/IEvent';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
-import { EventService } from '../../../admin/services/event/event.service';
-import { IEvent } from '../../../admin/types/IEvent';
 
 @Component({
 	selector: 'app-registration-list',

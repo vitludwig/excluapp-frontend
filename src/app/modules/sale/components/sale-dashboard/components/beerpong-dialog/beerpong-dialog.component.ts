@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IKeg } from '@modules/sortiment/types/IKeg';
+import { IUser } from '@modules/user/types/IUser';
+import { orderUsernames } from '@modules/user/utils/OrderUsernames';
 import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ListboxModule } from 'primeng/listbox';
-import { IKeg } from '../../../../../admin/types/IKeg';
-import { IUserRead } from '../../../../../user/types/IUser';
-import { orderUsernames } from '../../../../../user/utils/OrderUsernames';
 import { IBeerpong } from '../../../../types/IBeerpong';
 
 @Component({
@@ -27,12 +27,12 @@ export class BeerpongDialogComponent implements OnInit {
 	private readonly confirmationService = inject(ConfirmationService);
 
 	protected kegs: IKeg[] = [];
-	protected users: IUserRead[] = [];
+	protected users: IUser[] = [];
 	/**
 	 * {<kegId>: IUserRead[]}
 	 * @protected
 	 */
-	protected data: Record<number, IUserRead[]> = {};
+	protected data: Record<number, IUser[]> = {};
 
 	public ngOnInit() {
 		this.kegs = this.dialogConfig.data.kegs;
@@ -57,7 +57,7 @@ export class BeerpongDialogComponent implements OnInit {
 		}
 	}
 
-	protected onUserSelect(value: IUserRead[], kegId: number): void {
+	protected onUserSelect(value: IUser[], kegId: number): void {
 		if (!this.data[kegId]) {
 			this.data[kegId] = [];
 		}
@@ -67,7 +67,7 @@ export class BeerpongDialogComponent implements OnInit {
 		this.data[kegId] = value;
 	}
 
-	private removeDuplicateUsers(newUsers: IUserRead[], kegId: number, data: Record<number, IUserRead[]>): void {
+	private removeDuplicateUsers(newUsers: IUser[], kegId: number, data: Record<number, IUser[]>): void {
 		const userIds = newUsers.map((e) => e.id);
 		for (const [index, users] of Object.entries(this.data)) {
 			if (index === kegId.toString()) {

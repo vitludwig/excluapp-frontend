@@ -1,13 +1,13 @@
 @if($user()?.faceDescriptor) {
-	<p-button
-		[styleClass]="'p-button-danger'"
-		[style]="{ width: '100%' }"
-		(click)="removeUserDescriptor()"
-	>
-		Odstranit model
-	</p-button>
+<p-button
+	[styleClass]="'p-button-danger'"
+	[style]="{ width: '100%' }"
+	(click)="removeUserDescriptor()"
+>
+	Odstranit model
+</p-button>
 } @else {
-	<h3>Uživatel ještě nemá nahraný model obličeje</h3>
+<h3>Uživatel ještě nemá nahraný model obličeje</h3>
 }
 
 <video
@@ -16,11 +16,11 @@
 ></video>
 
 @if($scanning() && !$faceScanned()) { Skenuji } @else {
-	<p-button
-		[style]="{ width: '100%' }"
-		(click)="startScanningDescriptor()"
-		>Naskenovat nový obličej</p-button
-	>
+<p-button
+	[style]="{ width: '100%' }"
+	(click)="startScanningDescriptor()"
+	>Naskenovat nový obličej</p-button
+>
 } @if($faceScanned() && !$scanning()) {
-	<h2>Obličej naskenován a uložen!</h2>
+<h2>Obličej naskenován a uložen!</h2>
 }

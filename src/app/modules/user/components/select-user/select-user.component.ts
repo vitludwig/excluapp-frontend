@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
 import { UserService } from '../../services/user/user.service';
-import { IUserRead } from '../../types/IUser';
+import { IUser } from '../../types/IUser';
 import { orderUsernames } from '../../utils/OrderUsernames';
 
 // TODO: refactor, return only true response, multiple select, submit button - CLEANUP
@@ -24,12 +24,12 @@ export class SelectUserComponent {
 	private readonly usersService = inject(UserService);
 
 	public $layout = input<'list' | 'form'>('form', { alias: 'layout' });
-	public $users = input<IUserRead[], IUserRead[]>(this.usersService.$users(), { transform: orderUsernames, alias: 'users' });
+	public $users = input<IUser[], IUser[]>(this.usersService.$users(), { transform: orderUsernames, alias: 'users' });
 
 	@Output()
-	public select: EventEmitter<IUserRead | null> = new EventEmitter();
+	public select: EventEmitter<IUser | null> = new EventEmitter();
 
-	protected selectedUser: IUserRead | null = null;
+	protected selectedUser: IUser | null = null;
 
 	protected submit() {
 		this.select.emit(this.selectedUser);
