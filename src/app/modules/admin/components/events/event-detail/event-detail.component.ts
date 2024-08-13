@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { ConfirmComponent } from '../../../../../common/components/confirm/confirm.component';
 import { NotificationService } from '../../../../../common/services/notification.service';
+import { LayoutService } from '../../../../../layout/services/layout/layout.service';
 import { EventService } from '../../../services/event/event.service';
 import { SortimentService } from '../../../services/sortiment/sortiment.service';
 import { IEvent } from '../../../types/IEvent';
@@ -53,6 +54,7 @@ export class EventDetailComponent implements OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly notificationService = inject(NotificationService);
 	private readonly dialogService: DialogService = inject(DialogService);
+	private readonly layoutService = inject(LayoutService);
 	protected readonly sortimentService: SortimentService = inject(SortimentService);
 	protected readonly confirmationService: ConfirmationService = inject(ConfirmationService);
 
@@ -95,6 +97,8 @@ export class EventDetailComponent implements OnDestroy {
 
 		if (this.eventId) {
 			this.loadEvent(this.eventId);
+		} else {
+			this.initDefaultFormValues();
 		}
 	}
 
@@ -253,6 +257,7 @@ export class EventDetailComponent implements OnDestroy {
 					event.kegs = event.kegs.map((k) => +k);
 
 					this.form.patchValue(event);
+					this.layoutService.$topBarTitle.set(event.name);
 
 					return event;
 				}),
@@ -273,5 +278,19 @@ export class EventDetailComponent implements OnDestroy {
 	public ngOnDestroy() {
 		this.kegStatusDialogRef?.close();
 		this.kegUserStatisticsDialogRef?.close();
+	}
+
+	private initDefaultFormValues() {
+		const start = new Date();
+		start.setHours(0, 0, 0, 0);
+		const end = new Date();
+		end.setDate(start.getDate() + 7);
+		end.setHours(0, 0, 0, 0);
+
+		this.form.patchValue({
+			name: `Klubovna ${start.getDate()}.${start.getMonth()} - ${end.getDate()}.${end.getMonth()}`,
+			start: start,
+			end: end,
+		});
 	}
 }

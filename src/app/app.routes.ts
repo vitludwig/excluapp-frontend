@@ -33,17 +33,20 @@ export const routes: Routes = [
 		children: [
 			{
 				path: 'events',
-				data: {
-					title: 'Události',
-				},
 				children: [
 					{
 						path: '',
 						loadComponent: () => import('./modules/admin/components/events/event-list/event-list.component').then((m) => m.EventListComponent),
+						data: {
+							title: 'Události',
+						},
 					},
 					{
 						path: 'new',
 						loadComponent: () => import('./modules/admin/components/events/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
+						data: {
+							title: 'Nová událost',
+						},
 					},
 					{
 						path: 'detail/:id',
@@ -53,13 +56,13 @@ export const routes: Routes = [
 			},
 			{
 				path: 'users',
-				data: {
-					title: 'Pijáci',
-				},
 				children: [
 					{
 						path: '',
 						loadComponent: () => import('./modules/admin/components/users/user-list/user-list.component').then((m) => m.UserListComponent),
+						data: {
+							title: 'Uživatelé',
+						},
 					},
 					{
 						path: 'detail/:id',
@@ -68,6 +71,9 @@ export const routes: Routes = [
 					{
 						path: 'new',
 						loadComponent: () => import('./modules/admin/components/users/user-detail/user-detail.component').then((m) => m.UserDetailComponent),
+						data: {
+							title: 'Nový uživatel',
+						},
 					},
 				],
 			},
