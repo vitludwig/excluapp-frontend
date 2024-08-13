@@ -9,6 +9,7 @@ import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
 import { IKeg } from '@modules/sortiment/types/IKeg';
+import { UserStore } from '@modules/user/user.store';
 import { MessageService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -19,7 +20,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { firstValueFrom, tap } from 'rxjs';
 import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
-import { UserService } from '../../../user/services/user/user.service';
 import { IUser } from '../../../user/types/IUser';
 
 @Component({
@@ -43,9 +43,10 @@ import { IUser } from '../../../user/types/IUser';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrationDetailComponent implements OnDestroy {
+	protected userStore = inject(UserStore);
+
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly eventService: EventService = inject(EventService);
-	private readonly usersService: UserService = inject(UserService);
 	private readonly messageService = inject(MessageService);
 	private readonly sortimentService = inject(SortimentService);
 	protected readonly authService: AuthService = inject(AuthService);
@@ -53,7 +54,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 	protected eventId: number;
 	protected $event: Signal<IEvent | undefined> = signal(undefined);
 	protected $eventUsers = signal<IUser[]>([]);
-	protected $usersToPick = computed(() => this.usersService.$users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)));
+	protected $usersToPick = computed(() => this.userStore.users().filter((user) => !this.$eventUsers().find((u) => u.id === user.id)));
 	protected $enableRegistration = computed(() => {
 		if (this.authService.$isLogged()) {
 			return true;
@@ -124,8 +125,8 @@ export class RegistrationDetailComponent implements OnDestroy {
 	}
 
 	private async loadUsers(): Promise<void> {
-		const users = await firstValueFrom(this.eventService.getUsersForEvent(this.eventId));
-
-		this.$eventUsers.set(users);
+		// const users = await firstValueFrom(this.eventService.getUsersForEvent(this.eventId));
+		//
+		// this.$eventUsers.set(users);
 	}
 }

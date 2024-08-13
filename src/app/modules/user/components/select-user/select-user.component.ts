@@ -24,7 +24,7 @@ export class SelectUserComponent {
 	private readonly usersService = inject(UserService);
 
 	public $layout = input<'list' | 'form'>('form', { alias: 'layout' });
-	public $users = input<IUser[], IUser[]>(this.usersService.$users(), { transform: orderUsernames, alias: 'users' });
+	public $users = input.required<IUser[], IUser[]>({ transform: orderUsernames, alias: 'users' });
 
 	@Output()
 	public select: EventEmitter<IUser | null> = new EventEmitter();

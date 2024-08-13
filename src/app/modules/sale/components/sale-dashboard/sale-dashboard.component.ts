@@ -2,11 +2,14 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { DistinctFromPipe } from '@common/pipes/distinct-from.pipe';
 import { SettingsService } from '@common/services/settings.service';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { KegUsersStatisticsDialogComponent } from '@modules/sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
 import { IKeg } from '@modules/sortiment/types/IKeg';
+import { UserStore } from '@modules/user/user.store';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +17,7 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
-import { firstValueFrom, of, Subject, takeUntil, tap } from 'rxjs';
+import { catchError, firstValueFrom, of, Subject, takeUntil, tap } from 'rxjs';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { UserFaceRecognitionComponent } from '../../../user/components/user-face-recognition/user-face-recognition.component';
 import { FaceRecognitionService } from '../../../user/services/face-recognition/face-recognition.service';
@@ -45,6 +48,7 @@ import { DashboardUserSelectComponent } from './components/dashboard-user-select
 		FormsModule,
 		UserFaceRecognitionComponent,
 		KegStatusPipe,
+		DistinctFromPipe,
 	],
 	providers: [DialogService],
 	templateUrl: './sale-dashboard.component.html',
@@ -52,6 +56,9 @@ import { DashboardUserSelectComponent } from './components/dashboard-user-select
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleDashboardComponent implements OnDestroy {
+	protected readonly eventStore = inject(EventStore);
+	protected readonly userStore = inject(UserStore);
+
 	protected readonly eventService = inject(EventService);
 	protected readonly sortimentService = inject(SortimentService);
 	protected readonly orderService = inject(OrderService);
@@ -81,20 +88,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	});
 
 	protected $selectedUser = signal<IUser | null>(null);
-	protected $usersInEvent = computed(() => {
-		const event = this.eventService.$activeEvent();
-		if (event) {
-			return this.eventService.getUsersForEvent(event.id).pipe(
-				tap((users: IUser[]) => {
-					const usersInEventIds = users.map((u) => u.id);
-					this.$usersOther.set(this.userService.$users().filter((u) => !usersInEventIds.includes(u.id)));
-				}),
-			);
-		}
-		return of([]);
-	});
-
-	protected $usersOther = signal<IUser[]>([]);
+	protected $usersOther = signal<IUser[] | null>(null);
 	protected beerpongOpened = false;
 
 	private unsubscribe$: Subject<void> = new Subject<void>();
@@ -165,5 +159,29 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.beerpongDialogRef?.close();
 		this.kegUserStatisticsDialogRef?.close();
 		this.unsubscribe$.next();
+	}
+
+	/**
+	 * Loads into signal users, that are not registered in event
+	 * Used for 'Other' tab in user select accordion
+	 *
+	 * @param isOpened
+	 * @protected
+	 */
+	protected loadOtherUsers(isOpened: boolean) {
+		if (!isOpened) {
+			return;
+		}
+
+		this.userStore
+			.usersInEvent()
+			.pipe(
+				tap((users) => {
+					const otherUsers = this.userStore.users().filter((u) => !users.map((u) => u.id).includes(u.id));
+					this.$usersOther.set(otherUsers);
+				}),
+				catchError(() => of([])),
+			)
+			.subscribe();
 	}
 }

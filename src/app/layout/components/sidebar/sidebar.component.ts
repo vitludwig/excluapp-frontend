@@ -4,8 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
 import { SettingsService } from '@common/services/settings.service';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
-import { IEvent } from '@modules/event/types/IEvent';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
 import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
 import { MenuItem, MessageService } from 'primeng/api';
@@ -44,6 +44,8 @@ import { LoginDialogComponent } from './components/login-dialog/login-dialog.com
 	providers: [DialogService],
 })
 export class SidebarComponent implements OnDestroy {
+	protected eventStore = inject(EventStore);
+
 	protected readonly layoutService = inject(LayoutService);
 	protected readonly authService = inject(AuthService);
 	protected readonly eventService = inject(EventService);
@@ -66,8 +68,8 @@ export class SidebarComponent implements OnDestroy {
 		this.eventService.setActiveEventKegsToShow(kegs);
 	}
 
-	protected setActiveEvent(event: IEvent) {
-		this.eventService.setActiveEvent(event);
+	protected setActiveEvent(id: number) {
+		this.eventStore.setActiveEvent(id);
 	}
 
 	public get visible(): boolean {

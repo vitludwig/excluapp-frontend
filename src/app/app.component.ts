@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NotificationService } from '@common/services/notification.service';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ToastModule } from 'primeng/toast';
 import { filter, fromEvent, map, merge, tap } from 'rxjs';
-import { NotificationService } from './common/services/notification.service';
 import { SidebarComponent } from './layout/components/sidebar/sidebar.component';
 import { TopbarComponent } from './layout/components/topbar/topbar.component';
 import { LayoutService } from './layout/services/layout/layout.service';

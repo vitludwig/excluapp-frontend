@@ -25,7 +25,7 @@
 
 <p-table
 	#usersTable
-	[value]="userService.$users()"
+	[value]="userStore.users()"
 	[paginator]="true"
 	[rows]="10"
 	[globalFilterFields]="['name']"

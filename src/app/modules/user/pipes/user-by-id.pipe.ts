@@ -1,5 +1,5 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { UserService } from '../services/user/user.service';
+import { UserStore } from '@modules/user/user.store';
 import { IUser } from '../types/IUser';
 
 @Pipe({
@@ -7,12 +7,12 @@ import { IUser } from '../types/IUser';
 	standalone: true,
 })
 export class UserByIdPipe implements PipeTransform {
-	private usersService = inject(UserService);
+	protected userStore = inject(UserStore);
 
 	transform(value?: number): IUser | null {
 		if (!value) {
 			return null;
 		}
-		return this.usersService.$users().find((user) => user.id === value) ?? null;
+		return this.userStore.users().find((user) => user.id === value) ?? null;
 	}
 }

@@ -55,6 +55,7 @@ export class EventService {
 		);
 	}
 
+	// TODO: move to store
 	public setActiveEvent(event: IEvent | null): void {
 		const eventActiveKegs = JSON.parse(localStorage.getItem('activeEventKegsToShow') ?? '[]');
 
@@ -106,10 +107,6 @@ export class EventService {
 				return event;
 			}),
 		);
-	}
-
-	public getUsersForEvent(eventId: number): Observable<IUser[]> {
-		return this.http.get<IUser[]>(environment.apiUrl + '/attendance/getUsersByEventId/' + eventId);
 	}
 
 	public attendEvent(userId: number, eventId: number): Observable<IUser[]> {

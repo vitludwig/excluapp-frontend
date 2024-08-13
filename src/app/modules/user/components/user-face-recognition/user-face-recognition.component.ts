@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { UserStore } from '@modules/user/user.store';
 import { detectSingleFace, FaceMatcher, LabeledFaceDescriptors, TinyFaceDetectorOptions } from 'face-api.js';
 import { WebcamModule } from 'ngx-webcam';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { FaceRecognitionService } from '../../services/face-recognition/face-recognition.service';
-import { UserService } from '../../services/user/user.service';
 import { IUser } from '../../types/IUser';
 import { SelectUserComponent } from '../select-user/select-user.component';
 import { FaceScanningError } from './types/FaceScanningError';
@@ -19,7 +19,8 @@ import { FaceScanningError } from './types/FaceScanningError';
 	providers: [],
 })
 export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
-	protected readonly usersService = inject(UserService);
+	protected userStore = inject(UserStore);
+
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);
 
 	@Input()
@@ -28,16 +29,6 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 			this.detectUser(value);
 		}
 	}
-
-	// nebo
-
-	// public users2 = input<IUserRead[] | null, IUserRead[] | null>(null, {transform: (value) => {
-	// 	if(value) {
-	// 		this.detectUser(value)
-	// 	}
-	//
-	// 	return value;
-	// }});
 
 	private _enabled = true;
 
@@ -116,7 +107,7 @@ export class UserFaceRecognitionComponent implements AfterViewInit, OnInit {
 
 				if (detection) {
 					const bestMatch = this.matcher.findBestMatch(detection.descriptor);
-					const user = this.usersService.$users().find((user) => user.id.toString() === bestMatch.label) ?? null;
+					const user = this.userStore.users().find((user) => user.id.toString() === bestMatch.label) ?? null;
 					if (user) {
 						this.detected.emit(user);
 						clearInterval(this.recognitionInterval);
