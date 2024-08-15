@@ -43,7 +43,11 @@ export const EventStore = signalStore(
 				}),
 			),
 		);
-		return { setActiveEvent, loadAll };
+
+		function getById(id: number) {
+			return store.events().find((e) => e.id === id) ?? null;
+		}
+		return { setActiveEvent, loadAll, getById };
 	}),
 	withHooks({
 		onInit(store) {

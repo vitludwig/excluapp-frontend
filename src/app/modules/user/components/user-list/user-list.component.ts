@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
+import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { UserService } from '@modules/user/services/user/user.service';
@@ -9,19 +10,18 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
-import { tap } from 'rxjs';
 
 @Component({
 	selector: 'app-user-list',
 	standalone: true,
-	imports: [ButtonModule, SharedModule, TableModule, RouterLink, InputTextModule, ConfirmPopupModule, ConfirmComponent],
+	imports: [ButtonModule, SharedModule, TableModule, RouterLink, InputTextModule, ConfirmPopupModule, ConfirmComponent, JsonPipe],
 	templateUrl: './user-list.component.html',
 	styleUrls: ['./user-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [ConfirmationService],
 })
 export class UserListComponent {
-	protected userStore = inject(UserStore);
+	protected readonly userStore = inject(UserStore);
 
 	protected readonly userService: UserService = inject(UserService);
 
@@ -30,9 +30,6 @@ export class UserListComponent {
 	}
 
 	protected removeUser(id: number) {
-		this.userService
-			.removeUser(id)
-			.pipe(tap(() => this.userService.getUsers()))
-			.subscribe();
+		this.userStore.remove(id).subscribe();
 	}
 }

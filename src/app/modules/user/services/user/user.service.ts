@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { IUser } from '../../types/IUser';
+import { IUser, IUserCreate } from '../../types/IUser';
 
 @Injectable({
 	providedIn: 'root',
@@ -22,8 +22,8 @@ export class UserService {
 		return this.http.get<IUser[]>(environment.apiUrl + '/attendance/getUsersByEventId/' + eventId);
 	}
 
-	public addUser(name: string): Observable<IUser> {
-		return this.http.post<IUser>(environment.apiUrl + '/user', { name });
+	public addUser(user: IUserCreate): Observable<IUser> {
+		return this.http.post<IUser>(environment.apiUrl + '/user', user);
 	}
 
 	public removeUser(id: number): Observable<void> {
