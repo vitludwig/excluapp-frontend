@@ -65,16 +65,6 @@ export class EventStatisticsComponent {
 		this.$selectedEvent.set(value);
 	}
 
-	protected payday(eventId: number | undefined): void {
-		if (!eventId) {
-			console.warn('No event selected');
-			return;
-		}
-		// const result$ = this.eventService.getEventPayday(eventId).pipe(tap(() => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 0)));
-		//
-		// this.$paydayResult.set(result$);
-	}
-
 	private createKegsChartData(value: IEventKegsStatistics[]): IPChartData {
 		// TODO: create colors according to keg type and dynamically add them by amount of kegs
 		value.sort((a, b) => (a.volume > b.volume ? -1 : 1));

@@ -65,6 +65,8 @@ export class UserStatisticsComponent {
 		return of([]);
 	});
 
+	constructor() {}
+
 	protected selectUser(user: IUser | null) {
 		this.$selectedUser.set(user);
 	}

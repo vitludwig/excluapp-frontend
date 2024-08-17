@@ -27,11 +27,13 @@ export class SelectUserComponent {
 	public $users = input.required<IUser[], IUser[]>({ transform: orderUsernames, alias: 'users' });
 
 	@Output()
-	public select: EventEmitter<IUser | null> = new EventEmitter();
+	public select: EventEmitter<IUser> = new EventEmitter();
 
 	protected selectedUser: IUser | null = null;
 
 	protected submit() {
-		this.select.emit(this.selectedUser);
+		if (this.selectedUser) {
+			this.select.emit(this.selectedUser);
+		}
 	}
 }

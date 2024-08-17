@@ -1,44 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { EventStore } from '@modules/event/event.store';
-import { EventService } from '@modules/event/services/event/event.service';
-import { IKeg } from '@modules/sortiment/types/IKeg';
-import { Observable, forkJoin, tap } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { EBeerVolume } from '../../types/EBeerVolume';
-import { ICartItem } from '../../types/ICartItem';
 import { IOrderCreate, IOrderRead } from '../../types/IOrder';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class OrderService {
-	private readonly eventStore = inject(EventStore);
-
-	private readonly eventService = inject(EventService);
 	private readonly http = inject(HttpClient);
-
-	public $cart = signal<ICartItem[]>([]);
-	public $orderProcessing = signal<boolean>(false);
-
-	// TODO: write this using reduce maybe?
-	public $cartCount = computed(() => {
-		const result: Record<EBeerVolume | 'beerpong', Record<string, number>> = {
-			[EBeerVolume.BIG]: {},
-			[EBeerVolume.SMALL]: {},
-			beerpong: {},
-		};
-
-		for (const item of this.$cart()) {
-			const category = item.isBeerpong ? 'beerpong' : item.volume === EBeerVolume.BIG ? EBeerVolume.BIG : EBeerVolume.SMALL;
-			if (!result[category][item.kegId]) {
-				result[category][item.kegId] = 1;
-			} else {
-				result[category][item.kegId]++;
-			}
-		}
-		return result;
-	});
 
 	public addOrder(value: IOrderCreate): Observable<IOrderRead> {
 		return this.http.post<IOrderRead>(environment.apiUrl + '/order', value);
@@ -55,50 +25,6 @@ export class OrderService {
 		return this.http.get<IOrderRead[]>(`${environment.apiUrl}/order/event-user/${eventId}/${userId}`);
 	}
 
-	public addOneToCart(kegId: number, userId: number, volume: EBeerVolume = EBeerVolume.BIG, isBeerpong: boolean = false, $event?: MouseEvent) {
-		if ($event) {
-			$event.stopPropagation();
-		}
-
-		this.$cart.update((cart) => [...cart, { userId, kegId, isBeerpong, volume }]);
-	}
-
-	public removeOneFromCart(value: IKeg, $event: MouseEvent, volume: EBeerVolume) {
-		if ($event) {
-			$event.stopPropagation();
-		}
-		this.$cart.update((cart) => {
-			// remove only first occurrence, because there might be multiple duplicate items
-			const index = cart.findIndex((obj) => obj.kegId === value.id && obj.volume === volume);
-			if (index !== -1) {
-				cart.splice(index, 1);
-			}
-			return [...cart];
-		});
-	}
-
-	public confirmOrder() {
-		this.$orderProcessing.set(true);
-
-		const requests = [];
-		for (const item of this.$cart()) {
-			const req = this.addOrder({
-				userId: item.userId,
-				kegId: item.kegId,
-				volume: item.volume,
-				eventId: this.eventStore.activeEvent()?.id!,
-			});
-			requests.push(req);
-		}
-
-		return forkJoin(requests).pipe(
-			tap(() => {
-				this.$orderProcessing.set(false);
-				this.clearOrder();
-			}),
-		);
-	}
-
 	public getTransactions(userIds?: number[], eventIds?: number[]): Observable<IOrderRead[]> {
 		const params = new HttpParams({
 			fromObject: {
@@ -107,9 +33,5 @@ export class OrderService {
 			},
 		});
 		return this.http.get<IOrderRead[]>(`${environment.apiUrl}/order/`, { params: params });
-	}
-
-	public clearOrder() {
-		this.$cart.set([]);
 	}
 }

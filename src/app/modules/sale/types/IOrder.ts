@@ -12,5 +12,5 @@ export interface IOrderRead extends IOrderCreate {
 
 export interface IOrderReadGroup extends IOrderRead {
 	count: number;
-	orderIds: number[];
+	orderIds: number[]; // order ids in which is keg present
 }

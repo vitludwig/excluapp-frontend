@@ -1,17 +1,29 @@
 @if(sortimentStore.kegsInActiveEvent() | async; as kegs) {
-	@if ($selectedUser(); as selectedUser) {
+	@if (orderStore.selectedUser(); as selectedUser) {
 		<app-dashboard-sortiment-select
 			[selectedUser]="selectedUser"
 			[sortiment]="kegs"
-			(confirm)="confirmOrder()"
-			(cancel)="clearOrder()"
+			[cartCountMap]="orderStore.cartCountMap()"
+			(itemAdd)="orderStore.addOneToCart($event)"
+			(itemRemove)="orderStore.removeOneFromCart($event.id, $event.volume)"
+		/>
+
+		<app-order-controls
+			[confirmBtnDisabled]="orderStore.orderProcessing() || orderStore.cart().length === 0"
+			[cancelBtnDisabled]="orderStore.orderProcessing()"
+			[selectedUser]="selectedUser"
+			[kegs]="kegs"
+			[activeEvent]="eventStore.activeEvent()"
+			(confirmOrder)="confirmOrder()"
+			(cancelOrder)="resetOrder()"
+			(stornoOrder)="stornoOrder($event)"
 		/>
 	} @else {
 		@if(this.userStore.usersInEvent() | async; as usersInEvent) {
 			<p-card
 				(click)="showBeerpongDialog(kegs, usersInEvent)"
 				[header]="'Zapsat býrponk'"
-				[class.active]="(orderService.$cartCount()['beerpong'] | json) !== '{}'"
+				[class.active]="(orderStore.cartCountMap()['beerpong'] | json) !== '{}'"
 				class="card card-beerpong"
 			/>
 
@@ -25,9 +37,9 @@
 				/>
 				<br />
 				<p-accordion>
-					<p-accordionTab header="Ostatní">
+					<p-accordionTab header="Ostatní" (selectedChange)="loadOtherUsers($event, usersInEvent)">
 						<app-dashboard-user-select
-							[users]="userStore.users() | distinctFrom: usersInEvent"
+							[users]="$otherUsers()"
 							(selected)="selectUser($event)"
 						/>
 					</p-accordionTab>
@@ -36,28 +48,8 @@
 
 			<p-divider />
 		}
-		<h2 class="text-center">Už se vypilo</h2>
-		<div class="flex-responsive pb-6">
-			@for (keg of kegs; track $index) {
-				<div
-					class="flex-1 cursor-pointer"
-					(click)="showKegStatistics(keg)"
-				>
-					@if (keg.id | kegStatus | async; as kegStat) {
-						<h3 class="text-center">{{ keg.name }}</h3>
-						<p-knob
-							class="text-center"
-							[ngModel]="kegStat.consumedVolume"
-							[max]="kegStat.totalVolume"
-							[size]="200"
-							valueTemplate="{value}ks"
-							[readonly]="true"
-						/>
-						<h3 class="text-center">{{ kegStat.totalVolume }}ks</h3>
-					}
-				</div>
-			}
-		</div>
+
+		<app-dashboard-sortiment-statistics [kegs]="kegs"/>
 
 		<div class="kegs-pointer-container">
 			@for (keg of kegs; track keg.id) {

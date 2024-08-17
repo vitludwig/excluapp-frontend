@@ -33,17 +33,6 @@
 			}
 		}
 
-		.order-control-btn {
-			.p-element {
-				width: 5rem;
-				height: 5rem;
-
-				.p-button-icon {
-					font-size: 2.5rem;
-				}
-			}
-		}
-
 		p-confirmDialog {
 			.p-dialog-footer {
 				display: flex;
@@ -60,43 +49,4 @@
 	@media (max-width: $mobile-screen-width) {
 		flex: 100%;
 	}
-}
-
-.slide-panel {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	.summary {
-		width: 100%;
-		height: 0;
-		display: none;
-		transition: height 2s ease-in-out;
-		padding: 15px;
-		border-top: 1px solid #bbb;
-		background: #121212;
-
-		&.visible {
-			height: auto;
-			display: block;
-			transition: height 2s ease-in-out;
-		}
-
-		.summary-item {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			border-bottom: 1px solid #333;
-			padding: 15px 5px;
-		}
-	}
-}
-
-.order-control-btn {
-	margin: 40px;
 }
