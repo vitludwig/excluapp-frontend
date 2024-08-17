@@ -18,7 +18,7 @@ const initialState: UserState = {
 
 export const UserStore = signalStore(
 	{ providedIn: 'root' },
-	withState(initialState),
+	withState<UserState>(initialState),
 	withComputed((store, eventStore = inject(EventStore), userService = inject(UserService)) => ({
 		usersInEvent: computed(() => {
 			const eventId = eventStore.activeEvent();

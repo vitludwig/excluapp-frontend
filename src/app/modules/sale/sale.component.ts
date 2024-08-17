@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { SaleDashboardComponent } from './components/sale-dashboard/sale-dashboard.component';
 
@@ -12,5 +13,6 @@ import { SaleDashboardComponent } from './components/sale-dashboard/sale-dashboa
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleComponent {
-	protected eventService = inject(EventService);
+	protected readonly eventStore = inject(EventStore);
+	protected readonly eventService = inject(EventService);
 }

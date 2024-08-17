@@ -1,4 +1,4 @@
-@if($kegs() | async; as kegs) {
+@if(sortimentStore.kegsInActiveEvent() | async; as kegs) {
 	@if ($selectedUser(); as selectedUser) {
 		<app-dashboard-sortiment-select
 			[selectedUser]="selectedUser"

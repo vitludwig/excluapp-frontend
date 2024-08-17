@@ -2,7 +2,7 @@
 <!--	<app-select-user (select)="selectUser($event)"></app-select-user>-->
 
 	<p-multiSelect
-		[options]="this.eventService.$events() | sort: 'start'"
+		[options]="eventStore.events() | sort: 'start'"
 		[ngModel]="$selectedEvents()"
 		(ngModelChange)="$selectedEvents.set($event)"
 		placeholder="Vyber události"

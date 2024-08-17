@@ -38,18 +38,18 @@
 			<div class="flex gap-2 mt-2">
 				<label htmlFor="enableMultipleDevices">Více zařízení na události</label>
 				<p-inputSwitch
-					[ngModel]="settingsService.$enableMultipleDevices()"
-					(ngModelChange)="settingsService.$enableMultipleDevices.set($event)"
+					[ngModel]="settingsStore.enableMultipleDevices()"
+					(ngModelChange)="settingsStore.toggleEnabledMultipleDevices()"
 					id="enableMultipleDevices"
 				></p-inputSwitch>
 			</div>
 
-			@if(settingsService.$enableMultipleDevices() && ($activeEventKegsAll() | async); as kegs) {
+			@if(settingsStore.enableMultipleDevices() && (sortimentStore.allKegsInActiveEvent() | async); as kegs) {
 				<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
 				<p-multiSelect
 					[options]="kegs"
-					[ngModel]="eventService.activeEventKegsToShow$ | async"
-					(ngModelChange)="setActiveEventKegs($event)"
+					[ngModel]="settingsStore.activeEventKegsToShow()"
+					(ngModelChange)="settingsStore.setActiveEventKegsToShow($event)"
 					optionLabel="name"
 					optionValue="id"
 					[style]="{ width: '100%' }"

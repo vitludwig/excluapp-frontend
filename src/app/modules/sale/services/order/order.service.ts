@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IKeg } from '@modules/sortiment/types/IKeg';
 import { Observable, forkJoin, tap } from 'rxjs';
@@ -12,6 +13,8 @@ import { IOrderCreate, IOrderRead } from '../../types/IOrder';
 	providedIn: 'root',
 })
 export class OrderService {
+	private readonly eventStore = inject(EventStore);
+
 	private readonly eventService = inject(EventService);
 	private readonly http = inject(HttpClient);
 
@@ -83,7 +86,7 @@ export class OrderService {
 				userId: item.userId,
 				kegId: item.kegId,
 				volume: item.volume,
-				eventId: this.eventService.$activeEvent()?.id!,
+				eventId: this.eventStore.activeEvent()?.id!,
 			});
 			requests.push(req);
 		}

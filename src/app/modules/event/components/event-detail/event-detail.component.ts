@@ -6,6 +6,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { NotificationService } from '@common/services/notification.service';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { KegStatusDialogComponent } from '@modules/sortiment/components/keg-status-dialog/keg-status-dialog.component';
@@ -21,7 +22,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { OrderListModule } from 'primeng/orderlist';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { EventSortimentComponent } from './components/event-sortiment/event-sortiment.component';
 
@@ -49,6 +50,8 @@ import { EventSortimentComponent } from './components/event-sortiment/event-sort
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventDetailComponent implements OnDestroy {
+	private readonly eventStore = inject(EventStore);
+
 	private readonly eventService: EventService = inject(EventService);
 	private readonly router: Router = inject(Router);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -128,14 +131,18 @@ export class EventDetailComponent implements OnDestroy {
 		let request: Observable<IEvent>;
 
 		if (this.eventId) {
-			request = this.eventService.updateEvent(this.eventId, this.form.value as IEvent);
+			// TODO: add typeguards
+			request = this.eventStore.update(this.eventId, this.form.value as IEvent);
 		} else {
-			request = this.eventService.addEvent(this.form.value as IEvent);
+			request = this.eventStore.add(this.form.value as IEvent);
 		}
-		const event = await firstValueFrom(request);
-		await this.processEventKegs(event, newKegsToAdd, existingKegsToAdd);
 
-		this.router.navigate(['/admin/events']);
+		request
+			.pipe(
+				switchMap((event) => this.processEventKegs(event, newKegsToAdd, existingKegsToAdd)),
+				tap(() => this.router.navigate(['/admin/events'])),
+			)
+			.subscribe();
 	}
 
 	private async processEventKegs(event: IEvent, newKegsToAdd: IKeg[], existingKegsToAdd: IKeg[]): Promise<void> {
@@ -157,11 +164,14 @@ export class EventDetailComponent implements OnDestroy {
 		 * Locally update events, so newly added/removed kegs would be there
 		 * Normally this update is done on Event update/create, but this method have to be called after event update/create, because we might not have event id before (on create)
 		 */
-		this.eventService.$events.update((events) => events.map((e) => (e.id === event.id ? newEvent : e)));
+		// TODO: might not be needed with new store, check i tout
+		this.eventStore.update(event.id, newEvent);
 
 		// load active event data if it was updated
-		if (event.id === this.eventService.$activeEventId()) {
-			this.eventService.$activeEventId.set(event.id);
+		const activeEvent = this.eventStore.activeEvent();
+		if (event.id === activeEvent?.id) {
+			// TODO: this might not be needed with store, check it out
+			this.eventStore.setActiveEvent(event.id);
 		}
 	}
 
@@ -248,6 +258,7 @@ export class EventDetailComponent implements OnDestroy {
 	}
 
 	private loadEvent(id: number) {
+		// TODO: load values from store, implement local store
 		this.eventService
 			.getEvent(id)
 			.pipe(

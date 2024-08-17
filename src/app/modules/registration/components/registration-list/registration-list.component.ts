@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { SharedModule } from 'primeng/api';
@@ -18,9 +19,10 @@ import { Table, TableModule } from 'primeng/table';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrationListComponent {
+	private readonly eventStore = inject(EventStore);
 	protected readonly eventService: EventService = inject(EventService);
 
-	protected $events = computed(() => this.filterNearEvents(this.eventService.$events()));
+	protected $events = computed(() => this.filterNearEvents(this.eventStore.events()));
 
 	protected clearSearch(table: Table) {
 		table.clear();

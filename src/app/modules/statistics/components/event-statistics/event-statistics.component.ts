@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
 import { IPChartData } from '@common/types/IPChartData';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { IEventKegsStatistics, IEventUsersStatistics } from '@modules/event/types/IEventKegsStatistics';
@@ -25,10 +26,11 @@ import { Observable, of, switchMap } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventStatisticsComponent {
+	protected readonly eventStore = inject(EventStore);
 	protected readonly eventService = inject(EventService);
 	protected readonly authService: AuthService = inject(AuthService);
 
-	protected $selectedEvent = signal<IEvent | null>(this.eventService.$activeEvent());
+	protected $selectedEvent = signal<IEvent | null>(this.eventStore.activeEvent());
 	protected $paydayResult = signal<Observable<IEventPayday> | null>(null);
 
 	protected $kegsStatistics = computed(() => {

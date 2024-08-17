@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, inject, input, OnDestroy, Output, signal } from '@angular/core';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
 import { IKeg } from '@modules/sortiment/types/IKeg';
@@ -27,6 +28,8 @@ import { SummaryItemDialogComponent } from '../../../summary-item-dialog/summary
 	providers: [DialogService, ConfirmationService],
 })
 export class DashboardSortimentSelectComponent implements OnDestroy {
+	private readonly eventStore = inject(EventStore);
+
 	protected readonly sortimentService = inject(SortimentService);
 	protected readonly eventService = inject(EventService);
 	protected readonly orderService = inject(OrderService);
@@ -46,11 +49,12 @@ export class DashboardSortimentSelectComponent implements OnDestroy {
 	public cancel: EventEmitter<void> = new EventEmitter<void>();
 
 	protected $summary = computed(() => {
-		if (!this.$selectedUser || !this.eventService.$activeEvent()) {
+		const activeEvent = this.eventStore.activeEvent();
+		if (!this.$selectedUser || !activeEvent) {
 			return;
 		}
 
-		return this.orderService.getOrderByEventUserId(this.eventService.$activeEvent()?.id!, this.$selectedUser().id).pipe(
+		return this.orderService.getOrderByEventUserId(activeEvent.id, this.$selectedUser().id).pipe(
 			map((obj) => {
 				for (const item of obj) {
 					item.kegName = this.$sortiment().find((s) => s.id === item.kegId)?.name ?? '';

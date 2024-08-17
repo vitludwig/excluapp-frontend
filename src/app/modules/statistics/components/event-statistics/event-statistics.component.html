@@ -1,5 +1,5 @@
 <p-dropdown
-	[options]="eventService.$events()"
+	[options]="eventStore.events()"
 	[(ngModel)]="selectedEvent"
 	(ngModelChange)="$selectedEvent.set($event)"
 	[style]="{ width: '100%' }"

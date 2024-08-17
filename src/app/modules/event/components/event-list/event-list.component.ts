@@ -9,6 +9,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { SortPipe } from '@common/pipes/sort.pipe';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
 
@@ -22,6 +23,8 @@ import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventListComponent implements OnDestroy {
+	protected readonly eventStore = inject(EventStore);
+
 	protected readonly eventService: EventService = inject(EventService);
 	private readonly dialogService: DialogService = inject(DialogService);
 

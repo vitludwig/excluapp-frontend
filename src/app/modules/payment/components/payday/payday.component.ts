@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { SortPipe } from '@common/pipes/sort.pipe';
+import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { IEventPayday } from '@modules/event/types/IEventPaydayStatistics';
@@ -43,13 +44,15 @@ import { PaydayTableComponent } from '../payday-table/payday-table.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaydayComponent {
+	private readonly eventStore = inject(EventStore);
+
 	protected readonly eventService = inject(EventService);
 	protected readonly sortimentService = inject(SortimentService);
 
 	protected $selectedEvents = signal<IEvent[]>([]);
 	protected $paydayResult = signal<Observable<IEventPayday> | null>(null);
 	protected $events = computed(() => {
-		const events = this.eventService.$events();
+		const events = this.eventStore.events();
 		if (this.$showOnlyNotPaidEvents()) {
 			return events.filter((event) => {
 				const eventKegs = this.$copySortiment().filter((keg) => event.kegs.includes(keg.id));

@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DistinctFromPipe } from '@common/pipes/distinct-from.pipe';
-import { SettingsService } from '@common/services/settings.service';
-import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { KegUsersStatisticsDialogComponent } from '@modules/sortiment/components/keg-users-statistics-dialog/keg-users-statistics-dialog.component';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { SortimentStore } from '@modules/sortiment/sortiment.store';
 import { IKeg } from '@modules/sortiment/types/IKeg';
 import { UserStore } from '@modules/user/user.store';
 import { AccordionModule } from 'primeng/accordion';
@@ -56,8 +54,8 @@ import { DashboardUserSelectComponent } from './components/dashboard-user-select
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleDashboardComponent implements OnDestroy {
-	protected readonly eventStore = inject(EventStore);
 	protected readonly userStore = inject(UserStore);
+	protected readonly sortimentStore = inject(SortimentStore);
 
 	protected readonly eventService = inject(EventService);
 	protected readonly sortimentService = inject(SortimentService);
@@ -68,24 +66,9 @@ export class SaleDashboardComponent implements OnDestroy {
 	private readonly dialogService: DialogService = inject(DialogService);
 	private readonly layoutService = inject(LayoutService);
 	private readonly messageService = inject(MessageService);
-	private readonly settingsService = inject(SettingsService);
 
 	protected beerpongDialogRef: DynamicDialogRef | null = null;
 	private kegUserStatisticsDialogRef: DynamicDialogRef | null = null;
-
-	private $activeEventKegsToShow = toSignal(this.eventService.activeEventKegsToShow$);
-	protected $kegs = computed(() => {
-		let kegIds = this.eventService.$activeEvent()?.kegs ?? [];
-		if (this.settingsService.$enableMultipleDevices()) {
-			kegIds = this.$activeEventKegsToShow() ?? [];
-		}
-
-		if (kegIds.length === 0) {
-			return of([]);
-		}
-
-		return this.sortimentService.getSortimentList(kegIds, { isEmpty: false, isActive: true });
-	});
 
 	protected $selectedUser = signal<IUser | null>(null);
 	protected $usersOther = signal<IUser[] | null>(null);

@@ -4,9 +4,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
 import { SettingsService } from '@common/services/settings.service';
+import { SettingsStore } from '@common/state/stores/settings.store';
 import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
+import { SortimentStore } from '@modules/sortiment/sortiment.store';
 import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -45,6 +47,8 @@ import { LoginDialogComponent } from './components/login-dialog/login-dialog.com
 })
 export class SidebarComponent implements OnDestroy {
 	protected eventStore = inject(EventStore);
+	protected settingsStore = inject(SettingsStore);
+	protected sortimentStore = inject(SortimentStore);
 
 	protected readonly layoutService = inject(LayoutService);
 	protected readonly authService = inject(AuthService);
@@ -61,12 +65,6 @@ export class SidebarComponent implements OnDestroy {
 		}
 		return this.defaultMenuItems;
 	});
-
-	protected $activeEventKegsAll = computed(() => this.sortimentService.getSortimentList(this.eventService.$activeEvent()?.kegs ?? [], { isEmpty: false, isActive: true }));
-
-	protected setActiveEventKegs(kegs: number[]) {
-		this.eventService.setActiveEventKegsToShow(kegs);
-	}
 
 	protected setActiveEvent(id: number) {
 		this.eventStore.setActiveEvent(id);

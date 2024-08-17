@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormsModule } from '@angular/forms';
 import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
+import { EventStore } from '@modules/event/event.store';
 import { EventByIdPipe } from '@modules/event/pipes/eventById.pipe';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
@@ -42,6 +43,8 @@ import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
 	templateUrl: './user-statistics.component.html',
 })
 export class UserStatisticsComponent {
+	protected readonly eventStore = inject(EventStore);
+
 	protected readonly eventService = inject(EventService);
 	protected readonly orderService = inject(OrderService);
 	protected readonly authService: AuthService = inject(AuthService);
