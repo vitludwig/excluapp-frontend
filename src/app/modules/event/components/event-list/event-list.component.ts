@@ -9,8 +9,8 @@ import { ToastModule } from 'primeng/toast';
 
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { SortPipe } from '@common/pipes/sort.pipe';
+import { NotificationService } from '@common/services/notification.service';
 import { EventStore } from '@modules/event/event.store';
-import { EventService } from '@modules/event/services/event/event.service';
 import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.component';
 
 @Component({
@@ -25,8 +25,8 @@ import { InviteDialogComponent } from './components/invite-dialog/invite-dialog.
 export class EventListComponent implements OnDestroy {
 	protected readonly eventStore = inject(EventStore);
 
-	protected readonly eventService: EventService = inject(EventService);
 	private readonly dialogService: DialogService = inject(DialogService);
+	private notificationService = inject(NotificationService);
 
 	private inviteDialogRef: DynamicDialogRef;
 
@@ -48,7 +48,9 @@ export class EventListComponent implements OnDestroy {
 	}
 
 	protected removeEvent(eventId: number) {
-		this.eventService.removeEvent(eventId).subscribe();
+		this.eventStore.remove(eventId).subscribe({
+			error: () => this.notificationService.error('Nepodařilo se smazat událost'),
+		});
 	}
 
 	public ngOnDestroy() {

@@ -45,12 +45,10 @@ export class RegistrationDetailComponent implements OnDestroy {
 		if (this.authService.$isLogged()) {
 			return true;
 		}
-
 		const event = this.registrationStore.event();
 		if (!event) {
 			return false;
 		}
-
 		return this.registrationStore.eventUsers().length < event.capacity;
 	});
 

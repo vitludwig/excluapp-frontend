@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { IsIncludedPipe } from '@common/pipes/is-included.pipe';
-import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
-import { ISortimentFilters } from '@modules/sortiment/services/sortiment/types/ISortimentFilters';
+import { NotificationService } from '@common/services/notification.service';
+import { SortimentListStore } from '@modules/sortiment/components/sortiment-list/sortiment-list.store';
+import { SortimentStore } from '@modules/sortiment/sortiment.store';
 import { IKeg } from '@modules/sortiment/types/IKeg';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -42,61 +43,24 @@ import { SortimentListTableComponent } from './components/sortiment-list-table/s
 	templateUrl: './sortiment-list.component.html',
 	styleUrls: ['./sortiment-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [DialogService],
+	providers: [DialogService, SortimentListStore],
 })
 export class SortimentListComponent {
-	protected readonly sortimentService: SortimentService = inject(SortimentService);
+	protected readonly sortimentListStore = inject(SortimentListStore);
+	private readonly sortimentStore = inject(SortimentStore);
+	private readonly notificationService = inject(NotificationService);
 
-	protected $originalKegs = signal<IKeg[]>([]);
-	protected $copyKegs = signal<IKeg[]>([]);
-
-	// protected $sortiment = signal<IKeg[]>([]);
-
-	protected $filter = signal<ISortimentFilters>({ isEmpty: false });
-
-	constructor() {
-		this.loadSortiment();
-	}
-
-	protected toggleFilter(filter: keyof ISortimentFilters) {
-		this.$filter.update((filters) => {
-			filters[filter] = !filters[filter];
-			return filters;
-		});
-		this.loadSortiment();
-	}
-
-	protected loadSortiment() {
-		// TODO: load new data and filters declaratively
-		this.sortimentService.getSortimentList(undefined, this.$filter()).subscribe((kegs) => {
-			this.$originalKegs.set(kegs.filter((k) => k.isOriginal));
-			this.$copyKegs.set(kegs.filter((k) => !k.isOriginal));
+	public removeKeg(id: number) {
+		this.sortimentStore.removeKeg(id).subscribe({
+			next: () => this.notificationService.success('Sud odstraněn'),
+			error: () => this.notificationService.error('Nepodařilo se odstranit sud'),
 		});
 	}
 
-	// public onKegDelete(kegId: number) {
-	// 	this.$sortiment.update((kegs) => kegs.filter((k) => k.id !== kegId));
-	// }
-	//
-	// public onKegEmptyStatusChange(newValue: { id: number; isEmpty: boolean }) {
-	// 	this.$sortiment.update((kegs) => {
-	// 		const keg = kegs.find((k) => k.id === newValue.id);
-	// 		if (keg) {
-	// 			keg.isEmpty = newValue.isEmpty;
-	// 		}
-	//
-	// 		return kegs;
-	// 	});
-	// }
-	//
-	// public onKegDefectiveStatusChanged(newValue: { id: number; isDefective: boolean }) {
-	// 	this.$sortiment.update((kegs) => {
-	// 		const keg = kegs.find((k) => k.id === newValue.id);
-	// 		if (keg) {
-	// 			keg.isDefective = newValue.isDefective;
-	// 		}
-	//
-	// 		return kegs;
-	// 	});
-	// }
+	public updateKeg(id: number, property: keyof IKeg, value: any) {
+		this.sortimentStore.updateKeg(id, property, value).subscribe({
+			next: () => this.notificationService.success('Sud upraven'),
+			error: () => this.notificationService.error('Nepodařilo se upravit sud'),
+		});
+	}
 }

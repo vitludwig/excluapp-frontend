@@ -49,7 +49,7 @@ export const routes: Routes = [
 						},
 					},
 					{
-						path: 'detail/:id',
+						path: 'detail/:eventId',
 						loadComponent: () => import('@modules/event/components/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
 					},
 				],

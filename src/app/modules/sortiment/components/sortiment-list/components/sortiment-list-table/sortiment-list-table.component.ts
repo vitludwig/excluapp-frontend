@@ -12,7 +12,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { tap } from 'rxjs';
 
 @Component({
 	selector: 'app-sortiment-list-table',
@@ -28,31 +27,21 @@ export class SortimentListTableComponent implements OnDestroy {
 
 	public $kegs = input.required<IKeg[]>({ alias: 'kegs' });
 
-	public kegDeleted = output<number>();
-	public kegEmptyStatusChanged = output<{ id: number; isEmpty: boolean }>();
-	public kegDefectiveStatusChanged = output<{ id: number; isDefective: boolean }>();
+	public kegDelete = output<number>();
+	public kegUpdate = output<{ id: number; property: keyof IKeg; value: boolean }>();
 
 	private kegStatusDialogRef: DynamicDialogRef | undefined;
 
 	protected removeKeg(id: number) {
-		this.sortimentService
-			.removeSortiment(id)
-			.pipe(tap(() => this.kegDeleted.emit(id)))
-			.subscribe();
+		this.kegDelete.emit(id);
 	}
 
 	protected setKegEmptyStatus(id: number, isEmpty: boolean) {
-		this.sortimentService
-			.updateSortiment(id, { isEmpty })
-			.pipe(tap(() => this.kegEmptyStatusChanged.emit({ id, isEmpty })))
-			.subscribe();
+		this.kegUpdate.emit({ id, property: 'isEmpty', value: isEmpty });
 	}
 
 	protected setKegDefectiveStatus(id: number, isDefective: boolean) {
-		this.sortimentService
-			.updateSortiment(id, { isDefective })
-			.pipe(tap(() => this.kegDefectiveStatusChanged.emit({ id, isDefective })))
-			.subscribe();
+		this.kegUpdate.emit({ id, property: 'isDefective', value: isDefective });
 	}
 
 	protected showKegStatusDialog(kegId: number) {

@@ -3,11 +3,9 @@ import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject } from 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
-import { SettingsService } from '@common/services/settings.service';
 import { SettingsStore } from '@common/state/stores/settings.store';
 import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
-import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
 import { SortimentStore } from '@modules/sortiment/sortiment.store';
 import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
 import { MenuItem, MessageService } from 'primeng/api';
@@ -54,10 +52,8 @@ export class SidebarComponent implements OnDestroy {
 	protected readonly authService = inject(AuthService);
 	protected readonly eventService = inject(EventService);
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);
-	protected readonly settingsService = inject(SettingsService);
 	private readonly dialogService = inject(DialogService);
 	private readonly messageService = inject(MessageService);
-	private readonly sortimentService = inject(SortimentService);
 
 	protected $menuItems = computed(() => {
 		if (this.authService.$isLogged()) {

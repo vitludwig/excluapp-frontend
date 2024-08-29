@@ -2,10 +2,10 @@
 	<div class="flex">
 		<p-button
 			severity="info"
-			[outlined]="!$filter()['isEmpty']"
-			(click)="toggleFilter('isEmpty')"
+			[outlined]="!sortimentListStore.filters()['isEmpty']"
+			(click)="sortimentListStore.toggleFilter('isEmpty')"
 		>
-			Ukázat {{ $filter()["isEmpty"] ? "plné" : "prázdné" }}
+			Ukázat {{ sortimentListStore.filters()["isEmpty"] ? "plné" : "prázdné" }}
 		</p-button>
 	</div>
 
@@ -20,13 +20,12 @@
 <p-tabView>
 	<p-tabPanel header="Sudy na akcích">
 		<app-sortiment-list-table
-			[kegs]="$copyKegs()"
-			(kegDeleted)="loadSortiment()"
-			(kegEmptyStatusChanged)="loadSortiment()"
-			(kegDefectiveStatusChanged)="loadSortiment()"
+			[kegs]="sortimentListStore.copyKegs()"
+			(kegDelete)="removeKeg($event)"
+			(kegUpdate)="updateKeg($event.id, $event.property, $event.value)"
 		/>
 	</p-tabPanel>
 	<p-tabPanel header="Předlohy">
-		<app-sortiment-list-table [kegs]="$originalKegs()" />
+		<app-sortiment-list-table [kegs]="sortimentListStore.originalKegs()" />
 	</p-tabPanel>
 </p-tabView>

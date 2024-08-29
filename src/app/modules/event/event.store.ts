@@ -29,14 +29,17 @@ export const EventStore = signalStore(
 		function getById(id: number): IEvent | null {
 			return store.events().find((e) => e.id === id) ?? null;
 		}
-
 		function add(event: IEvent) {
 			return eventService.addEvent(event).pipe(
 				tapResponse({
 					next: (event) => {
 						patchState(store, { events: [...store.events(), event] });
+						return event;
 					},
-					error: console.error,
+					error: (e) => {
+						console.error('Error while adding event', e);
+						throw e;
+					},
 				}),
 			);
 		}
@@ -45,9 +48,13 @@ export const EventStore = signalStore(
 			return eventService.updateEvent(id, event).pipe(
 				tapResponse({
 					next: (event) => {
-						patchState(store, { events: store.events().map((e) => (e.id === id ? event : e)) });
+						patchState(store, { events: store.events().map((e) => (e.id === event.id ? event : e)) });
+						return event;
 					},
-					error: console.error,
+					error: (e) => {
+						console.error('Error while updating event', e);
+						throw e;
+					},
 				}),
 			);
 		}
@@ -58,7 +65,10 @@ export const EventStore = signalStore(
 					next: (event) => {
 						patchState(store, { events: store.events().filter((e) => e.id !== id) });
 					},
-					error: console.error,
+					error: (e) => {
+						console.error('Error while removing event', e);
+						throw e;
+					},
 				}),
 			);
 		}
@@ -76,7 +86,10 @@ export const EventStore = signalStore(
 									setActiveEvent(activeEventId);
 								}
 							},
-							error: console.error,
+							error: (e) => {
+								console.error('Error while loading all events', e);
+								throw e;
+							},
 						}),
 					);
 				}),

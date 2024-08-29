@@ -6,7 +6,8 @@ import { ISortimentFilters } from '@modules/sortiment/services/sortiment/types/I
 import { IKeg } from '@modules/sortiment/types/IKeg';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { map, of } from 'rxjs';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { exhaustMap, map, of, pipe } from 'rxjs';
 
 type SortimentState = {
 	sortiment: IKeg[];
@@ -45,16 +46,48 @@ export const SortimentStore = signalStore(
 
 		return { allKegsInActiveEvent, kegsInActiveEvent };
 	}),
-	withMethods((store, sortimentService = inject(SortimentService)) => {
-		function getAll(filters: ISortimentFilters = { isEmpty: false, isActive: true }) {
-			sortimentService.getSortimentList(undefined, filters).pipe(
+	withMethods((store, sortimentService = inject(SortimentService)) => ({
+		getAll: rxMethod<ISortimentFilters>(
+			pipe(
+				exhaustMap((filters = { isEmpty: false, isActive: true }) => {
+					return sortimentService.getSortimentList(undefined, filters).pipe(
+						tapResponse({
+							next: (sortiment) => patchState(store, { sortiment }),
+							error: (e) => {
+								console.error('Error while all sortiment');
+								throw e;
+							},
+						}),
+					);
+				}),
+			),
+		),
+		removeKeg: (id: number) => {
+			return sortimentService.removeSortiment(id).pipe(
 				tapResponse({
-					next: (sortiment) => patchState(store, { sortiment }),
-					error: console.error,
+					next: () => {
+						patchState(store, { sortiment: store.sortiment().filter((k) => k.id !== id) });
+					},
+					error: (e) => {
+						console.error('Error while removing keg from global store');
+						throw e;
+					},
 				}),
 			);
-		}
-
-		return { getAll };
-	}),
+		},
+		updateKeg: (id: number, property: keyof IKeg, value: any) => {
+			return sortimentService.updateSortiment(id, { [property]: value }).pipe(
+				tapResponse({
+					next: (updatedKeg) =>
+						patchState(store, {
+							sortiment: store.sortiment().map((k) => (k.id === id ? updatedKeg : k)),
+						}),
+					error: (e) => {
+						console.error('Error while updating keg in global store');
+						throw e;
+					},
+				}),
+			);
+		},
+	})),
 );

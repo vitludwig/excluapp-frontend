@@ -1,7 +1,7 @@
 <div class="flex flex-column">
 	<div class="flex-responsive gap-4">
 		<form
-			[formGroup]="form"
+			[formGroup]="eventDetailStore.eventForm()"
 			(ngSubmit)="onSubmit()"
 			class="flex flex-column flex-1 gap-4"
 		>
@@ -52,14 +52,14 @@
 			<h4 style="margin: 0; margin-bottom: 0.5rem">Přidat sud</h4>
 			<app-event-sortiment
 				label="Sud z minula"
-				[options]="($existingKegs() | async) ?? []"
-				(select)="addKeg($event)"
+				[options]="eventDetailStore.existingKegs()"
+				(select)="eventDetailStore.addKeg($event)"
 			></app-event-sortiment>
 
 			<app-event-sortiment
 				label="Nový plný sud"
-				[options]="$originalKegs() ?? []"
-				(select)="addKeg($event)"
+				[options]="eventDetailStore.originalKegs()"
+				(select)="eventDetailStore.addKeg($event)"
 			></app-event-sortiment>
 
 			<br />
@@ -68,8 +68,9 @@
 				class="keg-sortlist"
 				header="Sudy na akci"
 				controlsPosition="right"
-				[value]="$eventKegs()"
+				[value]="eventDetailStore.eventKegs()"
 				[responsive]="true"
+				[metaKeySelection]="true"
 				(onReorder)="orderKegs()"
 			>
 				<ng-template
@@ -82,7 +83,7 @@
 							style="width: 20px"
 						>
 							@if (keg.isActive) {
-							<i class="pi pi-fw pi-check"></i>
+								<i class="pi pi-fw pi-check"></i>
 							}
 						</div>
 						<div
@@ -94,32 +95,33 @@
 						<div class="keg-item">{{ keg.isEmpty ? "Prázdný" : "Plný" }}</div>
 						<div class="keg-item">{{ keg.volume }} l</div>
 						<div class="keg-item flex flex-1 gap-2 justify-content-end">
-							<p-button
-								(click)="openToggleConfirm(keg)"
-								[styleClass]="keg.isActive ? 'p-button-warning' : 'p-button-success'"
-								icon="pi pi-fw {{ keg.isActive ? 'pi-circle' : 'pi-circle-fill' }}"
-								[pTooltip]="keg.isActive ? 'Deaktivovat' : 'Aktivovat'"
-							/>
+							@if(!keg.isOriginal) {
+								<p-button
+									(click)="openToggleConfirm(keg)"
+									[styleClass]="keg.isActive ? 'p-button-warning' : 'p-button-success'"
+									icon="pi pi-fw {{ keg.isActive ? 'pi-circle' : 'pi-circle-fill' }}"
+									[pTooltip]="keg.isActive ? 'Deaktivovat' : 'Aktivovat'"
+								/>
 
-							<p-button
-								(click)="showKegStatusDialog(keg.id)"
-								[severity]="'info'"
-								icon="pi pi-fw pi-question-circle"
-								pTooltip="Stav sudu"
-							/>
+								<p-button
+									(click)="showKegStatusDialog(keg.id)"
+									[severity]="'info'"
+									icon="pi pi-fw pi-question-circle"
+									pTooltip="Stav sudu"
+								/>
 
-							<p-button
-								(click)="showKegStatistics(keg)"
-								[severity]="'info'"
-								icon="pi pi-fw pi-chart-bar"
-								pTooltip="Kdo pil ze sudu"
-							/>
-
+								<p-button
+									(click)="showKegStatistics(keg)"
+									[severity]="'info'"
+									icon="pi pi-fw pi-chart-bar"
+									pTooltip="Kdo pil ze sudu"
+								/>
+							}
 							<button
 								pButton
 								appConfirm
 								confirmMessage="Smazat?"
-								(confirm)="removeKeg(keg.id)"
+								(confirm)="eventDetailStore.removeKeg(keg.id)"
 								class="p-button-danger"
 								icon="pi pi-fw pi-trash"
 								pTooltip="Odebrat z události"

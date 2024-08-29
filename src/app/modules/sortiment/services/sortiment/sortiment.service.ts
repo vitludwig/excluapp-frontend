@@ -34,7 +34,7 @@ export class SortimentService {
 	 */
 	public $sources = signal<string[]>([]);
 
-	public addSortiment(value: IKeg): Observable<IKeg> {
+	public addSortiment(value: IKeg | IKeg[]): Observable<IKeg | IKeg[]> {
 		return this.http.post<IKeg>(`${environment.apiUrl}/keg`, value);
 	}
 
@@ -70,10 +70,10 @@ export class SortimentService {
 		return this.http.delete<IKeg>(`${environment.apiUrl}/keg/${id}`);
 	}
 
-	public addKegToEvent(eventId: number, kegId: number): Observable<void> {
+	public addKegToEvent(eventId: number, kegIds: number[]): Observable<void> {
 		return this.http.post<void>(`${environment.apiUrl}/keg/kegToEvent`, {
 			eventId: eventId,
-			kegId: kegId,
+			kegIds: kegIds,
 		});
 	}
 
@@ -81,8 +81,8 @@ export class SortimentService {
 		return this.http.get<IEvent>(`${environment.apiUrl}'/keg/${kegId}/event`);
 	}
 
-	public removeKegFromEvent(eventId: number, kegId: number): Observable<void> {
-		return this.http.delete<void>(`${environment.apiUrl}/keg/kegToEvent/${eventId}/${kegId}`);
+	public removeKegFromEvent(eventId: number, kegIds: number[]): Observable<void> {
+		return this.http.post<void>(`${environment.apiUrl}/keg/kegToEvent/${eventId}/remove`, { kegIds });
 	}
 
 	public getKegStatus(kegId: number): Observable<IKegStatus> {

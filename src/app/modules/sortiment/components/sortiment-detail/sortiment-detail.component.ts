@@ -99,7 +99,7 @@ export class SortimentDetailComponent {
 		});
 	}
 
-	private addOriginalKeg(keg: IKeg): Promise<IKeg> {
+	private addOriginalKeg(keg: IKeg): Promise<IKeg | IKeg[]> {
 		keg.isOriginal = true;
 		return firstValueFrom(this.sortimentService.addSortiment(keg));
 	}
