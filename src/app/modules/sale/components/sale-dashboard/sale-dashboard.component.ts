@@ -134,6 +134,12 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.layoutService.$topBarTitle.set(value?.name ?? '');
 	}
 
+	/**
+	 * Load this data on user open event, otherwise accordeon component will have default height by it's data due to bug
+	 * @param opened
+	 * @param usersInEvent
+	 * @protected
+	 */
 	protected loadOtherUsers(opened: boolean, usersInEvent: IUser[]) {
 		if (opened) {
 			const usersInEventIds = usersInEvent.map((user) => user.id);

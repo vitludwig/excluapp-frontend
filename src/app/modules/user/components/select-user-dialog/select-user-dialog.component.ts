@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -21,12 +21,12 @@ export class SelectUserDialogComponent implements OnInit {
 	public readonly dialogRef = inject(DynamicDialogRef);
 	public readonly dialogConfig = inject(DynamicDialogConfig);
 
-	protected layout: 'list' | 'form' = 'form';
-	protected users: IUser[] = [];
+	protected $layout = signal<'list' | 'form'>('form');
+	protected $users = signal<IUser[]>([]);
 
 	public ngOnInit() {
-		this.users = this.dialogConfig.data.users;
-		this.layout = this.dialogConfig.data.layout ?? 'form';
+		this.$users.set(this.dialogConfig.data.users);
+		this.$layout.set(this.dialogConfig.data.layout ?? 'form');
 	}
 
 	protected submit(value: IUser | null) {

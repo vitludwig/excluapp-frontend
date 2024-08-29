@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IKeg } from '@modules/sortiment/types/IKeg';
@@ -21,8 +21,7 @@ export class EventSortimentComponent {
 	public $options = input<IKeg[]>([], { alias: 'options' });
 	public $label = input<string>('', { alias: 'label' });
 
-	@Output()
-	public select: EventEmitter<IKeg> = new EventEmitter<IKeg>();
+	public select = output<IKeg>();
 
 	protected selectedSortiment: IKeg | null = null;
 

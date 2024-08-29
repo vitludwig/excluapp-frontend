@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { BackBtnDirective } from '@common/directives/back-btn/back-btn.directive';
 import { AuthService } from '@common/services/auth.service';
@@ -37,8 +37,7 @@ import { IUser } from '../../../user/types/IUser';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrationDetailComponent implements OnDestroy {
-	protected registrationStore = inject(RegistrationStore);
-
+	protected readonly registrationStore = inject(RegistrationStore);
 	protected readonly authService = inject(AuthService);
 
 	protected $enableRegistration = computed(() => {
@@ -52,8 +51,8 @@ export class RegistrationDetailComponent implements OnDestroy {
 		return this.registrationStore.eventUsers().length < event.capacity;
 	});
 
-	protected showSelectUserModal = false;
-	protected selectedUser: IUser | null = null;
+	protected $showSelectUserModal = signal<boolean>(false);
+	protected $selectedUser = signal<IUser | null>(null);
 
 	private attendDialogRef: DynamicDialogRef;
 
@@ -62,7 +61,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 	}
 
 	protected showAttendModal(): void {
-		this.showSelectUserModal = true;
+		this.$showSelectUserModal.set(true);
 	}
 
 	protected selectUser(user: IUser | null): void {
@@ -73,7 +72,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 		}
 
 		this.registrationStore.addUser(user.id);
-		this.showSelectUserModal = false;
+		this.$showSelectUserModal.set(false);
 	}
 
 	public ngOnDestroy() {

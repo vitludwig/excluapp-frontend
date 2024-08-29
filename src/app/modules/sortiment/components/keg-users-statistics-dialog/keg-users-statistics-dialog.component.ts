@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { IKegUserStatistics } from '@modules/sortiment/types/IKegUserStatistics';
 import { UserByIdPipe } from '@modules/user/pipes/user-by-id.pipe';
 import { DividerModule } from 'primeng/divider';
@@ -16,9 +16,9 @@ export class KegUsersStatisticsDialogComponent {
 	public readonly dialogRef = inject(DynamicDialogRef);
 	public readonly dialogConfig = inject(DynamicDialogConfig<IKegUserStatistics[]>);
 
-	protected statistics: IKegUserStatistics[] = [];
+	protected $statistics = signal<IKegUserStatistics[]>([]);
 
 	public ngOnInit() {
-		this.statistics = this.dialogConfig.data.statistics.sort((a: IKegUserStatistics, b: IKegUserStatistics) => b.volume - a.volume);
+		this.$statistics.set(this.dialogConfig.data.statistics.sort((a: IKegUserStatistics, b: IKegUserStatistics) => b.volume - a.volume));
 	}
 }

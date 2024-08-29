@@ -32,19 +32,19 @@
 
 <p-dialog
 	header="Pejdej"
-	[(visible)]="showPaydayDialog"
+	[visible]="$showPaydayDialog()"
 	[style]="{ width: '50vw' }"
 >
 	<textarea
 		readonly="readonly"
-		[value]="paydayResult"
+		[value]="$paydayResult()"
 		[rows]="$data().payday.length"
 		class="w-full"
 	></textarea>
 
 	<ng-template pTemplate="footer">
 		<p-button
-			(click)="showPaydayDialog = false"
+			(click)="$showPaydayDialog.set(false)"
 			label="Zavřít"
 			styleClass="p-button-text"
 		></p-button>

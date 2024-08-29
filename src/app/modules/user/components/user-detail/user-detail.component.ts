@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -33,8 +33,8 @@ export class UserDetailComponent {
 	private readonly notificationService: NotificationService = inject(NotificationService);
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);
 
-	protected userId: number | null = null;
-	protected user: IUser | null = null;
+	protected $userId = signal<number | null>(null);
+	protected $user = signal<IUser | null>(null);
 
 	protected form = new FormGroup({
 		name: new FormControl('', Validators.required),
@@ -42,10 +42,10 @@ export class UserDetailComponent {
 	});
 
 	constructor() {
-		this.userId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-
-		if (this.userId) {
-			this.loadUser(this.userId);
+		this.$userId.set(Number(this.activatedRoute.snapshot.paramMap.get('id')));
+		const userId = this.$userId();
+		if (userId) {
+			this.loadUser(userId);
 		}
 	}
 
@@ -62,8 +62,10 @@ export class UserDetailComponent {
 		}
 
 		let request: Observable<IUser>;
-		if (this.userId) {
-			request = this.userStore.update(this.userId, this.form.value);
+		const userId = this.$userId();
+
+		if (userId) {
+			request = this.userStore.update(userId, this.form.value);
 		} else {
 			request = this.userStore.add({
 				name: this.form.value.name,
@@ -88,7 +90,10 @@ export class UserDetailComponent {
 	}
 
 	private async loadUser(id: number): Promise<void> {
-		this.user = await firstValueFrom(this.userService.getUserById(id));
-		this.form.patchValue(this.user);
+		this.$user.set(await firstValueFrom(this.userService.getUserById(id)));
+		const user = this.$user();
+		if (user) {
+			this.form.patchValue(user);
+		}
 	}
 }

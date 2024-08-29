@@ -1,26 +1,26 @@
 <div class="flex gap-2">
-	@for (keg of kegs; track keg) {
-	<div class="beerpong-item flex-1">
-		<h3 class="keg-title">{{ keg.name }}</h3>
-		<p-listbox
-			[options]="users"
-			[ngModel]="data[keg.id]"
-			(ngModelChange)="onUserSelect($event, keg.id)"
-			[multiple]="true"
-			[metaKeySelection]="false"
-			optionLabel="name"
-			[style]="{ width: '100%' }"
-		>
-			<ng-template
-				let-user
-				pTemplate="item"
+	@for (keg of $kegs(); track keg) {
+		<div class="beerpong-item flex-1">
+			<h3 class="keg-title">{{ keg.name }}</h3>
+			<p-listbox
+				[options]="$users()"
+				[ngModel]="$data()[keg.id]"
+				(ngModelChange)="onUserSelect($event, keg.id)"
+				[multiple]="true"
+				[metaKeySelection]="false"
+				optionLabel="name"
+				[style]="{ width: '100%' }"
 			>
-				<div class="flex align-items-center gap-2">
-					<div>{{ user.name }}</div>
-				</div>
-			</ng-template>
-		</p-listbox>
-	</div>
+				<ng-template
+					let-user
+					pTemplate="item"
+				>
+					<div class="flex align-items-center gap-2">
+						<div>{{ user.name }}</div>
+					</div>
+				</ng-template>
+			</p-listbox>
+		</div>
 	}
 </div>
 

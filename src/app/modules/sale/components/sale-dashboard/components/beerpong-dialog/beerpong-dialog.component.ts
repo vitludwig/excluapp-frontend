@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,21 +26,21 @@ export class BeerpongDialogComponent implements OnInit {
 	public readonly dialogConfig = inject(DynamicDialogConfig);
 	private readonly confirmationService = inject(ConfirmationService);
 
-	protected kegs: IKeg[] = [];
-	protected users: IUser[] = [];
+	protected $kegs = signal<IKeg[]>([]);
+	protected $users = signal<IUser[]>([]);
 	/**
 	 * {<kegId>: IUserRead[]}
 	 * @protected
 	 */
-	protected data: Record<number, IUser[]> = {};
+	protected $data = signal<Record<number, IUser[]>>({});
 
 	public ngOnInit() {
-		this.kegs = this.dialogConfig.data.kegs;
-		this.users = orderUsernames(this.dialogConfig.data.users);
+		this.$kegs.set(this.dialogConfig.data.kegs);
+		this.$users.set(orderUsernames(this.dialogConfig.data.users));
 	}
 
 	protected submit() {
-		const usersCount = Object.values(this.data).flat().length;
+		const usersCount = Object.values(this.$data()).flat().length;
 		if (usersCount !== 4) {
 			this.confirmationService.confirm({
 				message: `Zvolil jsi ${usersCount} hráčů na beerpong, je to správně?`,
@@ -58,18 +58,21 @@ export class BeerpongDialogComponent implements OnInit {
 	}
 
 	protected onUserSelect(value: IUser[], kegId: number): void {
-		if (!this.data[kegId]) {
-			this.data[kegId] = [];
+		if (!this.$data()[kegId]) {
+			this.$data()[kegId] = [];
 		}
 
-		this.removeDuplicateUsers(value, kegId, this.data);
+		this.removeDuplicateUsers(value, kegId, this.$data());
 
-		this.data[kegId] = value;
+		this.$data.update((data) => {
+			data[kegId] = value;
+			return data;
+		});
 	}
 
 	private removeDuplicateUsers(newUsers: IUser[], kegId: number, data: Record<number, IUser[]>): void {
 		const userIds = newUsers.map((e) => e.id);
-		for (const [index, users] of Object.entries(this.data)) {
+		for (const [index, users] of Object.entries(this.$data())) {
 			if (index === kegId.toString()) {
 				continue;
 			}
@@ -81,7 +84,7 @@ export class BeerpongDialogComponent implements OnInit {
 
 	private confirmBeerpong(): void {
 		const data: IBeerpong[] = [];
-		for (const [keg, users] of Object.entries(this.data)) {
+		for (const [keg, users] of Object.entries(this.$data())) {
 			for (const user of users) {
 				data.push({
 					kegId: Number(keg),

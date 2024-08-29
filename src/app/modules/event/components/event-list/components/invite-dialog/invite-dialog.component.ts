@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 
-import { MessageService } from 'primeng/api';
+import { NotificationService } from '@common/services/notification.service';
 import { ButtonModule } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,17 +16,17 @@ import { InputTextModule } from 'primeng/inputtext';
 export class InviteDialogComponent implements OnInit {
 	public readonly dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
 	public readonly dialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig);
-	public readonly messageService: MessageService = inject(MessageService);
+	private readonly notificationService = inject(NotificationService);
 
-	protected address: string = '';
+	protected $address = signal<string>('');
 
 	public ngOnInit() {
-		this.address = this.dialogConfig.data.address;
+		this.$address.set(this.dialogConfig.data.address);
 	}
 
 	protected async copyAddress(): Promise<void> {
-		await navigator.clipboard.writeText(this.address);
-		this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Adresa zkopírována do schránky' });
+		await navigator.clipboard.writeText(this.$address());
+		this.notificationService.success('Adresa zkopírována do schránky');
 		this.dialogRef.close();
 	}
 }

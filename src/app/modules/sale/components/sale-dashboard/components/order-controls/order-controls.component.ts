@@ -75,39 +75,6 @@ export class OrderControlsComponent implements OnDestroy {
 		}
 	}
 
-	protected showSummaryDetail(value: IOrderReadGroup) {
-		// this.summaryDialogRef = this.dialogService.open(SummaryItemDialogComponent, {
-		// 	header: 'Upravit ponožku',
-		// 	width: '80%',
-		// 	height: 'auto',
-		// 	contentStyle: { overflow: 'auto' },
-		// 	data: {
-		// 		item: value,
-		// 	},
-		// });
-		//
-		// this.summaryDialogRef.onClose.pipe(takeUntil(this.unsubscribe$)).subscribe((data: IOrderReadGroup) => {
-		// 	// if (data && data.orderIds.length > 0) {
-		// 	// 	for (let i = 1; i <= Math.abs(value.count - data.count); i++) {
-		// 	// 		this.orderService
-		// 	// 			.removeOrder(data.orderIds.at(-i)!)
-		// 	// 			.pipe(
-		// 	// 				tap(() => {
-		// 	// 					this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Upraveno' });
-		// 	// 				}),
-		// 	// 			)
-		// 	// 			.subscribe();
-		// 	// 	}
-		// 	//
-		// 	// 	// TODO: update value properly, this is veeery ugly
-		// 	// 	setTimeout(() => {
-		// 	// 		// TODO: update user value
-		// 	// 		// this.$selectedUser.set(this.$selectedUser());
-		// 	// 	}, 1000);
-		// 	// }
-		// });
-	}
-
 	protected toggleSummary() {
 		this.$showSummary.set(!this.$showSummary());
 	}

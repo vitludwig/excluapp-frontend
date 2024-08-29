@@ -3,12 +3,13 @@ import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject } from 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
+import { NotificationService } from '@common/services/notification.service';
 import { SettingsStore } from '@common/state/stores/settings.store';
 import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
 import { SortimentStore } from '@modules/sortiment/sortiment.store';
 import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -53,7 +54,7 @@ export class SidebarComponent implements OnDestroy {
 	protected readonly eventService = inject(EventService);
 	protected readonly faceRecognitionService = inject(FaceRecognitionService);
 	private readonly dialogService = inject(DialogService);
-	private readonly messageService = inject(MessageService);
+	private readonly notificationService = inject(NotificationService);
 
 	protected $menuItems = computed(() => {
 		if (this.authService.$isLogged()) {
@@ -134,9 +135,9 @@ export class SidebarComponent implements OnDestroy {
 			const isCorrect = this.authService.login(result);
 
 			if (isCorrect) {
-				this.messageService.add({ severity: 'success', summary: 'Přihlášení úspěšné', detail: 'Vítej!' });
+				this.notificationService.success('Přihlášení úspěšné');
 			} else {
-				this.messageService.add({ severity: 'error', summary: 'Nopity nope', detail: 'Špatné heslo!' });
+				this.notificationService.error('Špatné heslo!');
 			}
 		});
 	}

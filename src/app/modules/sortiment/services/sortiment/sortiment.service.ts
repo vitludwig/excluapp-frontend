@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { IEvent } from '@modules/event/types/IEvent';
 import { IKegStatus } from '@modules/sortiment/types/IKegStatus';
 import { IKegUserStatistics } from '@modules/sortiment/types/IKegUserStatistics';
@@ -13,21 +13,6 @@ import { ISortimentFilters } from './types/ISortimentFilters';
 })
 export class SortimentService {
 	private readonly http = inject(HttpClient);
-
-	public $allSortiment = signal<IKeg[]>([]);
-	/**
-	 * Keg templates, that are copied to events as new kegs
-	 */
-	public $originalSortiment = computed(() => {
-		return this.$allSortiment().filter((obj) => obj.isOriginal);
-	});
-	/**
-	 * Copied kegs from original kegs
-	 * When adding new keg to event, original keg is copied and inserted as new (copied) keg
-	 */
-	public $copySortiment = computed(() => {
-		return this.$allSortiment().filter((obj) => !obj.isOriginal);
-	});
 
 	/**
 	 * Capitalized and trimmed unique keg's source names

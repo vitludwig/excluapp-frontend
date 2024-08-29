@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, inject, input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, input, output } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 
@@ -15,8 +15,7 @@ export class ConfirmComponent {
 
 	public $message = input<string>('Potvrdit', { alias: 'confirmMessage' });
 
-	@Output('confirm')
-	public confirm: EventEmitter<MouseEvent> = new EventEmitter();
+	public confirm = output<MouseEvent>();
 
 	@HostListener('click', ['$event'])
 	public onClick(event: MouseEvent) {

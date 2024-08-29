@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { JsonPipe } from '@angular/common';
 import { SharedModule } from 'primeng/api';
@@ -7,7 +7,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
-import { UserService } from '../../services/user/user.service';
 import { IUser } from '../../types/IUser';
 import { orderUsernames } from '../../utils/OrderUsernames';
 
@@ -21,13 +20,10 @@ import { orderUsernames } from '../../utils/OrderUsernames';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectUserComponent {
-	private readonly usersService = inject(UserService);
-
 	public $layout = input<'list' | 'form'>('form', { alias: 'layout' });
 	public $users = input.required<IUser[], IUser[]>({ transform: orderUsernames, alias: 'users' });
 
-	@Output()
-	public select: EventEmitter<IUser> = new EventEmitter();
+	public select = output<IUser>();
 
 	protected selectedUser: IUser | null = null;
 

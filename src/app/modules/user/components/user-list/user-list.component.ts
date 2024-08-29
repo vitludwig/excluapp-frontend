@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
-import { UserService } from '@modules/user/services/user/user.service';
 import { UserStore } from '@modules/user/user.store';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -22,8 +21,6 @@ import { Table, TableModule } from 'primeng/table';
 })
 export class UserListComponent {
 	protected readonly userStore = inject(UserStore);
-
-	protected readonly userService: UserService = inject(UserService);
 
 	protected clearSearch(table: Table) {
 		table.clear();

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { NotificationService } from '@common/services/notification.service';
 import { IEventPayday } from '@modules/event/types/IEventPaydayStatistics';
-import { MessageService, SharedModule } from 'primeng/api';
+import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
@@ -14,10 +15,10 @@ import { TableModule } from 'primeng/table';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaydayTableComponent {
-	private readonly messageService: MessageService = inject(MessageService);
+	private readonly notificationService = inject(NotificationService);
 
-	protected showPaydayDialog: boolean = false;
-	protected paydayResult: string = '';
+	protected $showPaydayDialog = signal<boolean>(false);
+	protected $paydayResult = signal<string>('');
 
 	public $data = input.required<IEventPayday, IEventPayday>({
 		alias: 'data',
@@ -44,10 +45,10 @@ export class PaydayTableComponent {
 			.join('\n');
 		if (window.isSecureContext) {
 			await navigator.clipboard.writeText(result);
-			this.messageService.add({ severity: 'success', summary: 'Olé!', detail: 'Zkopírováno do schránky' });
+			this.notificationService.success('Zkopírováno do schránky');
 		} else {
-			this.paydayResult = result;
-			this.showPaydayDialog = true;
+			this.$paydayResult.set(result);
+			this.$showPaydayDialog.set(true);
 		}
 	}
 }
