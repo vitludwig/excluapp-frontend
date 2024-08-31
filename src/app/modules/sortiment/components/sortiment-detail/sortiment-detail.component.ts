@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
+import { NotificationService } from '@common/services/notification.service';
+import { Keg } from '@modules/sortiment/models/keg.model';
 import { SortimentService } from '@modules/sortiment/services/sortiment/sortiment.service';
 import { IKeg } from '@modules/sortiment/types/IKeg';
 import { ConfirmationService } from 'primeng/api';
@@ -12,7 +14,7 @@ import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
-import { firstValueFrom, tap } from 'rxjs';
+import { catchError, tap } from 'rxjs';
 @Component({
 	selector: 'app-sortiment-detail',
 	standalone: true,
@@ -27,56 +29,66 @@ export class SortimentDetailComponent {
 	private readonly router: Router = inject(Router);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly confirmationService = inject(ConfirmationService);
-
-	protected sortimentId: string | null = null;
+	private readonly notificationService = inject(NotificationService);
 
 	protected form = new FormGroup({
-		name: new FormControl('', Validators.required),
-		sourceName: new FormControl('', Validators.required),
-		volume: new FormControl<number>(30, Validators.required),
-		price: new FormControl<number | null>(null, Validators.required),
-		isCashed: new FormControl<boolean>(false, Validators.required),
+		name: new FormControl<string>('', { validators: [Validators.required], nonNullable: true }),
+		sourceName: new FormControl<string>('', { validators: [Validators.required], nonNullable: true }),
+		volume: new FormControl<number>(30, { validators: [Validators.required], nonNullable: true }),
+		price: new FormControl<number>(0, { validators: [Validators.required], nonNullable: true }),
+		isCashed: new FormControl<boolean>(false, { validators: [Validators.required], nonNullable: true }),
 	});
 
 	protected $sources = signal(this.sortimentService.$sources());
+	protected $sortimentId = signal<number | null>(null);
 
 	constructor() {
-		this.sortimentId = this.activatedRoute.snapshot.paramMap.get('id');
-
-		if (this.sortimentId) {
-			this.loadSortiment(Number(this.sortimentId));
+		this.$sortimentId.set(Number(this.activatedRoute.snapshot.paramMap.get('id')));
+		const id = this.$sortimentId();
+		if (id) {
+			this.loadSortiment(id);
 		}
 	}
 
 	protected async onSubmit() {
-		try {
-			if (this.sortimentId) {
-				await firstValueFrom(this.sortimentService.updateSortiment(Number(this.sortimentId), this.form.value as IKeg));
-				this.router.navigate(['/admin/sortiment']);
-			} else {
-				const keg = this.form.value as IKeg; // TODO: add typeguard?
-				const duplicateKegs = this.sortimentService.getDuplicateKegs(keg);
+		const id = this.$sortimentId();
+		if (id) {
+			this.updateKeg(id);
+		} else {
+			this.addNewKeg(Keg.create(this.form.getRawValue()));
+		}
+	}
 
-				if (duplicateKegs.length > 0) {
-					this.confirmationService.confirm({
-						message: duplicateKegs.map((obj) => `${obj.name} (${obj.sourceName}, ${obj.volume}l)`).join(', ') + ' je již v databázi. Chceš ho přidat?',
-						header: 'Duplikátní sud',
-						acceptLabel: 'Ano',
-						rejectLabel: 'Ne',
-						acceptButtonStyleClass: 'p-button-success',
-						rejectButtonStyleClass: 'p-button-danger',
-						accept: () => {
-							this.addOriginalKeg(keg);
-							this.router.navigate(['/admin/sortiment']);
-						},
-					});
-				} else {
-					await this.addOriginalKeg(keg);
-					this.router.navigate(['/admin/sortiment']);
-				}
-			}
-		} catch (e) {
-			console.error(e);
+	private updateKeg(id: number) {
+		this.sortimentService
+			.updateSortiment(id, this.form.getRawValue())
+			.pipe(tap(() => this.router.navigate(['/admin/sortiment'])))
+			.subscribe({
+				error: () => this.notificationService.error('Nepodařilo se upravit sud'),
+			});
+	}
+
+	private addNewKeg(keg: IKeg) {
+		const duplicateKegs = this.sortimentService.getDuplicateKegs(keg);
+
+		if (duplicateKegs.length > 0) {
+			this.confirmationService.confirm({
+				message: duplicateKegs.map((obj) => `${obj.name} (${obj.sourceName}, ${obj.volume}l)`).join(', ') + ' je již v databázi. Chceš ho přidat?',
+				header: 'Duplikátní sud',
+				acceptLabel: 'Ano',
+				rejectLabel: 'Ne',
+				acceptButtonStyleClass: 'p-button-success',
+				rejectButtonStyleClass: 'p-button-danger',
+				accept: () => {
+					this.addOriginalKeg(keg)
+						.pipe(tap(() => this.router.navigate(['/admin/sortiment'])))
+						.subscribe();
+				},
+			});
+		} else {
+			this.addOriginalKeg(keg)
+				.pipe(tap(() => this.router.navigate(['/admin/sortiment'])))
+				.subscribe();
 		}
 	}
 
@@ -99,9 +111,15 @@ export class SortimentDetailComponent {
 		});
 	}
 
-	private addOriginalKeg(keg: IKeg): Promise<IKeg | IKeg[]> {
+	private addOriginalKeg(keg: IKeg) {
 		keg.isOriginal = true;
-		return firstValueFrom(this.sortimentService.addSortiment(keg));
+
+		return this.sortimentService.addSortiment(keg).pipe(
+			catchError((e) => {
+				this.notificationService.error('Nepodařilo se přidat nový plný sud');
+				return e;
+			}),
+		);
 	}
 
 	private loadSortiment(id: number) {
@@ -112,6 +130,8 @@ export class SortimentDetailComponent {
 					this.form.patchValue(value);
 				}),
 			)
-			.subscribe();
+			.subscribe({
+				error: () => this.notificationService.error('Nepodařilo se načíst detail sortimentu'),
+			});
 	}
 }

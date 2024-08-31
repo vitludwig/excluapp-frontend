@@ -15,7 +15,7 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
-import { catchError, forkJoin, Subject, takeUntil, tap, throwError } from 'rxjs';
+import { forkJoin, Subject, takeUntil, tap } from 'rxjs';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
 import { UserFaceRecognitionComponent } from '../../../user/components/user-face-recognition/user-face-recognition.component';
 import { IUser } from '../../../user/types/IUser';
@@ -75,6 +75,7 @@ export class SaleDashboardComponent implements OnDestroy {
 		this.layoutService.$topBarTitle.set('');
 	}
 
+	// TODO: move to store
 	protected confirmOrder() {
 		this.orderStore.setOrderProcessing(true);
 
@@ -100,11 +101,13 @@ export class SaleDashboardComponent implements OnDestroy {
 				tap(() => {
 					this.orderStore.setOrderProcessing(false);
 					new Audio('/assets/finish.mp3').play();
-					this.notificationService.success('Zapsáno!');
 					this.resetOrder();
 				}),
 			)
-			.subscribe();
+			.subscribe({
+				next: () => this.notificationService.success('Zapsáno!'),
+				error: () => this.notificationService.success('Nepodařilo zapsat objednávku'),
+			});
 	}
 
 	protected async showBeerpongDialog(kegs: IKeg[], users: IUser[]): Promise<void> {
@@ -151,19 +154,10 @@ export class SaleDashboardComponent implements OnDestroy {
 	}
 
 	public stornoOrder(orderId: number) {
-		this.orderService
-			.removeOrder(orderId)
-			.pipe(
-				tap({
-					next: () => this.notificationService.success('Stornováno'),
-				}),
-				catchError((e) => {
-					this.notificationService.error('Stornování selhalo');
-					console.error('Transaction storno error: ', e);
-					return throwError(() => e);
-				}),
-			)
-			.subscribe();
+		this.orderService.removeOrder(orderId).subscribe({
+			next: () => this.notificationService.success('Stornováno'),
+			error: (e) => this.notificationService.error('Stornování selhalo'),
+		});
 	}
 
 	public ngOnDestroy() {

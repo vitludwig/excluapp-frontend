@@ -1,5 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { NotificationService } from '@common/services/notification.service';
 import { withRouteParams } from '@common/state/features/route-params.feature';
 import { EventStore } from '@modules/event/event.store';
 import { EventService } from '@modules/event/services/event/event.service';
@@ -31,54 +30,39 @@ export const RegistrationStore = signalStore(
 			return userStore.users().filter((user) => !store.eventUsers().find((u) => u.id === user.id));
 		}),
 	})),
-	withMethods((store, userService = inject(UserService), eventService = inject(EventService), notificationService = inject(NotificationService)) => ({
+	withMethods((store, userService = inject(UserService), eventService = inject(EventService)) => ({
 		addUser: (userId: number) => {
-			eventService
-				.attendEvent(userId, store.eventId())
-				.pipe(
-					tapResponse({
-						next: (users) => patchState(store, (state) => ({ eventUsers: users })),
-						error: (e) => {
-							notificationService.error('Nepodařilo se registrovat uživatele');
-							console.error(e);
-						},
-					}),
-				)
-				.subscribe();
+			return eventService.attendEvent(userId, store.eventId()).pipe(
+				tapResponse({
+					next: (users) => patchState(store, (state) => ({ eventUsers: users })),
+					error: (e) => {
+						console.error('Error while attending user to event', e);
+						throw e;
+					},
+				}),
+			);
 		},
 		removeUser: (userId: number) => {
-			eventService
-				.attendEvent(userId, store.eventId())
-				.pipe(
-					tapResponse({
-						next: (users) => patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) })),
-						error: (e) => {
-							notificationService.error('Nepodařilo se odregistrovat uživatele');
-							console.error(e);
-						},
-					}),
-				)
-				.subscribe();
+			return eventService.attendEvent(userId, store.eventId()).pipe(
+				tapResponse({
+					next: (users) => patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) })),
+					error: (e) => {
+						console.error('Error while unattending user from event', e);
+						throw e;
+					},
+				}),
+			);
 		},
 		loadUsers: () => {
-			if (!store.eventId()) {
-				notificationService.error('Nepodařilo se načíst uživatele');
-				console.error('Registration user load error: event not specified');
-				return;
-			}
-
-			userService
-				.getUsersForEvent(store.eventId())
-				.pipe(
-					tapResponse({
-						next: (eventUsers) => patchState(store, { eventUsers }),
-						error: (e) => {
-							notificationService.error('Nepodařilo se načíst uživatele');
-							console.error(e);
-						},
-					}),
-				)
-				.subscribe();
+			return userService.getUsersForEvent(store.eventId()).pipe(
+				tapResponse({
+					next: (eventUsers) => patchState(store, { eventUsers }),
+					error: (e) => {
+						console.error('Error while loading users to registration', e);
+						throw e;
+					},
+				}),
+			);
 		},
 	})),
 );

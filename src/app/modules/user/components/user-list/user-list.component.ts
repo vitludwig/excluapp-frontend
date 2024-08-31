@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
+import { NotificationService } from '@common/services/notification.service';
 import { UserStore } from '@modules/user/user.store';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -21,12 +22,15 @@ import { Table, TableModule } from 'primeng/table';
 })
 export class UserListComponent {
 	protected readonly userStore = inject(UserStore);
+	private readonly notificationService = inject(NotificationService);
 
 	protected clearSearch(table: Table) {
 		table.clear();
 	}
 
 	protected removeUser(id: number) {
-		this.userStore.remove(id).subscribe();
+		this.userStore.remove(id).subscribe({
+			error: (e) => this.notificationService.error('Nepodařilo se odstranit uživatele z události'),
+		});
 	}
 }

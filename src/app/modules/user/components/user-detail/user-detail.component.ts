@@ -5,6 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '@common/services/notification.service';
 import { UserFaceScanDescriptorComponent } from '@modules/user/components/user-face-scan-descriptor/user-face-scan-descriptor.component';
+import { User } from '@modules/user/models/User';
 import { FaceRecognitionService } from '@modules/user/services/face-recognition/face-recognition.service';
 import { UserService } from '@modules/user/services/user/user.service';
 import { isIUser, IUser } from '@modules/user/types/IUser';
@@ -14,7 +15,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
-import { catchError, firstValueFrom, Observable, tap } from 'rxjs';
+import { catchError, Observable, tap } from 'rxjs';
 
 @Component({
 	selector: 'app-user-detail',
@@ -67,10 +68,7 @@ export class UserDetailComponent {
 		if (userId) {
 			request = this.userStore.update(userId, this.form.value);
 		} else {
-			request = this.userStore.add({
-				name: this.form.value.name,
-				isRegular: this.form.value.isRegular,
-			});
+			request = this.userStore.add(User.create(this.form.value));
 		}
 
 		request
@@ -80,7 +78,6 @@ export class UserDetailComponent {
 					console.error('User update/create error: ', e);
 					if (e instanceof HttpErrorResponse && e.status === 409) {
 						this.notificationService.error('Uživatel s tímto jménem již existuje');
-						return e;
 					}
 
 					return e;
@@ -89,11 +86,17 @@ export class UserDetailComponent {
 			.subscribe();
 	}
 
-	private async loadUser(id: number): Promise<void> {
-		this.$user.set(await firstValueFrom(this.userService.getUserById(id)));
-		const user = this.$user();
-		if (user) {
-			this.form.patchValue(user);
-		}
+	private loadUser(id: number) {
+		this.userService
+			.getUserById(id)
+			.pipe(
+				tap((user) => {
+					this.$user.set(user);
+					this.form.patchValue(user);
+				}),
+			)
+			.subscribe({
+				error: () => this.notificationService.error('Nepodařilo se načíst detail uživatele'),
+			});
 	}
 }

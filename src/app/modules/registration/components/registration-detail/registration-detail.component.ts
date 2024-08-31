@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { BackBtnDirective } from '@common/directives/back-btn/back-btn.directive';
 import { AuthService } from '@common/services/auth.service';
+import { NotificationService } from '@common/services/notification.service';
 import { RegistrationStore } from '@modules/registration/registration.store';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +12,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { tap } from 'rxjs';
 import { SelectUserDialogComponent } from '../../../user/components/select-user-dialog/select-user-dialog.component';
 import { SelectUserComponent } from '../../../user/components/select-user/select-user.component';
 import { IUser } from '../../../user/types/IUser';
@@ -39,6 +41,7 @@ import { IUser } from '../../../user/types/IUser';
 export class RegistrationDetailComponent implements OnDestroy {
 	protected readonly registrationStore = inject(RegistrationStore);
 	protected readonly authService = inject(AuthService);
+	private readonly notificationService = inject(NotificationService);
 
 	protected $enableRegistration = computed(() => {
 		if (this.authService.$isLogged()) {
@@ -57,7 +60,9 @@ export class RegistrationDetailComponent implements OnDestroy {
 	private attendDialogRef: DynamicDialogRef;
 
 	constructor() {
-		this.registrationStore.loadUsers();
+		this.registrationStore.loadUsers().subscribe({
+			error: () => this.notificationService.error('Nepodařilo se načíst uživatele k události'),
+		});
 	}
 
 	protected showAttendModal(): void {
@@ -71,8 +76,24 @@ export class RegistrationDetailComponent implements OnDestroy {
 			return;
 		}
 
-		this.registrationStore.addUser(user.id);
-		this.$showSelectUserModal.set(false);
+		this.registrationStore
+			.addUser(user.id)
+			.pipe(
+				tap(() => {
+					this.$showSelectUserModal.set(false);
+				}),
+			)
+			.subscribe({
+				next: () => this.notificationService.success('Uživatel byl přidán k události'),
+				error: (e) => this.notificationService.error('Nepodařilo se přidat uživatele k události'),
+			});
+	}
+
+	protected removeUser(id: number) {
+		this.registrationStore.removeUser(id).subscribe({
+			next: () => this.notificationService.success('Uživatel byl odstraněn z události'),
+			error: (e) => this.notificationService.error('Nepodařilo se odstranit uživatele z události'),
+		});
 	}
 
 	public ngOnDestroy() {
