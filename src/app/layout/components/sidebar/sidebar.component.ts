@@ -118,6 +118,10 @@ export class SidebarComponent implements OnDestroy {
 					label: 'Platby',
 					routerLink: ['/admin/payments'],
 				},
+				{
+					label: 'Achievementy',
+					routerLink: ['/admin/achievements'],
+				},
 			],
 		},
 	];

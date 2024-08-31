@@ -111,6 +111,23 @@ export const routes: Routes = [
 				},
 				loadComponent: () => import('@modules/payment/payments.component').then((m) => m.PaymentsComponent),
 			},
+
+			{
+				path: 'achievements',
+				children: [
+					{
+						path: '',
+						loadComponent: () => import('@modules/achievements/components/achievement-list/achievement-list.component').then((m) => m.AchievementListComponent),
+						data: {
+							title: 'Achievementy',
+						},
+					},
+					{
+						path: 'detail/:id',
+						loadComponent: () => import('@modules/achievements/components/achievement-detail/achievement-detail.component').then((m) => m.AchievementDetailComponent),
+					},
+				],
+			},
 		],
 	},
 	{
