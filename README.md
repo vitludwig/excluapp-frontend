@@ -1,11 +1,16 @@
 # ExclubApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.1.
+Web application for administration of simple cashless transactions among friends. Sortiment inventory, user statistics, payment calculation, multiple events etc. 
 
 ## Instalation
 
 ```bash
 pnpm install
+```
+
+If you don't have pnpm installed, run this first
+```bash
+npm i pnpm -g
 ```
 
 ## Running in production
@@ -20,10 +25,6 @@ ng build
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
@@ -32,9 +33,9 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Test generator
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+`ngentest ./<path-to-component.component.ts> --framework karma -c ./node_modules/ngentest/ngentest.config.js`
 
 ## Further help
 

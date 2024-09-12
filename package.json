@@ -24,6 +24,7 @@
     "@ngrx/signals": "^18.0.2",
     "chart.js": "^4.4.0",
     "face-api.js": "^0.22.2",
+    "ngentest": "^2.2.4",
     "ngx-webcam": "^0.4.1",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
@@ -44,6 +45,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-mocks": "^14.13.1",
     "prettier": "3.0.3",
     "prettier-plugin-organize-imports": "^3.2.4",
     "typescript": "~5.5.4"
