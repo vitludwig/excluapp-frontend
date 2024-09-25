@@ -5,7 +5,6 @@ import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
 import { EventStore } from '@modules/event/event.store';
 import { EventByIdPipe } from '@modules/event/pipes/eventById.pipe';
-import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { OrderService } from '@modules/sale/services/order/order.service';
 import { SelectUserComponent } from '@modules/user/components/select-user/select-user.component';
@@ -17,6 +16,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { of } from 'rxjs';
 import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
+import { UserStore } from "@modules/user/user.store";
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,8 +44,8 @@ import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
 })
 export class UserStatisticsComponent {
 	protected readonly eventStore = inject(EventStore);
+	protected readonly userStore = inject(UserStore);
 
-	protected readonly eventService = inject(EventService);
 	protected readonly orderService = inject(OrderService);
 	protected readonly authService: AuthService = inject(AuthService);
 

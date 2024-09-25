@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { IEvent } from '@modules/event/types/IEvent';
-import { IEventKegsStatistics, IEventUsersStatistics } from '@modules/event/types/IEventKegsStatistics';
 import { IEventPayday } from '@modules/event/types/IEventPaydayStatistics';
 import { IUser } from '@modules/user/types/IUser';
 import { Observable } from 'rxjs';
@@ -39,14 +38,6 @@ export class EventService {
 
 	public unAttendEvent(userId: number, eventId: number): Observable<void> {
 		return this.http.delete<void>(`${environment.apiUrl}/attendance/${eventId}/${userId}`);
-	}
-
-	public getKegsStatistics(eventId: number): Observable<IEventKegsStatistics[]> {
-		return this.http.get<IEventKegsStatistics[]>(`${environment.apiUrl}/events/${eventId}/keg-statistics`);
-	}
-
-	public getUsersStatistics(eventId: number): Observable<IEventUsersStatistics[]> {
-		return this.http.get<IEventUsersStatistics[]>(`${environment.apiUrl}/events/${eventId}/user-statistics/`);
 	}
 
 	public getEventPayday(eventIds: number[], onlyUncashed?: boolean): Observable<IEventPayday[]> {

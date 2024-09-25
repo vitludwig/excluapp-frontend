@@ -5,9 +5,8 @@ import { SortPipe } from '@common/pipes/sort.pipe';
 import { AuthService } from '@common/services/auth.service';
 import { IPChartData } from '@common/types/IPChartData';
 import { EventStore } from '@modules/event/event.store';
-import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
-import { IEventKegsStatistics, IEventUsersStatistics } from '@modules/event/types/IEventKegsStatistics';
+import { IEventKegsStatistics, IUsersStatistics } from '@modules/event/types/IEventKegsStatistics';
 import { IEventPayday } from '@modules/event/types/IEventPaydayStatistics';
 import { PaydayTableComponent } from '@modules/payment/components/payday-table/payday-table.component';
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Observable, of, switchMap } from 'rxjs';
+import { StatisticsService } from "@modules/statistics/services/statistics.service";
 
 @Component({
 	selector: 'app-event-statistics',
@@ -27,7 +27,7 @@ import { Observable, of, switchMap } from 'rxjs';
 })
 export class EventStatisticsComponent {
 	protected readonly eventStore = inject(EventStore);
-	protected readonly eventService = inject(EventService);
+	protected readonly statisticsService: StatisticsService = inject(StatisticsService);
 	protected readonly authService: AuthService = inject(AuthService);
 
 	protected $selectedEvent = signal<IEvent | null>(this.eventStore.activeEvent());
@@ -36,7 +36,7 @@ export class EventStatisticsComponent {
 	protected $kegsStatistics = computed(() => {
 		const event = this.$selectedEvent();
 		if (event) {
-			return this.eventService.getKegsStatistics(event.id).pipe(
+			return this.statisticsService.getKegsStatistics(event.id).pipe(
 				switchMap((statistics) => {
 					return of(this.createKegsChartData(statistics));
 				}),
@@ -46,10 +46,10 @@ export class EventStatisticsComponent {
 		return null;
 	});
 
-	protected $usersStatistics: Signal<Observable<IEventUsersStatistics[]>> = computed(() => {
+	protected $usersStatistics: Signal<Observable<IUsersStatistics[]>> = computed(() => {
 		const event = this.$selectedEvent();
 		if (event) {
-			return this.eventService.getUsersStatistics(event.id);
+			return this.statisticsService.getUsersStatistics(event.id);
 		}
 
 		return of([]);

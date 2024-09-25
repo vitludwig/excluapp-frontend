@@ -1,11 +1,17 @@
 <p-tabView>
 	<p-tabPanel header="Události">
-		<app-event-statistics />
+		<ng-template pTemplate="content">
+			<app-event-statistics />
+		</ng-template>
 	</p-tabPanel>
 	<p-tabPanel header="Přehled transakcí">
-		<app-user-statistics />
+		<ng-template pTemplate="content">
+			<app-user-statistics />
+		</ng-template>
 	</p-tabPanel>
-	<!--	<p-tabPanel header="Sudy">-->
-	<!--		<app-keg-statistics />-->
-	<!--	</p-tabPanel>-->
+		<p-tabPanel header="Leaderboard">
+			<ng-template pTemplate="content">
+				<app-leaderboard />
+			</ng-template>
+		</p-tabPanel>
 </p-tabView>

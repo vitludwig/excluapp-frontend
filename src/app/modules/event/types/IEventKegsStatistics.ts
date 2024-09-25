@@ -6,7 +6,7 @@ export interface IEventKegsStatistics {
 	kegVolume: number;
 }
 
-export interface IEventUsersStatistics {
+export interface IUsersStatistics {
 	order_userId: number;
 	volume: number; // in litres
 	userName: string;
