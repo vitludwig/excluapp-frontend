@@ -27,17 +27,22 @@
 		<p-table
 			[value]="data"
 			[paginator]="true"
-			[sortField]="'volume'"
-			[sortOrder]="-1"
 			[rows]="10"
+			[globalFilterFields]="['userName']"
+			#leaderBoardTable
 		>
+			<ng-template pTemplate="caption">
+				<div class="flex">
+					<span class="p-input-icon-left ml-auto">
+						<i class="pi pi-search"></i>
+						<input pInputText type="text" (input)="leaderBoardTable.filterGlobal($any($event.target).value, 'startsWith')" placeholder="Vyhledat jméno" />
+					</span>
+				</div>
+			</ng-template>
 			<ng-template pTemplate="header">
 				<tr>
 					<th>Kdo</th>
-					<th pSortableColumn="volume">
-						Kolik
-						<p-sortIcon field="createdAt" />
-					</th>
+					<th>Kolik (l)</th>
 				</tr>
 			</ng-template>
 			<ng-template
@@ -46,7 +51,7 @@
 			>
 				<tr>
 					<td>{{ item.userName }}</td>
-					<td>{{ item.volume }} l</td>
+					<td>{{ item.volume }}</td>
 				</tr>
 			</ng-template>
 		</p-table>

@@ -4,11 +4,12 @@ import { AsyncPipe } from "@angular/common";
 import { TableModule } from "primeng/table";
 import { CalendarModule } from "primeng/calendar";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
 	selector: 'app-leaderboard',
 	standalone: true,
-	imports: [AsyncPipe, TableModule, CalendarModule, ReactiveFormsModule, FormsModule],
+	imports: [AsyncPipe, TableModule, CalendarModule, ReactiveFormsModule, FormsModule, InputTextModule],
 	templateUrl: './leaderboard.component.html',
 	styleUrl: './leaderboard.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
