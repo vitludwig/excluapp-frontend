@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from "@angular/core";
-import { StatisticsService } from "@modules/statistics/services/statistics.service";
-import { AsyncPipe } from "@angular/common";
-import { TableModule } from "primeng/table";
-import { CalendarModule } from "primeng/calendar";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { InputTextModule } from "primeng/inputtext";
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StatisticsService } from '@modules/statistics/services/statistics.service';
+import { CalendarModule } from 'primeng/calendar';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 
 @Component({
 	selector: 'app-leaderboard',

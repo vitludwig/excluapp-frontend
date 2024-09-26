@@ -34,7 +34,7 @@ export const RegistrationStore = signalStore(
 		addUser: (userId: number) => {
 			return eventService.attendEvent(userId, store.eventId()).pipe(
 				tapResponse({
-					next: (users) => patchState(store, (state) => ({ eventUsers: users })),
+					next: (users) => patchState(store, () => ({ eventUsers: users })),
 					error: (e) => {
 						console.error('Error while attending user to event', e);
 						throw e;
@@ -45,7 +45,7 @@ export const RegistrationStore = signalStore(
 		removeUser: (userId: number) => {
 			return eventService.attendEvent(userId, store.eventId()).pipe(
 				tapResponse({
-					next: (users) => patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) })),
+					next: () => patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) })),
 					error: (e) => {
 						console.error('Error while unattending user from event', e);
 						throw e;

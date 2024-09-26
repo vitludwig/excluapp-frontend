@@ -1,5 +1,4 @@
 <div class="slide-panel">
-
 	<div class="w-full flex align-items-end justify-content-between">
 		<p-button
 			icon="pi pi-times"
@@ -32,26 +31,22 @@
 		[class.visible]="$showSummary()"
 	>
 		<h4>Už jsi vypil/a</h4>
-		@if ($summary() | async; as summary) {
-			@if (summary.length === 0) {
-				<h5>Nic jsi nevypil/a, křupko!</h5>
-			}
-
-			@for (item of summary; track item) {
-				<div class="summary-item">
-					<span>{{ item.kegName ?? "Pivečko nebo kyseláček" }}</span>
-					<div class="flex align-items-center">
-						<span>{{ item.count }}ks</span>
-						<p-button
-							class="ml-4"
-							styleClass="p-button-raised p-button-danger p-button-sm"
-							(click)="removeOne(item)"
-						>
-							<i class="pi pi-trash mr-2"></i> Odebrat jeden
-						</p-button>
-					</div>
-				</div>
-			}
-		}
+		@if ($summary() | async; as summary) { @if (summary.length === 0) {
+		<h5>Nic jsi nevypil/a, křupko!</h5>
+		} @for (item of summary; track item) {
+		<div class="summary-item">
+			<span>{{ item.kegName ?? "Pivečko nebo kyseláček" }}</span>
+			<div class="flex align-items-center">
+				<span>{{ item.count }}ks</span>
+				<p-button
+					class="ml-4"
+					styleClass="p-button-raised p-button-danger p-button-sm"
+					(click)="removeOne(item)"
+				>
+					<i class="pi pi-trash mr-2"></i> Odebrat jeden
+				</p-button>
+			</div>
+		</div>
+		} }
 	</div>
 </div>

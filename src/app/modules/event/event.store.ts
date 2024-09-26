@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { EventService } from '@modules/event/services/event/event.service';
 import { IEvent } from '@modules/event/types/IEvent';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe } from 'rxjs';
 
@@ -19,7 +19,6 @@ const initialState: EventState = {
 export const EventStore = signalStore(
 	{ providedIn: 'root' },
 	withState<EventState>(initialState),
-	withComputed((store) => ({})),
 	withMethods((store, eventService = inject(EventService)) => {
 		function setActiveEvent(id: number): void {
 			patchState(store, { activeEvent: store.events().find((e) => e.id === id) ?? null });
@@ -62,7 +61,7 @@ export const EventStore = signalStore(
 		function remove(id: number) {
 			return eventService.removeEvent(id).pipe(
 				tapResponse({
-					next: (event) => {
+					next: () => {
 						patchState(store, { events: store.events().filter((e) => e.id !== id) });
 					},
 					error: (e) => {

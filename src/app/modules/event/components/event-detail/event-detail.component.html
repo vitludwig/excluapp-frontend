@@ -83,7 +83,7 @@
 							style="width: 20px"
 						>
 							@if (keg.isActive) {
-								<i class="pi pi-fw pi-check"></i>
+							<i class="pi pi-fw pi-check"></i>
 							}
 						</div>
 						<div
@@ -96,26 +96,26 @@
 						<div class="keg-item">{{ keg.volume }} l</div>
 						<div class="keg-item flex flex-1 gap-2 justify-content-end">
 							@if(!keg.isOriginal) {
-								<p-button
-									(click)="openToggleConfirm(keg)"
-									[styleClass]="keg.isActive ? 'p-button-warning' : 'p-button-success'"
-									icon="pi pi-fw {{ keg.isActive ? 'pi-circle' : 'pi-circle-fill' }}"
-									[pTooltip]="keg.isActive ? 'Deaktivovat' : 'Aktivovat'"
-								/>
+							<p-button
+								(click)="openToggleConfirm(keg)"
+								[styleClass]="keg.isActive ? 'p-button-warning' : 'p-button-success'"
+								icon="pi pi-fw {{ keg.isActive ? 'pi-circle' : 'pi-circle-fill' }}"
+								[pTooltip]="keg.isActive ? 'Deaktivovat' : 'Aktivovat'"
+							/>
 
-								<p-button
-									(click)="showKegStatusDialog(keg.id)"
-									[severity]="'info'"
-									icon="pi pi-fw pi-question-circle"
-									pTooltip="Stav sudu"
-								/>
+							<p-button
+								(click)="showKegStatusDialog(keg.id)"
+								[severity]="'info'"
+								icon="pi pi-fw pi-question-circle"
+								pTooltip="Stav sudu"
+							/>
 
-								<p-button
-									(click)="showKegStatistics(keg)"
-									[severity]="'info'"
-									icon="pi pi-fw pi-chart-bar"
-									pTooltip="Kdo pil ze sudu"
-								/>
+							<p-button
+								(click)="showKegStatistics(keg)"
+								[severity]="'info'"
+								icon="pi pi-fw pi-chart-bar"
+								pTooltip="Kdo pil ze sudu"
+							/>
 							}
 							<button
 								pButton

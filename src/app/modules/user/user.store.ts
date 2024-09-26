@@ -35,7 +35,7 @@ export const UserStore = signalStore(
 				exhaustMap(() => {
 					return userService.getUsers().pipe(
 						tapResponse({
-							next: (users) => patchState(store, (state) => ({ users: users })),
+							next: (users) => patchState(store, () => ({ users: users })),
 							error: (e) => {
 								// TODO create error layer for handling notifications etc.
 								notificationService.error('Nepodařilo se načíst uživatele');
@@ -71,7 +71,7 @@ export const UserStore = signalStore(
 		remove: (userId: number) => {
 			return userService.removeUser(userId).pipe(
 				tapResponse({
-					next: (user) => patchState(store, (state) => ({ users: state.users.filter((obj) => obj.id !== userId) })),
+					next: () => patchState(store, (state) => ({ users: state.users.filter((obj) => obj.id !== userId) })),
 					error: (e) => {
 						notificationService.error('Nepodařilo se odstranit uživatele');
 						console.error(e);

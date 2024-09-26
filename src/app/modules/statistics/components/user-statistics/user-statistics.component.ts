@@ -10,13 +10,13 @@ import { OrderService } from '@modules/sale/services/order/order.service';
 import { SelectUserComponent } from '@modules/user/components/select-user/select-user.component';
 import { UserByIdPipe } from '@modules/user/pipes/user-by-id.pipe';
 import { IUser } from '@modules/user/types/IUser';
+import { UserStore } from '@modules/user/user.store';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { of } from 'rxjs';
 import { KegByIdPipe } from '../../../sortiment/pipes/kegById.pipe';
-import { UserStore } from "@modules/user/user.store";
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,

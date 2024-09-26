@@ -1,45 +1,45 @@
 :host ::ng-deep .order-control-btn .p-element {
-  width: 5rem;
-  height: 5rem;
+	width: 5rem;
+	height: 5rem;
 }
 :host ::ng-deep .order-control-btn .p-element .p-button-icon {
-  font-size: 2.5rem;
+	font-size: 2.5rem;
 }
 
 .slide-panel {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .slide-panel .summary {
-  width: 100%;
-  height: 0;
-  display: none;
-  transition: height 2s ease-in-out;
-  padding: 15px;
-  border-top: 1px solid #bbb;
-  background: #121212;
+	width: 100%;
+	height: 0;
+	display: none;
+	transition: height 2s ease-in-out;
+	padding: 15px;
+	border-top: 1px solid #bbb;
+	background: #121212;
 }
 .slide-panel .summary.visible {
-  height: auto;
-  display: block;
-  transition: height 2s ease-in-out;
+	height: auto;
+	display: block;
+	transition: height 2s ease-in-out;
 }
 .slide-panel .summary .summary-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #333;
-  padding: 15px 5px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #333;
+	padding: 15px 5px;
 }
 
 .order-control-btn {
-  margin: 40px;
+	margin: 40px;
 }
 
 /*# sourceMappingURL=order-controls.component.css.map */

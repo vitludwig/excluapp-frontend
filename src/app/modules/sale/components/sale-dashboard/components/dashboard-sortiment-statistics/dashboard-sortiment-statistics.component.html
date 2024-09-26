@@ -1,22 +1,22 @@
 <h2 class="text-center">Už se vypilo</h2>
 <div class="flex-responsive pb-8">
 	@for (keg of $kegs(); track $index) {
-		<div
-			class="flex-1 cursor-pointer"
-			(click)="showKegStatistics(keg)"
-		>
-			@if (keg.id | kegStatus | async; as kegStat) {
-				<h3 class="text-center">{{ keg.name }}</h3>
-				<p-knob
-					class="text-center"
-					[ngModel]="kegStat.consumedVolume"
-					[max]="kegStat.totalVolume"
-					[size]="200"
-					valueTemplate="{value}ks"
-					[readonly]="true"
-				/>
-				<h3 class="text-center">{{ kegStat.totalVolume }}ks</h3>
-			}
-		</div>
+	<div
+		class="flex-1 cursor-pointer"
+		(click)="showKegStatistics(keg)"
+	>
+		@if (keg.id | kegStatus | async; as kegStat) {
+		<h3 class="text-center">{{ keg.name }}</h3>
+		<p-knob
+			class="text-center"
+			[ngModel]="kegStat.consumedVolume"
+			[max]="kegStat.totalVolume"
+			[size]="200"
+			valueTemplate="{value}ks"
+			[readonly]="true"
+		/>
+		<h3 class="text-center">{{ kegStat.totalVolume }}ks</h3>
+		}
+	</div>
 	}
 </div>

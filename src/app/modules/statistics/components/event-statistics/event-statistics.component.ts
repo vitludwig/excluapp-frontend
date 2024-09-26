@@ -9,13 +9,13 @@ import { IEvent } from '@modules/event/types/IEvent';
 import { IEventKegsStatistics, IUsersStatistics } from '@modules/event/types/IEventKegsStatistics';
 import { IEventPayday } from '@modules/event/types/IEventPaydayStatistics';
 import { PaydayTableComponent } from '@modules/payment/components/payday-table/payday-table.component';
+import { StatisticsService } from '@modules/statistics/services/statistics.service';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { Observable, of, switchMap } from 'rxjs';
-import { StatisticsService } from "@modules/statistics/services/statistics.service";
 
 @Component({
 	selector: 'app-event-statistics',

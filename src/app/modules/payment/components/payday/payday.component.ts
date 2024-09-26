@@ -130,7 +130,14 @@ export class PaydayComponent {
 
 		this.sortimentService
 			.getSortimentList(eventKegs)
-			.pipe(map((kegs) => kegs.reduce((obj: { [index: number]: IKeg }, item) => ((obj[item.id] = item), obj), {})))
+			.pipe(
+				map((kegs) =>
+					kegs.reduce((obj: { [index: number]: IKeg }, item) => {
+						obj[item.id] = item
+						return obj;
+					}, {}),
+				),
+			)
 			.subscribe((newKegs) => {
 				this.$copySortiment.update((sortiment) => {
 					return sortiment.map((s) => newKegs[s.id] ?? s);

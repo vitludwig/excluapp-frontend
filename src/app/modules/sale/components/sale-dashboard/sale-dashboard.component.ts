@@ -100,7 +100,7 @@ export class SaleDashboardComponent implements OnDestroy {
 			.pipe(
 				tap(() => {
 					this.orderStore.setOrderProcessing(false);
-					new Audio('/assets/finish.mp3').play();
+					new Audio('/assets/finish.mp3').play().catch((e) => console.error('Cannot play finish sound', e));
 					this.resetOrder();
 				}),
 			)
@@ -156,7 +156,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	public stornoOrder(orderId: number) {
 		this.orderService.removeOrder(orderId).subscribe({
 			next: () => this.notificationService.success('Stornováno'),
-			error: (e) => this.notificationService.error('Stornování selhalo'),
+			error: () => this.notificationService.error('Stornování selhalo'),
 		});
 	}
 

@@ -1,6 +1,6 @@
 <div class="flex gap-3 flex-wrap">
 	@for (item of $sortiment(); track item) {
-		<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.BIG, item: item }"></ng-container>
+	<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.BIG, item: item }"></ng-container>
 	}
 </div>
 
@@ -8,11 +8,9 @@
 
 <div class="flex gap-3 flex-wrap">
 	@for (item of $sortiment(); track item) {
-		<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.SMALL, item: item, subheader: 'malé' }"></ng-container>
+	<ng-container *ngTemplateOutlet="sortimentCard; context: { category: EBeerVolume.SMALL, item: item, subheader: 'malé' }"></ng-container>
 	}
 </div>
-
-
 
 <p-confirmDialog
 	header="Potvrdit"

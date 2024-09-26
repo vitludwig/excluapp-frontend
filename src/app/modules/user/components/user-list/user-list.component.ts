@@ -30,7 +30,7 @@ export class UserListComponent {
 
 	protected removeUser(id: number) {
 		this.userStore.remove(id).subscribe({
-			error: (e) => this.notificationService.error('Nepodařilo se odstranit uživatele z události'),
+			error: () => this.notificationService.error('Nepodařilo se odstranit uživatele z události'),
 		});
 	}
 }

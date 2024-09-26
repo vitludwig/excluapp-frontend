@@ -85,14 +85,14 @@ export class RegistrationDetailComponent implements OnDestroy {
 			)
 			.subscribe({
 				next: () => this.notificationService.success('Uživatel byl přidán k události'),
-				error: (e) => this.notificationService.error('Nepodařilo se přidat uživatele k události'),
+				error: () => this.notificationService.error('Nepodařilo se přidat uživatele k události'),
 			});
 	}
 
 	protected removeUser(id: number) {
 		this.registrationStore.removeUser(id).subscribe({
 			next: () => this.notificationService.success('Uživatel byl odstraněn z události'),
-			error: (e) => this.notificationService.error('Nepodařilo se odstranit uživatele z události'),
+			error: () => this.notificationService.error('Nepodařilo se odstranit uživatele z události'),
 		});
 	}
 

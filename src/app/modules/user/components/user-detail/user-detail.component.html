@@ -27,8 +27,8 @@
 		/>
 	</form>
 	@if($userId() && faceRecognitionService.$faceRecognitionEnabled()) {
-		<div class="flex-1">
-			<app-user-face-scan-descriptor [user]="$user()" />
-		</div>
+	<div class="flex-1">
+		<app-user-face-scan-descriptor [user]="$user()" />
+	</div>
 	}
 </div>
