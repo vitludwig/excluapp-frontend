@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IEvent } from '@modules/event/types/IEvent';
 import { IKegStatus } from '@modules/sortiment/types/IKegStatus';
 import { IKegUserStatistics } from '@modules/sortiment/types/IKegUserStatistics';
@@ -13,11 +13,6 @@ import { ISortimentFilters } from './types/ISortimentFilters';
 })
 export class SortimentService {
 	private readonly http = inject(HttpClient);
-
-	/**
-	 * Capitalized and trimmed unique keg's source names
-	 */
-	public $sources = signal<string[]>([]);
 
 	public addSortiment(value: IKeg | IKeg[]): Observable<IKeg | IKeg[]> {
 		return this.http.post<IKeg>(`${environment.apiUrl}/keg`, value);
@@ -66,6 +61,10 @@ export class SortimentService {
 		return this.http.get<IEvent>(`${environment.apiUrl}'/keg/${kegId}/event`);
 	}
 
+	public getSources() {
+		return this.http.get<string[]>(`${environment.apiUrl}/keg/sources`);
+	}
+
 	public removeKegFromEvent(eventId: number, kegIds: number[]): Observable<void> {
 		return this.http.post<void>(`${environment.apiUrl}/keg/kegToEvent/${eventId}/remove`, { kegIds });
 	}
@@ -78,11 +77,7 @@ export class SortimentService {
 		return this.http.get<IKegUserStatistics[]>(`${environment.apiUrl}/keg/${kegId}/users-statistics`);
 	}
 
-	public getDuplicateKegs(keg: IKeg): IKeg[] {
-		// TODO: implement
-		return [];
-		// return this.$originalSortiment().filter(
-		// 	(k) => k.sourceName.toLowerCase().trim() === keg.sourceName.toLowerCase().trim() && k.name.toLowerCase().trim() === keg.name.toLowerCase().trim() && k.volume === keg.volume,
-		// );
+	public getDuplicateKegs(keg: IKeg) {
+		return this.http.post<IKeg[]>(`${environment.apiUrl}/keg/check-duplicate`, { name: keg.name, sourceName: keg.sourceName, volume: keg.volume });
 	}
 }

@@ -17,7 +17,7 @@
 			<label htmlFor="sortimentSourceName">Pivovar</label>
 			<p-autoComplete
 				id="sortimentSourceName"
-				[suggestions]="$sources()"
+				[suggestions]="$searchSources()"
 				(completeMethod)="searchSources($event)"
 				formControlName="sourceName"
 			/>

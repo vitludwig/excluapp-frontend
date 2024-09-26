@@ -14,7 +14,7 @@ import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { PaginatorModule } from 'primeng/paginator';
-import { catchError, tap } from 'rxjs';
+import { catchError, firstValueFrom, tap } from "rxjs";
 @Component({
 	selector: 'app-sortiment-detail',
 	standalone: true,
@@ -39,7 +39,8 @@ export class SortimentDetailComponent {
 		isCashed: new FormControl<boolean>(false, { validators: [Validators.required], nonNullable: true }),
 	});
 
-	protected $sources = signal(this.sortimentService.$sources());
+	protected $allSources = signal<string[]>([]);
+	protected $searchSources = signal<string[]>([]);
 	protected $sortimentId = signal<number | null>(null);
 
 	constructor() {
@@ -48,6 +49,8 @@ export class SortimentDetailComponent {
 		if (id) {
 			this.loadSortiment(id);
 		}
+
+		this.loadSources();
 	}
 
 	protected async onSubmit() {
@@ -68,12 +71,12 @@ export class SortimentDetailComponent {
 			});
 	}
 
-	private addNewKeg(keg: IKeg) {
-		const duplicateKegs = this.sortimentService.getDuplicateKegs(keg);
+	private async addNewKeg(keg: IKeg) {
+		const duplicateKeg = await firstValueFrom(this.sortimentService.getDuplicateKegs(keg))
 
-		if (duplicateKegs.length > 0) {
+		if (duplicateKeg.length > 0) {
 			this.confirmationService.confirm({
-				message: duplicateKegs.map((obj) => `${obj.name} (${obj.sourceName}, ${obj.volume}l)`).join(', ') + ' je již v databázi. Chceš ho přidat?',
+				message: duplicateKeg.map((obj) => `${obj.name} (${obj.sourceName}, ${obj.volume}l, ${obj.price}Kč)`).join(',\n\r ') + ' je již v databázi. Chceš ho přidat?',
 				header: 'Duplikátní sud',
 				acceptLabel: 'Ano',
 				rejectLabel: 'Ne',
@@ -93,8 +96,8 @@ export class SortimentDetailComponent {
 	}
 
 	protected searchSources(event: AutoCompleteCompleteEvent): void {
-		const result = this.sortimentService.$sources().filter((source) => source.toLowerCase().trim().startsWith(event.query.toLowerCase().trim()));
-		this.$sources.set(result);
+		const result = this.$allSources().filter((source) => source.toLowerCase().trim().startsWith(event.query.toLowerCase().trim()));
+		this.$searchSources.set(result);
 	}
 
 	protected confirmKegIsCashed(event: InputSwitchChangeEvent): void {
@@ -125,13 +128,16 @@ export class SortimentDetailComponent {
 	private loadSortiment(id: number) {
 		this.sortimentService
 			.getSortimentById(id)
-			.pipe(
-				tap((value) => {
-					this.form.patchValue(value);
-				}),
-			)
 			.subscribe({
+				next: (value) => this.form.patchValue(value),
 				error: () => this.notificationService.error('Nepodařilo se načíst detail sortimentu'),
 			});
+	}
+
+	private loadSources() {
+		this.sortimentService.getSources().subscribe({
+			next: (value) => this.$allSources.set(value),
+			error: () => this.notificationService.error('Nepodařilo se načíst pivovary'),
+		})
 	}
 }
