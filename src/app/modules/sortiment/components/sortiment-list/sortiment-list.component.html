@@ -26,6 +26,9 @@
 		/>
 	</p-tabPanel>
 	<p-tabPanel header="Předlohy">
-		<app-sortiment-list-table [kegs]="sortimentListStore.originalKegs()" />
+		<app-sortiment-list-table
+			[kegs]="sortimentListStore.originalKegs()"
+			(kegDelete)="removeKeg($event)"
+			(kegUpdate)="updateKeg($event.id, $event.property, $event.value)"/>
 	</p-tabPanel>
 </p-tabView>
