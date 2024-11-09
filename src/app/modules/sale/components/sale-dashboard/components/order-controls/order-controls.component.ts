@@ -49,9 +49,6 @@ export class OrderControlsComponent implements OnDestroy {
 
 		return this.orderService.getOrderByEventUserId(activeEvent.id, selectedUser.id).pipe(
 			map((obj) => {
-				for (const item of obj) {
-					item.kegName = this.$kegs().find((s) => s.id === item.kegId)?.name ?? '';
-				}
 				return this.groupOrderBySortiment(obj);
 			}),
 		);
