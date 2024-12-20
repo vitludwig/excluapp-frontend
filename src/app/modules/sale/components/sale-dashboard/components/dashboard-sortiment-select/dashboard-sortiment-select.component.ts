@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, input, OnDestroy, output } from '@angular/core';
 import { ICartItem } from '@modules/sale/types/ICartItem';
 import { TCartCountMap } from '@modules/sale/types/TCartCountMap';
@@ -17,7 +17,7 @@ import { EBeerVolume } from '../../../../types/EBeerVolume';
 @Component({
 	selector: 'app-dashboard-sortiment-select',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, CardModule, ConfirmDialogModule],
+	imports: [CommonModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, CardModule, ConfirmDialogModule, DecimalPipe],
 	templateUrl: './dashboard-sortiment-select.component.html',
 	styleUrls: ['./dashboard-sortiment-select.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
