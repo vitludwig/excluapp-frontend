@@ -13,11 +13,12 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Subject } from 'rxjs';
 import { AsSortimentCategoryPipe } from '../../../../pipes/as-sortiment-category.pipe';
 import { EBeerVolume } from '../../../../types/EBeerVolume';
+import { SortimentPriceComponent } from "@common/components/sortiment-price/sortiment-price.component";
 
 @Component({
 	selector: 'app-dashboard-sortiment-select',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, CardModule, ConfirmDialogModule, DecimalPipe],
+	imports: [CommonModule, ButtonModule, DividerModule, AsSortimentCategoryPipe, CardModule, ConfirmDialogModule, DecimalPipe, SortimentPriceComponent],
 	templateUrl: './dashboard-sortiment-select.component.html',
 	styleUrls: ['./dashboard-sortiment-select.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,67 +1,70 @@
-@if(sortimentStore.kegsInActiveEvent() | async; as kegs) { @if (orderStore.selectedUser(); as selectedUser) {
-<app-dashboard-sortiment-select
-	[selectedUser]="selectedUser"
-	[sortiment]="kegs"
-	[cartCountMap]="orderStore.cartCountMap()"
-	(itemAdd)="orderStore.addOneToCart($event)"
-	(itemRemove)="orderStore.removeOneFromCart($event.id, $event.volume)"
-/>
+@if (sortimentStore.kegsInActiveEvent() | async; as kegs) {
+	@if (orderStore.selectedUser(); as selectedUser) {
+		<app-dashboard-sortiment-select
+			[selectedUser]="selectedUser"
+			[sortiment]="kegs"
+			[cartCountMap]="orderStore.cartCountMap()"
+			(itemAdd)="orderStore.addOneToCart($event)"
+			(itemRemove)="orderStore.removeOneFromCart($event.id, $event.volume)"
+		/>
 
-<app-order-controls
-	[confirmBtnDisabled]="orderStore.orderProcessing() || orderStore.cart().length === 0"
-	[cancelBtnDisabled]="orderStore.orderProcessing()"
-	[selectedUser]="selectedUser"
-	[kegs]="kegs"
-	[activeEvent]="eventStore.activeEvent()"
-	(confirmOrder)="confirmOrder()"
-	(cancelOrder)="resetOrder()"
-	(stornoOrder)="stornoOrder($event)"
-/>
-} @else { @if(this.userStore.usersInEvent() | async; as usersInEvent) {
-<p-card
-	(click)="showBeerpongDialog(kegs, usersInEvent)"
-	[header]="'Zapsat býrponk'"
-	[class.active]="(orderStore.cartCountMap()['beerpong'] | json) !== '{}'"
-	class="card card-beerpong"
-/>
-
-<p-divider align="center">nebo</p-divider>
-
-<h3>Vyber pijáka</h3>
-<div>
-	<app-dashboard-user-select
-		[users]="usersInEvent"
-		(selected)="selectUser($event)"
-	/>
-	<br />
-	<p-accordion>
-		<p-accordionTab
-			header="Ostatní"
-			(selectedChange)="loadOtherUsers($event, usersInEvent)"
-		>
-			<app-dashboard-user-select
-				[users]="$otherUsers()"
-				(selected)="selectUser($event)"
+		<app-order-controls
+			[confirmBtnDisabled]="orderStore.orderProcessing() || orderStore.cart().length === 0"
+			[cancelBtnDisabled]="orderStore.orderProcessing()"
+			[selectedUser]="selectedUser"
+			[kegs]="kegs"
+			[activeEvent]="eventStore.activeEvent()"
+			(confirmOrder)="confirmOrder()"
+			(cancelOrder)="resetOrder()"
+			(stornoOrder)="stornoOrder($event)"
+		/>
+	} @else {
+		@if (this.userStore.usersInEvent() | async; as usersInEvent) {
+			<p-card
+				(click)="showBeerpongDialog(kegs, usersInEvent)"
+				[header]="'Zapsat býrponk'"
+				[class.active]="(orderStore.cartCountMap()['beerpong'] | json) !== '{}'"
+				class="card card-beerpong"
 			/>
-		</p-accordionTab>
-	</p-accordion>
-</div>
 
-<p-divider />
-}
+			<p-divider align="center">nebo</p-divider>
 
-<app-dashboard-sortiment-statistics [kegs]="kegs" />
+			<h3>Vyber pijáka</h3>
+			<div>
+				<app-dashboard-user-select
+					[users]="usersInEvent"
+					(selected)="selectUser($event)"
+				/>
+				<br />
+				<p-accordion>
+					<p-accordionTab
+						header="Ostatní"
+						(selectedChange)="loadOtherUsers($event, usersInEvent)"
+					>
+						<app-dashboard-user-select
+							[users]="$otherUsers()"
+							(selected)="selectUser($event)"
+						/>
+					</p-accordionTab>
+				</p-accordion>
+			</div>
 
-<div class="kegs-pointer-container">
-	@for (keg of kegs; track keg.id) {
-	<div class="keg-pointer-item">
-		<i class="pi pi-fw pi-arrow-down mr-2"></i>
-		{{ keg.name }} ({{ keg.sourceName }})
-	</div>
+			<p-divider />
+		}
+
+		<app-dashboard-sortiment-statistics [kegs]="kegs" />
+
+		<div class="kegs-pointer-container">
+			@for (keg of kegs; track keg.id) {
+				<div class="keg-pointer-item">
+					<i class="pi pi-fw pi-arrow-down mr-2"></i>
+					{{ keg.name }} ({{ keg.sourceName }})
+				</div>
+			}
+		</div>
 	}
-</div>
-} } @else {
-<h1>Žádné sudy na události</h1>
+} @else {
+	<h1>Žádné sudy na události</h1>
 }
 
 <!--@if(faceRecognitionService.$faceRecognitionEnabled()) {-->

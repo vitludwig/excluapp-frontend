@@ -43,7 +43,7 @@ export const RegistrationStore = signalStore(
 			);
 		},
 		removeUser: (userId: number) => {
-			return eventService.attendEvent(userId, store.eventId()).pipe(
+			return eventService.unAttendEvent(userId, store.eventId()).pipe(
 				tapResponse({
 					next: () => patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) })),
 					error: (e) => {

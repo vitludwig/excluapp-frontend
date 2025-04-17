@@ -58,7 +58,7 @@
 		<ng-template pTemplate="footer">
 			<div style="display: flex;width: 100%;justify-content: space-between;">
 				<div>{{ item.sourceName }}</div>
-				<div>cca {{ ((item.price / item.volume) * (category === EBeerVolume.SMALL ? 0.3 : 0.5) + ($selectedUser().isRegular ? 3 : 5)) | number: '1.0-0' }} Kč</div>
+				<div><app-sortiment-price [keg]="item" [volume]="category" [user]="$selectedUser()" /></div>
 			</div>
 		</ng-template>
 	</p-card>

@@ -65,6 +65,7 @@ export class SidebarComponent implements OnDestroy {
 
 	protected setActiveEvent(id: number) {
 		this.eventStore.setActiveEvent(id);
+		this.settingsStore.resetActiveEventKegs();
 	}
 
 	public get visible(): boolean {
@@ -86,7 +87,7 @@ export class SidebarComponent implements OnDestroy {
 					routerLink: ['/party'],
 				},
 				{
-					label: 'Registrace',
+					label: 'Přidání na párty',
 					routerLink: ['/registration'],
 				},
 				{
@@ -107,7 +108,7 @@ export class SidebarComponent implements OnDestroy {
 					routerLink: ['/admin/events'],
 				},
 				{
-					label: 'Uživatelé',
+					label: 'Seznam uživatelů',
 					routerLink: ['/admin/users'],
 				},
 				{

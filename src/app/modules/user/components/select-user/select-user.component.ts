@@ -10,7 +10,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { IUser } from '../../types/IUser';
 import { orderUsernames } from '../../utils/OrderUsernames';
 
-// TODO: refactor, return only true response, multiple select, submit button - CLEANUP
+// TODO: refactor, maybe create separate component for multiple user select
 @Component({
 	selector: 'app-select-user',
 	standalone: true,
@@ -26,6 +26,10 @@ export class SelectUserComponent {
 	public select = output<IUser>();
 
 	protected selectedUser: IUser | null = null;
+
+	public reset() {
+		this.selectedUser = null;
+	}
 
 	protected submit() {
 		if (this.selectedUser) {

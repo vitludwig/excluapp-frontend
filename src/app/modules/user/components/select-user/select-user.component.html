@@ -1,62 +1,63 @@
 <div class="flex flex-column h-full">
 	@if ($layout() === 'form') {
-	<div class="flex flex-column justify-content-center">
-		<p-dropdown
-			[options]="$users()"
-			[(ngModel)]="selectedUser"
-			(ngModelChange)="submit()"
-			optionLabel="name"
-			[filter]="true"
-			filterBy="name"
-			[showClear]="true"
-			placeholder="Vyber uživatele"
-			[style]="{ width: '100%' }"
-			scrollHeight="65vh"
-			appendTo="body"
-		>
-			<ng-template pTemplate="selectedItem">
-				@if (selectedUser) {
-				<div class="flex align-items-center gap-2">
-					<span>{{ selectedUser.name }}</span>
-				</div>
-				}
-			</ng-template>
-
-			<ng-template
-				let-item
-				pTemplate="item"
+		<div class="flex flex-column justify-content-center">
+			<p-dropdown
+				[options]="$users()"
+				[(ngModel)]="selectedUser"
+				(ngModelChange)="submit()"
+				optionLabel="name"
+				[filter]="true"
+				filterBy="name"
+				[showClear]="true"
+				placeholder="Vyber uživatele"
+				[style]="{ width: '100%' }"
+				scrollHeight="65vh"
+				appendTo="body"
 			>
-				<div class="flex align-items-center gap-2">
-					<div>{{ item.name }}</div>
-				</div>
-			</ng-template>
-		</p-dropdown>
-	</div>
-	} @if ($layout() === 'list') {
-	<div class="overflow-auto">
-		<p-listbox
-			class="user-list"
-			[options]="$users()"
-			[(ngModel)]="selectedUser"
-			(ngModelChange)="submit()"
-			[metaKeySelection]="false"
-			optionLabel="name"
-			[style]="{ width: '100%' }"
-			[class.big-list-items]="$users().length < 6"
-			emptyMessage="Žádní uživatelé"
-		>
-			<ng-template
-				let-user
-				pTemplate="item"
-			>
-				<div class="flex align-items-center w-full justify-content-between">
-					{{ user.name }}
-					@if(user.isRegular) {
-					<i class="pi pi-fw pi-crown"></i>
+				<ng-template pTemplate="selectedItem">
+					@if (selectedUser) {
+						<div class="flex align-items-center gap-2">
+							<span>{{ selectedUser.name }}</span>
+						</div>
 					}
-				</div>
-			</ng-template>
-		</p-listbox>
-	</div>
+				</ng-template>
+
+				<ng-template
+					let-item
+					pTemplate="item"
+				>
+					<div class="flex align-items-center gap-2">
+						<div>{{ item.name }}</div>
+					</div>
+				</ng-template>
+			</p-dropdown>
+		</div>
+	}
+	@if ($layout() === 'list') {
+		<div class="overflow-auto">
+			<p-listbox
+				class="user-list"
+				[options]="$users()"
+				[(ngModel)]="selectedUser"
+				(ngModelChange)="submit()"
+				[metaKeySelection]="false"
+				optionLabel="name"
+				[style]="{ width: '100%' }"
+				[class.big-list-items]="$users().length < 6"
+				emptyMessage="Žádní uživatelé"
+			>
+				<ng-template
+					let-user
+					pTemplate="item"
+				>
+					<div class="flex align-items-center w-full justify-content-between">
+						{{ user.name }}
+						@if (user.isRegular) {
+							<i class="pi pi-fw pi-crown"></i>
+						}
+					</div>
+				</ng-template>
+			</p-listbox>
+		</div>
 	}
 </div>

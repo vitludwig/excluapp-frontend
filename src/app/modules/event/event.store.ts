@@ -5,6 +5,7 @@ import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe } from 'rxjs';
+import { SettingsStore } from "@common/state/stores/settings.store";
 
 type EventState = {
 	events: IEvent[];
@@ -19,7 +20,7 @@ const initialState: EventState = {
 export const EventStore = signalStore(
 	{ providedIn: 'root' },
 	withState<EventState>(initialState),
-	withMethods((store, eventService = inject(EventService)) => {
+	withMethods((store, eventService = inject(EventService), settingsStore = inject(SettingsStore)) => {
 		function setActiveEvent(id: number): void {
 			patchState(store, { activeEvent: store.events().find((e) => e.id === id) ?? null });
 			localStorage.setItem('activeEvent', id.toString());

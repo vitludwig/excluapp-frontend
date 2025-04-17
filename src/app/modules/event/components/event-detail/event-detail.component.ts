@@ -21,6 +21,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { catchError, firstValueFrom, tap } from 'rxjs';
 import { EventSortimentComponent } from './components/event-sortiment/event-sortiment.component';
+import { SortimentStore } from "@modules/sortiment/sortiment.store";
 
 @Component({
 	selector: 'app-event-detail',
@@ -47,6 +48,7 @@ import { EventSortimentComponent } from './components/event-sortiment/event-sort
 })
 export class EventDetailComponent implements OnDestroy {
 	protected readonly eventDetailStore = inject(EventDetailStore);
+	private readonly sortimentStore = inject(SortimentStore);
 
 	private readonly notificationService = inject(NotificationService);
 	private readonly dialogService: DialogService = inject(DialogService);
@@ -119,6 +121,16 @@ export class EventDetailComponent implements OnDestroy {
 				statistics: result,
 			},
 			dismissableMask: true,
+		});
+	}
+
+	protected setKegDefectiveStatus(id: number, isDefective: boolean) {
+		this.sortimentStore.updateKeg(id, 'isDefective', isDefective).subscribe({
+			next: () => {
+				this.notificationService.success('Sud upraven');
+				this.eventDetailStore.updateKeg(id, { isDefective });
+			},
+			error: () => this.notificationService.error('Nepodařilo se upravit sud'),
 		});
 	}
 

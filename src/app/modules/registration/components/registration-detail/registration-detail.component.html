@@ -1,70 +1,72 @@
 @if (registrationStore.event(); as currentEvent) {
-<h2 class="mb-0">{{ currentEvent.name }}</h2>
-<div class="flex justify-content-between align-items-center">
-	<h4>Kapacita ({{ registrationStore.eventUsers().length }}/{{ currentEvent.capacity }})</h4>
-	<h4>({{ currentEvent.start | date: "dd.MM" }} - {{ currentEvent.end | date: "dd.MM" }})</h4>
-</div>
-<div class="mb-2">
-	@if ($enableRegistration()) {
-	<button
-		pButton
-		class="registration-btn p-button-lg"
-		(click)="showAttendModal()"
-	>
-		<i class="pi pi-plus mr-2"></i>
-		Přidat se
-	</button>
-	}
-</div>
+	<h2 class="mb-0">{{ currentEvent.name }}</h2>
+	<div class="flex justify-content-between align-items-center">
+		<h4>Kapacita ({{ registrationStore.eventUsers().length }}/{{ currentEvent.capacity }})</h4>
+		<h4>({{ currentEvent.start | date: "dd.MM" }} - {{ currentEvent.end | date: "dd.MM" }})</h4>
+	</div>
+	<div class="mb-2">
+		@if ($enableRegistration()) {
+			<button
+				pButton
+				class="registration-btn p-button-lg"
+				(click)="showAttendModal()"
+			>
+				<i class="pi pi-plus mr-2"></i>
+				Přidat se
+			</button>
+		}
+	</div>
 
-<p-table
-	[value]="registrationStore.eventUsers()"
-	[paginator]="true"
-	[rows]="10"
-	[globalFilterFields]="['name']"
->
-	<ng-template
-		pTemplate="body"
-		let-user
+	<p-table
+		[value]="registrationStore.eventUsers()"
+		[paginator]="true"
+		[rows]="10"
+		[globalFilterFields]="['name']"
 	>
-		<tr>
-			<td>{{ user.name }}</td>
-			<td class="flex justify-content-end">
-				<button
-					pButton
-					appConfirm
-					(confirm)="removeUser(user.id)"
-					[confirmMessage]="'Odzúčastnit?'"
-					pTooltip="Odzúčastnit se"
-					class="p-button-danger"
-					icon="pi pi-fw pi-trash"
-				></button>
-			</td>
-		</tr>
-	</ng-template>
-</p-table>
+		<ng-template
+			pTemplate="body"
+			let-user
+		>
+			<tr>
+				<td>{{ user.name }}</td>
+				<td class="flex justify-content-end">
+					<button
+						pButton
+						appConfirm
+						(confirm)="removeUser(user.id)"
+						[confirmMessage]="'Odzúčastnit?'"
+						pTooltip="Odzúčastnit se"
+						class="p-button-danger"
+						icon="pi pi-fw pi-trash"
+					></button>
+				</td>
+			</tr>
+		</ng-template>
+	</p-table>
 
-<p-dialog
-	header="Přidat se"
-	[visible]="$showSelectUserModal()"
-	[modal]="true"
-	[breakpoints]="{ '768px': '95vw' }"
-	[style]="{ width: '50vw' }"
-	[dismissableMask]="true"
-	[position]="'top'"
->
-	<app-select-user
-		[users]="registrationStore.usersToPick()"
-		(select)="$selectedUser.set($event)"
-		class="mb-4"
-	/>
-	<p-button
-		(click)="selectUser($selectedUser())"
-		[style]="{ width: '100%' }"
-		styleClass="p-button-lg"
-		label="Potvrdit"
-	/>
-</p-dialog>
+	<p-dialog
+		header="Přidat se"
+		[visible]="$showSelectUserModal()"
+		(visibleChange)="hideAttendModal()"
+		[modal]="true"
+		[breakpoints]="{ '768px': '95vw' }"
+		[style]="{ width: '50vw' }"
+		[dismissableMask]="true"
+		[position]="'top'"
+	>
+		<app-select-user
+			[users]="registrationStore.usersToPick()"
+			(select)="$selectedUser.set($event)"
+			#selectUserPicker
+			class="mb-4"
+		/>
+		<p-button
+			(click)="selectUser($selectedUser())"
+			[style]="{ width: '100%' }"
+			styleClass="p-button-lg"
+			label="Potvrdit"
+		/>
+	</p-dialog>
 } @else {
-<p>Nepodařilo se načíst událost</p>
+	<p>Nepodařilo se načíst událost</p>
 }

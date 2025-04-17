@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, signal, viewChild } from "@angular/core";
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { BackBtnDirective } from '@common/directives/back-btn/back-btn.directive';
 import { AuthService } from '@common/services/auth.service';
@@ -56,6 +56,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 
 	protected $showSelectUserModal = signal<boolean>(false);
 	protected $selectedUser = signal<IUser | null>(null);
+	protected selectUserPicker = viewChild<SelectUserComponent>("selectUserPicker");
 
 	private attendDialogRef: DynamicDialogRef;
 
@@ -67,6 +68,10 @@ export class RegistrationDetailComponent implements OnDestroy {
 
 	protected showAttendModal(): void {
 		this.$showSelectUserModal.set(true);
+	}
+
+	protected hideAttendModal(): void {
+		this.$showSelectUserModal.set(false);
 	}
 
 	protected selectUser(user: IUser | null): void {
@@ -81,6 +86,7 @@ export class RegistrationDetailComponent implements OnDestroy {
 			.pipe(
 				tap(() => {
 					this.$showSelectUserModal.set(false);
+					this.selectUserPicker()?.reset();
 				}),
 			)
 			.subscribe({

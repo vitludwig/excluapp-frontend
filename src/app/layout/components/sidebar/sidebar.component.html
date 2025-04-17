@@ -5,94 +5,95 @@
 		</div>
 
 		@if (authService.$isLogged()) {
-		<h4 class="mb-1 ml-1">Událost</h4>
-		<p-dropdown
-			[options]="eventStore.events() | sort: 'start'"
-			[ngModel]="eventStore.activeEvent()"
-			(ngModelChange)="setActiveEvent($event.id)"
-			optionLabel="name"
-			[filter]="true"
-			[autofocusFilter]="false"
-			filterBy="name"
-			placeholder="Select event"
-			[style]="{ width: '100%' }"
-		>
-			<ng-template pTemplate="selectedItem">
-				@if (eventStore.activeEvent(); as event) {
-				<div class="flex align-items-center gap-2">
-					<div>{{ event.name }}</div>
-				</div>
-				}
-			</ng-template>
-
-			<ng-template
-				let-item
-				pTemplate="item"
+			<h4 class="mb-1 ml-1">Událost</h4>
+			<p-dropdown
+				[options]="eventStore.events() | sort: 'start'"
+				[ngModel]="eventStore.activeEvent()"
+				(ngModelChange)="setActiveEvent($event.id)"
+				optionLabel="name"
+				[filter]="true"
+				[autofocusFilter]="false"
+				filterBy="name"
+				placeholder="Select event"
+				[style]="{ width: '100%' }"
 			>
-				<div class="flex align-items-center gap-2">
-					<div>{{ item.name }}</div>
-				</div>
-			</ng-template>
-		</p-dropdown>
+				<ng-template pTemplate="selectedItem">
+					@if (eventStore.activeEvent(); as event) {
+						<div class="flex align-items-center gap-2">
+							<div>{{ event.name }}</div>
+						</div>
+					}
+				</ng-template>
 
-		<div class="flex gap-2 mt-2">
-			<label htmlFor="enableMultipleDevices">Více zařízení na události</label>
-			<p-inputSwitch
-				[ngModel]="settingsStore.enableMultipleDevices()"
-				(ngModelChange)="settingsStore.toggleEnabledMultipleDevices()"
-				id="enableMultipleDevices"
-			></p-inputSwitch>
-		</div>
+				<ng-template
+					let-item
+					pTemplate="item"
+				>
+					<div class="flex align-items-center gap-2">
+						<div>{{ item.name }}</div>
+					</div>
+				</ng-template>
+			</p-dropdown>
 
-		@if(settingsStore.enableMultipleDevices() && (sortimentStore.allKegsInActiveEvent() | async); as kegs) {
-		<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
-		<p-multiSelect
-			[options]="kegs"
-			[ngModel]="settingsStore.activeEventKegsToShow()"
-			(ngModelChange)="settingsStore.setActiveEventKegsToShow($event)"
-			optionLabel="name"
-			optionValue="id"
-			[style]="{ width: '100%' }"
-		/>
-		} }
+			<div class="flex gap-2 mt-2">
+				<label htmlFor="enableMultipleDevices">Více zařízení na události</label>
+				<p-inputSwitch
+					[ngModel]="settingsStore.enableMultipleDevices()"
+					(ngModelChange)="settingsStore.toggleEnabledMultipleDevices()"
+					id="enableMultipleDevices"
+				></p-inputSwitch>
+			</div>
+
+			@if (settingsStore.enableMultipleDevices() && (sortimentStore.allKegsInActiveEvent() | async); as kegs) {
+				<h4 class="mb-1 ml-1">Sudy na zařízení</h4>
+				<p-multiSelect
+					[options]="kegs"
+					[ngModel]="settingsStore.activeEventKegsToShow()"
+					(ngModelChange)="settingsStore.setActiveEventKegsToShow($event)"
+					optionLabel="name"
+					optionValue="id"
+					[style]="{ width: '100%' }"
+				/>
+			}
+		}
 		<div class="mt-auto">
 			@if (authService.$isLogged()) {
-			<div class="flex gap-2 mb-4">
-				<label htmlFor="faceRecognition">Face recognition</label>
-				<!-- TODO: use face recognition signals reactively without page reload -->
-				<p-inputSwitch
-					[ngModel]="faceRecognitionService.$faceRecognitionEnabled()"
-					(ngModelChange)="faceRecognitionService.$faceRecognitionEnabled.set($event); reloadPage()"
-					id="faceRecognition"
-				></p-inputSwitch>
-			</div>
+				<div class="flex gap-2 mb-4">
+					<label htmlFor="faceRecognition">Face recognition</label>
+					<!-- TODO: use face recognition signals reactively without page reload -->
+					<p-inputSwitch
+						[ngModel]="faceRecognitionService.$faceRecognitionEnabled()"
+						(ngModelChange)="faceRecognitionService.$faceRecognitionEnabled.set($event); reloadPage()"
+						id="faceRecognition"
+					></p-inputSwitch>
+				</div>
 
-			<div class="flex gap-2 mb-4">
-				<label htmlFor="faceRecognitionOverlay">Face recognition overlay</label>
-				<p-inputSwitch
-					[ngModel]="faceRecognitionService.$faceRecognitionOverlayEnabled()"
-					(ngModelChange)="faceRecognitionService.$faceRecognitionOverlayEnabled.set($event); reloadPage()"
-					id="faceRecognitionOverlay"
-				></p-inputSwitch>
-			</div>
+				<div class="flex gap-2 mb-4">
+					<label htmlFor="faceRecognitionOverlay">Face recognition overlay</label>
+					<p-inputSwitch
+						[ngModel]="faceRecognitionService.$faceRecognitionOverlayEnabled()"
+						(ngModelChange)="faceRecognitionService.$faceRecognitionOverlayEnabled.set($event); reloadPage()"
+						id="faceRecognitionOverlay"
+					></p-inputSwitch>
+				</div>
 
-			<p-button
-				class="mt-auto"
-				[style]="{ width: '100%' }"
-				(click)="authService.logout()"
-			>
-				<i class="pi pi-fw pi-sign-out mr-2"></i>
-				Odhlásit
-			</p-button>
+				<p-button
+					class="mt-auto"
+					[style]="{ width: '100%' }"
+					(click)="authService.logout()"
+				>
+					<i class="pi pi-fw pi-sign-out mr-2"></i>
+					Odhlásit
+				</p-button>
 			} @else {
-			<p-button
-				class="mt-auto"
-				[style]="{ width: '100%' }"
-				(click)="showLoginDialog()"
-			>
-				<i class="pi pi-fw pi-user mr-2"></i>
-				Admin
-			</p-button>
+				<p-button
+					class="mt-auto"
+					[style]="{ width: '100%' }"
+					(click)="showLoginDialog()"
+				>
+					<i class="pi pi-fw pi-user mr-2"></i>
+					Admin
+				</p-button>
 			}
 		</div>
 	</div>

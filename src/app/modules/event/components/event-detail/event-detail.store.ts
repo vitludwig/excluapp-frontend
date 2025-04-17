@@ -103,6 +103,9 @@ export const EventDetailStore = signalStore(
 		removeKeg: (id: number) => {
 			return patchState(store, { eventKegs: store.eventKegs().filter((k) => k.id !== id) });
 		},
+		updateKeg: (id: number, changes: Partial<IKeg>) => {
+			return patchState(store, { eventKegs: store.eventKegs().map((k) => (k.id === id ? { ...k, ...changes } : k)) });
+		},
 		setKegActive: (id: number, isActive: boolean, isEmpty: boolean) => {
 			return sortimentService.updateSortiment(id, { isActive, isEmpty }).pipe(
 				tap((keg) => patchState(store, { eventKegs: store.eventKegs().map((k) => (k.id === id ? keg : k)) })),
@@ -121,7 +124,13 @@ export const EventDetailStore = signalStore(
 						.includes(k.id),
 			);
 			const existingKegsToAdd = kegsToAdd.filter((keg) => !keg.isOriginal);
-			const newKegToAdd = kegsToAdd.filter((keg) => keg.isOriginal).map((keg) => ({ ...keg, isEmpty: false, isOriginal: false }));
+			const newKegToAdd = kegsToAdd
+				.filter((keg) => keg.isOriginal)
+				.map((keg) => ({
+					...keg,
+					isEmpty: false,
+					isOriginal: false,
+				}));
 
 			const eventKegIds = store.eventKegs().map((k) => k.id);
 			const kegsToRemove = store.initialEventKegs().filter((k) => !eventKegIds.includes(k.id));

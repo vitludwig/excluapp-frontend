@@ -27,6 +27,7 @@ import { IBeerpong } from '../../types/IBeerpong';
 import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-dialog.component';
 import { DashboardSortimentSelectComponent } from './components/dashboard-sortiment-select/dashboard-sortiment-select.component';
 import { DashboardUserSelectComponent } from './components/dashboard-user-select/dashboard-user-select.component';
+import { getRandomNumber } from "@common/utils/Utils";
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -100,7 +101,13 @@ export class SaleDashboardComponent implements OnDestroy {
 			.pipe(
 				tap(() => {
 					this.orderStore.setOrderProcessing(false);
-					new Audio('/assets/finish.mp3').play().catch((e) => console.error('Cannot play finish sound', e));
+
+					const playOtherSound = getRandomNumber(3) > 2;
+					let audioSrc = '/assets/sounds/finish.mp3';
+					if(playOtherSound) {
+						audioSrc = `/assets/sounds/finish${getRandomNumber(8)}.mp3`
+					}
+					new Audio(audioSrc).play().catch((e) => console.error('Cannot play finish sound ' + audioSrc, e));
 					this.resetOrder();
 				}),
 			)
