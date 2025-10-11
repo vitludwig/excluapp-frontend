@@ -17,10 +17,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { KnobModule } from 'primeng/knob';
 import { forkJoin, Subject, takeUntil, tap } from 'rxjs';
 import { LayoutService } from '../../../../layout/services/layout/layout.service';
-import { UserFaceRecognitionComponent } from '../../../user/components/user-face-recognition/user-face-recognition.component';
 import { IUser } from '../../../user/types/IUser';
-import { AsSortimentCategoryPipe } from '../../pipes/as-sortiment-category.pipe';
-import { KegStatusPipe } from '../../pipes/keg-status.pipe';
 import { OrderService } from '../../services/order/order.service';
 import { EBeerVolume } from '../../types/EBeerVolume';
 import { IBeerpong } from '../../types/IBeerpong';
@@ -28,6 +25,7 @@ import { BeerpongDialogComponent } from './components/beerpong-dialog/beerpong-d
 import { DashboardSortimentSelectComponent } from './components/dashboard-sortiment-select/dashboard-sortiment-select.component';
 import { DashboardUserSelectComponent } from './components/dashboard-user-select/dashboard-user-select.component';
 import { getRandomNumber } from "@common/utils/Utils";
+import { AttendDialogComponent } from '@modules/registration/components/attend-dialog/attend-dialog.component';
 
 @Component({
 	selector: 'app-sale-dashboard',
@@ -37,16 +35,14 @@ import { getRandomNumber } from "@common/utils/Utils";
 		CardModule,
 		ButtonModule,
 		DividerModule,
-		AsSortimentCategoryPipe,
 		DashboardUserSelectComponent,
 		DashboardSortimentSelectComponent,
 		AccordionModule,
 		KnobModule,
 		FormsModule,
-		UserFaceRecognitionComponent,
-		KegStatusPipe,
 		DashboardSortimentStatisticsComponent,
 		OrderControlsComponent,
+		AttendDialogComponent,
 	],
 	providers: [DialogService, OrderStore],
 	templateUrl: './sale-dashboard.component.html',
@@ -68,6 +64,7 @@ export class SaleDashboardComponent implements OnDestroy {
 	protected beerpongDialogRef: DynamicDialogRef | null = null;
 
 	protected $otherUsers = signal<IUser[]>([]);
+	protected $showSelectUserModal = signal<boolean>(false);
 
 	private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -104,8 +101,8 @@ export class SaleDashboardComponent implements OnDestroy {
 
 					const playOtherSound = getRandomNumber(3) > 2;
 					let audioSrc = '/assets/sounds/finish.mp3';
-					if(playOtherSound) {
-						audioSrc = `/assets/sounds/finish${getRandomNumber(8)}.mp3`
+					if (playOtherSound) {
+						audioSrc = `/assets/sounds/finish${getRandomNumber(8)}.mp3`;
 					}
 					new Audio(audioSrc).play().catch((e) => console.error('Cannot play finish sound ' + audioSrc, e));
 					this.resetOrder();
@@ -170,5 +167,9 @@ export class SaleDashboardComponent implements OnDestroy {
 	public ngOnDestroy() {
 		this.beerpongDialogRef?.close();
 		this.unsubscribe$.next();
+	}
+
+	protected showAttendModal(): void {
+		this.$showSelectUserModal.set(true);
 	}
 }

@@ -19,7 +19,7 @@
 			(stornoOrder)="stornoOrder($event)"
 		/>
 	} @else {
-		@if (this.userStore.usersInEvent() | async; as usersInEvent) {
+		@if (this.userStore.usersInEvent(); as usersInEvent) {
 			<p-card
 				(click)="showBeerpongDialog(kegs, usersInEvent)"
 				[header]="'Zapsat býrponk'"
@@ -35,6 +35,15 @@
 					[users]="usersInEvent"
 					(selected)="selectUser($event)"
 				/>
+				<button
+					pButton
+					class="w-full mb-3 p-button-lg"
+					(click)="showAttendModal()"
+				>
+					<i class="pi pi-plus mr-2"></i>
+					Přidat na párty
+				</button>
+
 				<br />
 				<p-accordion>
 					<p-accordionTab
@@ -66,6 +75,8 @@
 } @else {
 	<h1>Žádné sudy na události</h1>
 }
+
+<app-attend-dialog [visible]="$showSelectUserModal()" (visibleChange)="$showSelectUserModal.set($event)" />
 
 <!--@if(faceRecognitionService.$faceRecognitionEnabled()) {-->
 <!--	<app-user-face-recognition-->

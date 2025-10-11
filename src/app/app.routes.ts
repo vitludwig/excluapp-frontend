@@ -23,7 +23,7 @@ export const routes: Routes = [
 				loadComponent: () => import('@modules/registration/components/registration-list/registration-list.component').then((m) => m.RegistrationListComponent),
 			},
 			{
-				path: ':eventId',
+				path: ':routeEventId',
 				loadComponent: () => import('@modules/registration/components/registration-detail/registration-detail.component').then((m) => m.RegistrationDetailComponent),
 			},
 		],

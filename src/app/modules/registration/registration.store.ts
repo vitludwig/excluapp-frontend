@@ -7,6 +7,7 @@ import { IUser } from '@modules/user/types/IUser';
 import { UserStore } from '@modules/user/user.store';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { of } from 'rxjs';
 
 type RegistrationState = {
 	eventUsers: IUser[];
@@ -17,12 +18,20 @@ const initialState: RegistrationState = {
 };
 
 export const RegistrationStore = signalStore(
+	{ providedIn: 'root' },
 	withState(initialState),
-	withRouteParams({ eventId: (param) => Number(param) }),
+	withRouteParams({ routeEventId: (param) => parseRouteId(param) }),
+	withComputed((store, eventStore = inject(EventStore)) => ({
+		eventId: computed(() => {
+			const fromRoute = store.routeEventId(); // This is from withRouteParams
+			return fromRoute !== undefined ? fromRoute : eventStore.activeEvent()?.id ?? undefined;
+		}),
+	})),
 	withComputed((store, eventStore = inject(EventStore), userStore = inject(UserStore)) => ({
 		event: computed(() => {
-			if (store.eventId()) {
-				return eventStore.getById(store.eventId());
+			const eventId = store.eventId();
+			if (eventId) {
+				return eventStore.getById(eventId);
 			}
 			return null;
 		}),
@@ -30,11 +39,20 @@ export const RegistrationStore = signalStore(
 			return userStore.users().filter((user) => !store.eventUsers().find((u) => u.id === user.id));
 		}),
 	})),
-	withMethods((store, userService = inject(UserService), eventService = inject(EventService)) => ({
+	withMethods((store, userService = inject(UserService), eventService = inject(EventService), userStore = inject(UserStore)) => ({
 		addUser: (userId: number) => {
-			return eventService.attendEvent(userId, store.eventId()).pipe(
+			const eventId = store.eventId();
+			if (!eventId) {
+				console.error('No event id loaded');
+				return of();
+			}
+
+			return eventService.attendEvent(userId, eventId).pipe(
 				tapResponse({
-					next: (users) => patchState(store, () => ({ eventUsers: users })),
+					next: (users) => {
+						patchState(store, () => ({ eventUsers: users }));
+						userStore.updateUsersInEvent(users);
+					},
 					error: (e) => {
 						console.error('Error while attending user to event', e);
 						throw e;
@@ -43,9 +61,18 @@ export const RegistrationStore = signalStore(
 			);
 		},
 		removeUser: (userId: number) => {
-			return eventService.unAttendEvent(userId, store.eventId()).pipe(
+			const eventId = store.eventId();
+			if (!eventId) {
+				console.error('No event id loaded');
+				return of();
+			}
+
+			return eventService.unAttendEvent(userId, eventId).pipe(
 				tapResponse({
-					next: () => patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) })),
+					next: () => {
+						patchState(store, (state) => ({ eventUsers: state.eventUsers.filter((obj) => obj.id !== userId) }));
+						userStore.loadUsersInEvent(eventId);
+					},
 					error: (e) => {
 						console.error('Error while unattending user from event', e);
 						throw e;
@@ -54,7 +81,13 @@ export const RegistrationStore = signalStore(
 			);
 		},
 		loadUsers: () => {
-			return userService.getUsersForEvent(store.eventId()).pipe(
+			const eventId = store.eventId();
+			if (!eventId) {
+				console.error('No event id loaded');
+				return of();
+			}
+
+			return userService.getUsersForEvent(eventId).pipe(
 				tapResponse({
 					next: (eventUsers) => patchState(store, { eventUsers }),
 					error: (e) => {
@@ -66,3 +99,11 @@ export const RegistrationStore = signalStore(
 		},
 	})),
 );
+
+function parseRouteId(param: string | undefined): number | undefined {
+	if (param === undefined) {
+		return undefined;
+	}
+	const num = parseInt(param, 10);
+	return isNaN(num) ? undefined : num;
+}

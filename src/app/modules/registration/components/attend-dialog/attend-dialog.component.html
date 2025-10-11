@@ -1,0 +1,23 @@
+<p-dialog
+	header="Přidat se"
+	[visible]="$visible()"
+	(visibleChange)="hideDialog()"
+	[modal]="true"
+	[breakpoints]="{ '768px': '95vw' }"
+	[style]="{ width: '50vw' }"
+	[dismissableMask]="true"
+	[position]="'top'"
+>
+	<app-select-user
+		[users]="registrationStore.usersToPick()"
+		(select)="$selectedUser.set($event)"
+		#selectUserPicker
+		class="mb-4"
+	/>
+	<p-button
+		(click)="selectUser($selectedUser())"
+		[style]="{ width: '100%' }"
+		styleClass="p-button-lg"
+		label="Potvrdit"
+	/>
+</p-dialog>

@@ -1,35 +1,49 @@
-import { computed, inject } from '@angular/core';
+import { effect, inject } from '@angular/core';
 import { NotificationService } from '@common/services/notification.service';
 import { EventStore } from '@modules/event/event.store';
 import { tapResponse } from '@ngrx/operators';
-import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, of, pipe } from 'rxjs';
+import { exhaustMap, of, pipe, switchMap } from 'rxjs';
 import { UserService } from './services/user/user.service';
 import { IUser, IUserCreate } from './types/IUser';
 
 type UserState = {
 	users: IUser[];
+	usersInEvent: IUser[];
 };
 
 const initialState: UserState = {
 	users: [],
+	usersInEvent: [],
 };
 
 export const UserStore = signalStore(
 	{ providedIn: 'root' },
 	withState<UserState>(initialState),
-	withComputed((store, eventStore = inject(EventStore), userService = inject(UserService)) => ({
-		usersInEvent: computed(() => {
-			const eventId = eventStore.activeEvent();
-
-			if (eventId) {
-				return userService.getUsersForEvent(eventId.id);
-			}
-			return of([]);
-		}),
-	})),
-	withMethods((store, userService = inject(UserService), eventStore = inject(EventStore), notificationService = inject(NotificationService)) => ({
+	withMethods((store, userService = inject(UserService), notificationService = inject(NotificationService)) => ({
+		loadUsersInEvent: rxMethod<number | undefined>(
+			pipe(
+				switchMap((eventId) => {
+					if (!eventId) {
+						patchState(store, { usersInEvent: [] });
+						return of();
+					}
+					return userService.getUsersForEvent(eventId).pipe(
+						tapResponse({
+							next: (users) => patchState(store, { usersInEvent: users }),
+							error: (e) => {
+								notificationService.error('Nepodařilo se načíst uživatele pro událost');
+								console.error(e);
+							},
+						}),
+					);
+				}),
+			),
+		),
+		updateUsersInEvent: (users: IUser[]) => {
+			patchState(store, { usersInEvent: users });
+		},
 		loadAll: rxMethod<void>(
 			pipe(
 				exhaustMap(() => {
@@ -82,7 +96,12 @@ export const UserStore = signalStore(
 	})),
 	withHooks({
 		onInit(store) {
+			const eventStore = inject(EventStore);
 			store.loadAll();
+			effect(() => {
+				const eventId = eventStore.activeEvent()?.id;
+				store.loadUsersInEvent(eventId);
+			});
 		},
 	}),
 );
