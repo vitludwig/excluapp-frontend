@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { IEvent } from '@modules/event/types/IEvent';
 import { IKegStatus } from '@modules/sortiment/types/IKegStatus';
 import { IKegUserStatistics } from '@modules/sortiment/types/IKegUserStatistics';
-import { Observable, map } from 'rxjs';
+import { Observable, map, of, switchMap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IKeg } from '../../types/IKeg';
 import { ISortimentFilters } from './types/ISortimentFilters';
@@ -15,7 +15,7 @@ export class SortimentService {
 	private readonly http = inject(HttpClient);
 
 	public addSortiment(value: IKeg | IKeg[]): Observable<IKeg | IKeg[]> {
-		return this.http.post<IKeg>(`${environment.apiUrl}/keg`, value);
+		return this.http.post<IKeg | IKeg[]>(`${environment.apiUrl}/keg`, value);
 	}
 
 	public getSortimentById(id: number): Observable<IKeg> {
@@ -58,7 +58,7 @@ export class SortimentService {
 	}
 
 	public getKegEvent(kegId: number): Observable<IEvent> {
-		return this.http.get<IEvent>(`${environment.apiUrl}'/keg/${kegId}/event`);
+		return this.http.get<IEvent>(`${environment.apiUrl}/keg/${kegId}/event`);
 	}
 
 	public getSources() {
@@ -79,5 +79,29 @@ export class SortimentService {
 
 	public getDuplicateKegs(keg: IKeg) {
 		return this.http.post<IKeg[]>(`${environment.apiUrl}/keg/check-duplicate`, { name: keg.name, sourceName: keg.sourceName, volume: keg.volume });
+	}
+
+	public changeKeg(oldKeg: IKeg, newKegTemplate: IKeg, eventId: number): Observable<void> {
+		return this.updateSortiment(oldKeg.id, { isEmpty: true, isActive: false }).pipe(
+			switchMap(() => this.createKegsFromTemplates([newKegTemplate], oldKeg.position)),
+			switchMap((newKegs: IKeg[]) => {
+				const newKegIds = newKegs.map((k) => k.id);
+				return this.addKegToEvent(eventId, newKegIds);
+			}),
+		);
+	}
+
+	public createKegsFromTemplates(kegTemplates: IKeg[], position?: number): Observable<IKeg[]> {
+		if (kegTemplates.length === 0) {
+			return of([]);
+		}
+		const kegsToCreate = kegTemplates.map((keg) => ({
+			...keg,
+			isEmpty: false,
+			isOriginal: false,
+			isActive: true,
+			position: position ?? keg.position,
+		}));
+		return this.addSortiment(kegsToCreate).pipe(map((kegs) => kegs as IKeg[]));
 	}
 }

@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '@common/services/notification.service';
@@ -76,10 +74,6 @@ export class UserDetailComponent {
 				tap(() => this.router.navigate(['/admin/users'])),
 				catchError((e) => {
 					console.error('User update/create error: ', e);
-					if (e instanceof HttpErrorResponse && e.status === 409) {
-						this.notificationService.error('Uživatel s tímto jménem již existuje');
-					}
-
 					return e;
 				}),
 			)

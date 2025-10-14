@@ -61,7 +61,7 @@
 			<p-divider />
 		}
 
-		<app-dashboard-sortiment-statistics [kegs]="kegs" />
+		<app-dashboard-sortiment-statistics [kegs]="kegs" [event]="eventStore.activeEvent()" />
 
 		<div class="kegs-pointer-container">
 			@for (keg of kegs; track keg.id) {

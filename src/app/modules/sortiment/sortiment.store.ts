@@ -46,7 +46,7 @@ export const SortimentStore = signalStore(
 
 		return { allKegsInActiveEvent, kegsInActiveEvent };
 	}),
-	withMethods((store, sortimentService = inject(SortimentService)) => ({
+	withMethods((store, sortimentService = inject(SortimentService), eventStore = inject(EventStore)) => ({
 		getAll: rxMethod<ISortimentFilters>(
 			pipe(
 				exhaustMap((filters = { isEmpty: false, isActive: true }) => {
@@ -88,6 +88,9 @@ export const SortimentStore = signalStore(
 					},
 				}),
 			);
+		},
+		loadKegsInActiveEvent: () => {
+			eventStore.loadAll();
 		},
 	})),
 );

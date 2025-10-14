@@ -67,6 +67,9 @@ export const routes: Routes = [
 					{
 						path: 'detail/:id',
 						loadComponent: () => import('@modules/user/components/user-detail/user-detail.component').then((m) => m.UserDetailComponent),
+						data: {
+							title: 'Upravit uživatele',
+						},
 					},
 					{
 						path: 'new',
@@ -90,10 +93,16 @@ export const routes: Routes = [
 					{
 						path: 'detail/:id',
 						loadComponent: () => import('@modules/sortiment/components/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
+						data: {
+							title: 'Upravit sud',
+						},
 					},
 					{
 						path: 'new',
 						loadComponent: () => import('@modules/sortiment/components/sortiment-detail/sortiment-detail.component').then((m) => m.SortimentDetailComponent),
+						data: {
+							title: 'Nový sud',
+						},
 					},
 				],
 			},

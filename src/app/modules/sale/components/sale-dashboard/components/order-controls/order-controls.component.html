@@ -1,12 +1,12 @@
 <div class="slide-panel">
 	<div class="w-full flex align-items-end justify-content-between">
-		<p-button
+		<button
+			pButton
 			icon="pi pi-times"
-			styleClass="p-button-rounded p-button-raised p-button-lg p-button-danger"
-			class="order-control-btn"
+			class="order-control-btn p-button-rounded p-button-raised p-button-lg p-button-danger"
 			(click)="cancel()"
 			[disabled]="$cancelBtnDisabled()"
-		/>
+		></button>
 
 		<p-button
 			class="slide-open-btn"
@@ -17,13 +17,13 @@
 			<i class="pi pi-fw pi-{{ $showSummary() ? 'chevron-down' : 'chevron-up' }}"></i>
 		</p-button>
 
-		<p-button
+		<button
+			pButton
 			icon="pi pi-check"
-			styleClass="p-button-rounded p-button-raised p-button-lg p-button-success"
-			class="order-control-btn"
+			class="order-control-btn p-button-rounded p-button-raised p-button-lg p-button-success"
 			(click)="confirm()"
 			[disabled]="$confirmBtnDisabled()"
-		/>
+		></button>
 	</div>
 
 	<div

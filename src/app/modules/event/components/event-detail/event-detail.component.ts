@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
-
-import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ConfirmComponent } from '@common/components/confirm/confirm.component';
 import { NotificationService } from '@common/services/notification.service';
 import { EventDetailStore } from '@modules/event/components/event-detail/event-detail.store';
@@ -31,15 +29,12 @@ import { SortimentStore } from "@modules/sortiment/sortiment.store";
 		InputTextModule,
 		CalendarModule,
 		TableModule,
-		RouterLink,
 		EventSortimentComponent,
 		TooltipModule,
 		ConfirmDialogModule,
 		ConfirmComponent,
-		JsonPipe,
 		DividerModule,
 		OrderListModule,
-		AsyncPipe,
 	],
 	providers: [ConfirmationService, DialogService, EventDetailStore],
 	templateUrl: './event-detail.component.html',
@@ -148,5 +143,12 @@ export class EventDetailComponent implements OnDestroy {
 	public ngOnDestroy() {
 		this.kegStatusDialogRef?.close();
 		this.kegUserStatisticsDialogRef?.close();
+	}
+
+	protected addKeg($event: IKeg) {
+		const newPosition = this.eventDetailStore.eventKegs().map((k) => k.position).reduce((a, b) => Math.max(a, b), 0) + 1;
+		$event.position = newPosition;
+		this.eventDetailStore.addKeg($event)
+		this.notificationService.success("Sud přidán na událost");
 	}
 }

@@ -1,0 +1,25 @@
+<div class="p-dialog-content">
+	@if(originalKegs$ | async; as originalKegs) {
+		<div class="mb-2">Vyber sud, na který se přeráží</div>
+		<app-event-sortiment
+			label="Nový plný sud"
+			[options]="originalKegs"
+			(select)="newKeg = $event"
+		></app-event-sortiment>
+
+		<div class="mb-4 flex justify-content-end">
+			<p-button [routerLink]="['/admin/sortiment/new']" severity="warning" icon="pi pi-exclamation-triangle" label="Sud není v aplikaci" outlined="true" size="small" />
+		</div>
+	}
+</div>
+<div class="p-dialog-footer">
+	<h3 class="text-left mt-0">POZOR! Pokud jsou sudy předem připravené na události, tak je ručně aktivuj <a [routerLink]="['/admin/events/detail', eventId]">TADY</a></h3>
+
+	<p-button
+		(click)="confirm()"
+		[style]="{ width: '100%' }"
+		class="w-full mt-3"
+		styleClass="p-button-lg"
+		label="Potvrdit"
+	/>
+</div>

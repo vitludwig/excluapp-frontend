@@ -7,6 +7,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, of, pipe, switchMap } from 'rxjs';
 import { UserService } from './services/user/user.service';
 import { IUser, IUserCreate } from './types/IUser';
+import { HttpErrorResponse } from '@angular/common/http';
 
 type UserState = {
 	users: IUser[];
@@ -65,8 +66,14 @@ export const UserStore = signalStore(
 				tapResponse({
 					next: (user) => patchState(store, (state) => ({ users: state.users.map((obj) => (obj.id === user.id ? user : obj)) })),
 					error: (e) => {
-						notificationService.error('Nepodařilo se aktualizovat uživatele');
 						console.error(e);
+
+						if (e instanceof HttpErrorResponse && e.status === 409) {
+							notificationService.error('Uživatel s tímto jménem již existuje');
+							return;
+						}
+						notificationService.error('Nepodařilo se aktualizovat uživatele');
+
 					},
 				}),
 			);
@@ -76,8 +83,14 @@ export const UserStore = signalStore(
 				tapResponse({
 					next: (user) => patchState(store, (state) => ({ users: [...state.users, user] })),
 					error: (e) => {
-						notificationService.error('Nepodařilo se přidat uživatele');
 						console.error(e);
+
+						if (e instanceof HttpErrorResponse && e.status === 409) {
+							notificationService.error('Uživatel s tímto jménem již existuje');
+							return;
+						}
+						notificationService.error('Nepodařilo se přidat uživatele');
+
 					},
 				}),
 			);

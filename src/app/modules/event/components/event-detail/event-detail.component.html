@@ -53,13 +53,15 @@
 			<app-event-sortiment
 				label="Rozpitý sud"
 				[options]="eventDetailStore.existingKegs()"
-				(select)="eventDetailStore.addKeg($event)"
+				(select)="addKeg($event)"
+				dropdownSelectButtonText="Přidat"
 			></app-event-sortiment>
 
 			<app-event-sortiment
 				label="Nový plný sud"
 				[options]="eventDetailStore.originalKegs()"
-				(select)="eventDetailStore.addKeg($event)"
+				(select)="addKeg($event)"
+				dropdownSelectButtonText="Přidat"
 			></app-event-sortiment>
 
 			<br />

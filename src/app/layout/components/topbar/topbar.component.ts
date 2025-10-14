@@ -24,7 +24,7 @@ export class TopbarComponent {
 			.pipe(
 				filter((e): e is ActivationEnd => e instanceof ActivationEnd && e.snapshot.data.hasOwnProperty('title')),
 				tap((e: ActivationEnd) => {
-					this.layoutService.$topBarTitle.set(e.snapshot.data['title'] ?? '');
+					this.layoutService.$topBarTitle.set(e.snapshot.firstChild?.data['title'] ?? e.snapshot.data['title'] ?? '');
 				}),
 			)
 			.subscribe();

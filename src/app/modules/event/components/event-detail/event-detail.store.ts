@@ -116,21 +116,9 @@ export const EventDetailStore = signalStore(
 			);
 		},
 		processForm: () => {
-			const kegsToAdd: IKeg[] = store.eventKegs().filter(
-				(k) =>
-					!store
-						.initialEventKegs()
-						.map((o) => o.id)
-						.includes(k.id),
-			);
+			const kegsToAdd: IKeg[] = store.eventKegs().filter((k) => !store.initialEventKegs().some((ik) => ik.id === k.id));
 			const existingKegsToAdd = kegsToAdd.filter((keg) => !keg.isOriginal);
-			const newKegToAdd = kegsToAdd
-				.filter((keg) => keg.isOriginal)
-				.map((keg) => ({
-					...keg,
-					isEmpty: false,
-					isOriginal: false,
-				}));
+			const newKegTemplates = kegsToAdd.filter((keg) => keg.isOriginal);
 
 			const eventKegIds = store.eventKegs().map((k) => k.id);
 			const kegsToRemove = store.initialEventKegs().filter((k) => !eventKegIds.includes(k.id));
@@ -140,32 +128,30 @@ export const EventDetailStore = signalStore(
 
 			return eventRequest.pipe(
 				switchMap((event) => {
-					return addNewSortiment(newKegToAdd, event, sortimentService);
+					return sortimentService.createKegsFromTemplates(newKegTemplates).pipe(map((newKegs) => ({ event, newKegs })));
 				}),
-				switchMap((obj) => {
+				switchMap(({ event, newKegs }) => {
 					// add kegs (new and existing) to event
-					const kegsToAdd = [...obj.newSortiment.map((k) => k.id), ...existingKegsToAdd.map((k) => k.id)];
-					if (kegsToAdd.length === 0) {
-						return of({ event: obj.event });
+					const kegsToAddIds = [...newKegs.map((k) => k.id), ...existingKegsToAdd.map((k) => k.id)];
+					if (kegsToAddIds.length === 0) {
+						return of({ event });
 					}
 
-					return sortimentService.addKegToEvent(obj.event.id, kegsToAdd).pipe(
-						tap(() => patchState(store, { eventKegs: [...store.eventKegs(), ...obj.newSortiment] })),
-						map(() => ({ event: obj.event })),
+					return sortimentService.addKegToEvent(event.id, kegsToAddIds).pipe(
+						tap(() => patchState(store, { eventKegs: [...store.eventKegs(), ...newKegs] })),
+						map(() => ({ event })),
 					);
 				}),
-				switchMap((obj) => {
+				switchMap(({ event }) => {
 					// remove kegs from event
 					if (kegsToRemove.length === 0) {
-						return of({ event: obj.event });
+						return of({ event });
 					}
 
-					return sortimentService
-						.removeKegFromEvent(
-							obj.event.id,
-							kegsToRemove.map((k) => k.id),
-						)
-						.pipe(tap(() => patchState(store, { eventKegs: store.eventKegs().filter((eventKeg) => !kegsToRemove.map((k) => k.id).includes(eventKeg.id)) })));
+					return sortimentService.removeKegFromEvent(
+						event.id,
+						kegsToRemove.map((k) => k.id),
+					);
 				}),
 				tap(() => eventStore.loadAll()),
 				catchError((e) => {
@@ -197,17 +183,4 @@ function getFormDefaultValues() {
 		start: start,
 		end: end,
 	};
-}
-
-function addNewSortiment(newKegsToAdd: IKeg[], event: IEvent, sortimentService: SortimentService) {
-	if (newKegsToAdd.length === 0) {
-		return of({ event, newSortiment: [] });
-	}
-
-	return sortimentService.addSortiment(newKegsToAdd).pipe(
-		map((obj) => ({
-			event,
-			newSortiment: obj as IKeg[],
-		})),
-	);
 }

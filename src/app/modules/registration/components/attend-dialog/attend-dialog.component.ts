@@ -7,11 +7,12 @@ import { IUser } from '@modules/user/types/IUser';
 import { takeUntil, tap } from 'rxjs';
 import { NotificationService } from '@common/services/notification.service';
 import { WithSubscriptionsComponent } from '@common/components/with-subscriptions.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
 	selector: 'app-attend-dialog',
 	standalone: true,
-	imports: [Button, DialogModule, SelectUserComponent],
+	imports: [Button, DialogModule, SelectUserComponent, RouterLink],
 	templateUrl: './attend-dialog.component.html',
 	styleUrl: './attend-dialog.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,6 +2,7 @@
 	<p-dropdown
 		[options]="$options()"
 		[(ngModel)]="selectedSortiment"
+		(ngModelChange)="propagateSortiment($event)"
 		optionLabel="name"
 		[filter]="true"
 		[filterFields]="['name', 'sourceName']"
@@ -9,12 +10,13 @@
 		ariaFilterLabel=""
 		[placeholder]="$label()"
 		[style]="{ width: '100%' }"
+		appendTo="body"
 	>
 		<ng-template pTemplate="selectedItem">
 			@if (selectedSortiment) {
-			<div class="flex align-items-center gap-2">
-				<div>{{ selectedSortiment.name }} ({{ selectedSortiment.volume }}l)</div>
-			</div>
+				<div class="flex align-items-center gap-2">
+					<div>{{ selectedSortiment.name }} ({{ selectedSortiment.volume }}l)</div>
+				</div>
 			}
 		</ng-template>
 
@@ -22,16 +24,10 @@
 			let-item
 			pTemplate="item"
 		>
-			<div class="flex align-items-center gap-2">
+			<div class="flex align-items-center justify-content-between gap-2">
 				<div>{{ item.name }} ({{ item.sourceName }}) - {{ item.volume }}l</div>
+				<div><button pButton>{{ $dropdownSelectButtonText() }}</button></div>
 			</div>
 		</ng-template>
 	</p-dropdown>
-
-	<p-button
-		styleClass="p-button-lg p-button-success"
-		[style]="{ height: '100%' }"
-		icon="pi pi-fw pi-plus"
-		(click)="addSortiment(selectedSortiment)"
-	></p-button>
 </p-inputGroup>

@@ -1,12 +1,12 @@
 :host {
 	::ng-deep {
 		.order-control-btn {
-			.p-element {
+			&.p-button.p-button-lg {
 				width: 5rem;
 				height: 5rem;
 
 				.p-button-icon {
-					font-size: 2.5rem;
+					font-size: 2.5rem !important;
 				}
 			}
 		}

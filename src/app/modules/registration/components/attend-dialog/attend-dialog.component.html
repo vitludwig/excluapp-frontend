@@ -14,6 +14,9 @@
 		#selectUserPicker
 		class="mb-4"
 	/>
+	<div class="mb-4 flex justify-content-end">
+		<p-button [routerLink]="['/admin/users/new']" severity="warning" icon="pi pi-exclamation-triangle" label="Člověk ještě není v aplikaci" outlined="true" size="small" />
+	</div>
 	<p-button
 		(click)="selectUser($selectedUser())"
 		[style]="{ width: '100%' }"

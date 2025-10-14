@@ -8,6 +8,7 @@ import { UserStore } from '@modules/user/user.store';
 import { tapResponse } from '@ngrx/operators';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { of } from 'rxjs';
+import { parseRouteId } from '@common/utils/Utils';
 
 type RegistrationState = {
 	eventUsers: IUser[];
@@ -99,11 +100,3 @@ export const RegistrationStore = signalStore(
 		},
 	})),
 );
-
-function parseRouteId(param: string | undefined): number | undefined {
-	if (param === undefined) {
-		return undefined;
-	}
-	const num = parseInt(param, 10);
-	return isNaN(num) ? undefined : num;
-}

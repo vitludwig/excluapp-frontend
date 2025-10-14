@@ -1,17 +1,17 @@
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnDestroy, output, signal } from '@angular/core';
 import { IEvent } from '@modules/event/types/IEvent';
 import { OrderService } from '@modules/sale/services/order/order.service';
 import { IOrderRead, IOrderReadGroup } from '@modules/sale/types/IOrder';
 import { IKeg } from '@modules/sortiment/types/IKeg';
 import { IUser } from '@modules/user/types/IUser';
-import { Button } from 'primeng/button';
+import { Button, ButtonDirective } from 'primeng/button';
 import { map, of, Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-order-controls',
 	standalone: true,
-	imports: [Button, AsyncPipe, JsonPipe],
+	imports: [Button, AsyncPipe, ButtonDirective],
 	templateUrl: './order-controls.component.html',
 	styleUrl: './order-controls.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,

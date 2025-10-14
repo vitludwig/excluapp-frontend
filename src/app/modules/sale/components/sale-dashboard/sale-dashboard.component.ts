@@ -99,7 +99,7 @@ export class SaleDashboardComponent implements OnDestroy {
 				tap(() => {
 					this.orderStore.setOrderProcessing(false);
 
-					const playOtherSound = getRandomNumber(3) > 2;
+					const playOtherSound = getRandomNumber(3) > 1;
 					let audioSrc = '/assets/sounds/finish.mp3';
 					if (playOtherSound) {
 						audioSrc = `/assets/sounds/finish${getRandomNumber(8)}.mp3`;
