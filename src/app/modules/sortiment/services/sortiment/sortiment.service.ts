@@ -7,12 +7,14 @@ import { Observable, map, of, switchMap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { IKeg } from '../../types/IKeg';
 import { ISortimentFilters } from './types/ISortimentFilters';
+import { SettingsStore } from '@common/state/stores/settings.store';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class SortimentService {
 	private readonly http = inject(HttpClient);
+	protected settingsStore = inject(SettingsStore);
 
 	public addSortiment(value: IKeg | IKeg[]): Observable<IKeg | IKeg[]> {
 		return this.http.post<IKeg | IKeg[]>(`${environment.apiUrl}/keg`, value);
@@ -86,6 +88,15 @@ export class SortimentService {
 			switchMap(() => this.createKegsFromTemplates([newKegTemplate], oldKeg.position)),
 			switchMap((newKegs: IKeg[]) => {
 				const newKegIds = newKegs.map((k) => k.id);
+				if(this.settingsStore.enableMultipleDevices()) {
+					// update active kegs saved on this device
+					const index = this.settingsStore.activeEventKegsToShow().indexOf(oldKeg.id);
+					if(index > -1) {
+						const newValues = [...this.settingsStore.activeEventKegsToShow()];
+						newValues[index] = newKegIds[0];
+						this.settingsStore.setActiveEventKegsToShow(newValues);
+					}
+				}
 				return this.addKegToEvent(eventId, newKegIds);
 			}),
 		);
